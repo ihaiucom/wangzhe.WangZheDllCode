@@ -1,0 +1,14 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_HERO_JOB
+	{
+		RES_HEROJOB_TANK = 1,
+		RES_HEROJOB_SOLDIER,
+		RES_HEROJOB_ASSASSIN,
+		RES_HEROJOB_MASTER,
+		RES_HEROJOB_ARCHER,
+		RES_HEROJOB_AID
+	}
+}

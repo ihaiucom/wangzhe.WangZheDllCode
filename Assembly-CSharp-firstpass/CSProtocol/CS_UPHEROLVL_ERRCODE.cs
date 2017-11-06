@@ -1,0 +1,12 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum CS_UPHEROLVL_ERRCODE
+	{
+		CS_UPHEROLVL_NOTREADY = 1,
+		CS_UPHEROLVL_NOHERO,
+		CS_UPHEROLVL_LACKEXPORFULLLVL,
+		CS_UPHEROLVL_OTHERS
+	}
+}

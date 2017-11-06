@@ -1,0 +1,11 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_HANGUP_PUNISH_TYPE
+	{
+		RES_HANGUP_PUNISH_SERIOUS = 1,
+		RES_HANGUP_PUNISH_LIGHT,
+		RES_HANGUP_PUNISH_ALL
+	}
+}

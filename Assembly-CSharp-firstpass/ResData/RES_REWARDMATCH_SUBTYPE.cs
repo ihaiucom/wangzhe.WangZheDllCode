@@ -1,0 +1,10 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_REWARDMATCH_SUBTYPE
+	{
+		RES_REWARDMATCH_SUBTYPE_PVP = 1,
+		RES_REWARDMATCH_SUBTYPE_ENTERTAINMENT
+	}
+}

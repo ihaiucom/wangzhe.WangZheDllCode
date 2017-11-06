@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_MOBA_CHK_USED_TYPE
+	{
+		COM_MOBA_CHK_USED_TYPE_NOUSE,
+		COM_MOBA_CHK_USED_TYPE_NORMAL,
+		COM_MOBA_CHK_USED_TYPE_OLD_PLAYER
+	}
+}

@@ -1,0 +1,11 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_CREDIT_LEVEL_TYPE
+	{
+		RES_CREDIT_LEVEL_TYPE_POOR = 1,
+		RES_CREDIT_LEVEL_TYPE_GOOD,
+		RES_CREDIT_LEVEL_TYPE_EXCELLENT
+	}
+}

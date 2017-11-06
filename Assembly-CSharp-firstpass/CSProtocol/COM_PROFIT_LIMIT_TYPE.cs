@@ -1,0 +1,12 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_PROFIT_LIMIT_TYPE
+	{
+		COM_PROFIT_LIMIT_NULL,
+		COM_PROFIT_LIMIT_EXP,
+		COM_PROFIT_LIMIT_COIN,
+		COM_PROFIT_LIMIT_MAX
+	}
+}

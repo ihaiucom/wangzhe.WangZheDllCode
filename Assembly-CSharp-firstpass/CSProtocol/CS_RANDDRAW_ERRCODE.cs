@@ -1,0 +1,13 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum CS_RANDDRAW_ERRCODE
+	{
+		CS_RANDDRAW_ERR_SYS = 1,
+		CS_RANDDRAW_ERR_ID,
+		CS_RANDDRAW_ERR_OUTDATE,
+		CS_RANDDRAW_ERR_MONEY,
+		CS_RANDDRAW_ERR_NODATA
+	}
+}

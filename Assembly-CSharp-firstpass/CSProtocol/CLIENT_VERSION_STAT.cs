@@ -1,0 +1,14 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum CLIENT_VERSION_STAT
+	{
+		VERSION_CONFIG_BAD = -2,
+		VERSION_BAD,
+		VERSION_NEWEST,
+		VERSION_FORCEUPDATE,
+		VERSION_CANUPDATE,
+		VERSION_IN_REVIEW
+	}
+}

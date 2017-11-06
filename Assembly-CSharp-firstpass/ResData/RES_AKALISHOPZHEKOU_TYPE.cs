@@ -1,0 +1,10 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_AKALISHOPZHEKOU_TYPE
+	{
+		RES_AKALISHOPZHEKOU_CONFIRM = 1,
+		RES_AKALISHOPZHEKOU_RANDOM
+	}
+}

@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_INTIMACY_RELATION_CHG_TYPE
+	{
+		COM_INTIMACY_RELATION_NULL,
+		COM_INTIMACY_RELATION_ADD,
+		COM_INTIMACY_RELATION_DEL
+	}
+}

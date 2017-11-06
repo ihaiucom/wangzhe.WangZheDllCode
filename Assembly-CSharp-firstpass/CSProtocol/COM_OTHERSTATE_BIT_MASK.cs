@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_OTHERSTATE_BIT_MASK
+	{
+		COM_OTHERSTATE_BIT_MASK_DND,
+		COM_OTHERSTATE_BIT_MASK_TVOB,
+		COM_OTHERSTATE_BIT_MASK_MAX
+	}
+}

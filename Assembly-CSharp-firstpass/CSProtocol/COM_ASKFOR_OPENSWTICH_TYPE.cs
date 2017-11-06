@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_ASKFOR_OPENSWTICH_TYPE
+	{
+		COM_ASKFOR_OPENSWTICH_FRIEND = 1,
+		COM_ASKFOR_OPENSWTICH_SNS,
+		COM_ASKFOR_OPENSWTICH_MASTER = 4
+	}
+}
