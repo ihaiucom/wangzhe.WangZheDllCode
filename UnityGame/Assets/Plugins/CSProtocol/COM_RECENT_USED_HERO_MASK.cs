@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_RECENT_USED_HERO_MASK
+	{
+		COM_RECENT_USED_HERO_NULL,
+		COM_RECENT_USED_HERO_HIDE,
+		COM_RECENT_USED_HERO_SELFSET
+	}
+}

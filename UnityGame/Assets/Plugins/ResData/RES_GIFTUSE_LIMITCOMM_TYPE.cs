@@ -1,0 +1,10 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_GIFTUSE_LIMITCOMM_TYPE
+	{
+		RES_GIFTUSE_LIMITCOMM_USUAL,
+		RES_GIFTUSE_LIMITCOMM_NEVER
+	}
+}

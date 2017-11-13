@@ -1,0 +1,12 @@
+using System;
+
+namespace Apollo
+{
+	public enum APO_PAY_RESULT
+	{
+		APO_PAYRESULT_ERROR = -1,
+		APO_PAYRESULT_SUCC,
+		APO_PAYRESULT_CANCEL = 2,
+		APO_PAYRESULT_PARAMERROR
+	}
+}

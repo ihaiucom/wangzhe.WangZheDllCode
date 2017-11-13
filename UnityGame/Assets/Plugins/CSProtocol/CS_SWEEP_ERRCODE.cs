@@ -1,0 +1,16 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum CS_SWEEP_ERRCODE
+	{
+		CS_SWEEP_STAR = 1,
+		CS_SWEEP_VIP,
+		CS_SWEEP_AP,
+		CS_SWEEP_TICKET,
+		CS_SWEEP_COUPONS,
+		CS_SWEEP_CNTLIMIT,
+		CS_SWEEP_OTHER,
+		CS_SWEEP_NOTLOCK
+	}
+}

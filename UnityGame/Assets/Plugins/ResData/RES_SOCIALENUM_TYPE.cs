@@ -1,0 +1,12 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_SOCIALENUM_TYPE
+	{
+		RES_SOCIALENUM_SEARCH,
+		RES_SOCIALENUM_DAYS,
+		RES_SOCIALENUM_HOURS,
+		RES_SOCIALENUM_HEROJOB
+	}
+}

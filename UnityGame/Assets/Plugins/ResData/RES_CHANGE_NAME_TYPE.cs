@@ -1,0 +1,11 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_CHANGE_NAME_TYPE
+	{
+		RES_CHANGE_NAME_TYPE_PLAYER = 1,
+		RES_CHANGE_NAME_TYPE_GUILD,
+		RES_CHANGE_NAME_TYPE_TRANSDATA_PLAYER
+	}
+}

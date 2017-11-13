@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_ASKFOR_DELOPT_TYPE
+	{
+		COM_ASKFOR_DELOPT_DELETE,
+		COM_ASKFOR_DELOPT_REFUSE,
+		COM_ASKFOR_DELOPT_CONFIRM
+	}
+}

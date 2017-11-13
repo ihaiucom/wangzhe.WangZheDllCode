@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum CS_CHEATHUOYUEDU_OPT
+	{
+		CS_CHEATHUOYUEDU_OPT_ADD = 1,
+		CS_CHEATHUOYUEDU_OPT_DEC,
+		CS_CHEATHUOYUEDU_OPT_RESET
+	}
+}

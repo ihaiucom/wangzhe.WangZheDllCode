@@ -1,0 +1,11 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_WEAL_ENTRANCE_TYPE
+	{
+		RES_WEAL_ENTRANCE_TYPE_WEAL,
+		RES_WEAL_ENTRANCE_TYPE_ACTIVITY,
+		RES_WEAL_ENTRANCE_TYPE_14CHECK
+	}
+}

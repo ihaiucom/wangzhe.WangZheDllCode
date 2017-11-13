@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_RECRUITMENT_TYPE
+	{
+		COM_RECRUITMENT_NULL,
+		COM_RECRUITMENT_ACTIVE,
+		COM_RECRUITMENT_PASSIVE
+	}
+}
