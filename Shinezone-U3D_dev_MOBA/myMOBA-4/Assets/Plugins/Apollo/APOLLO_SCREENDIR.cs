@@ -1,0 +1,11 @@
+using System;
+
+namespace Apollo
+{
+	public enum APOLLO_SCREENDIR
+	{
+		APO_SCREENDIR_SENSOR,
+		APO_SCREENDIR_PORTRAIT,
+		APO_SCREENDIR_LANDSCAPE
+	}
+}

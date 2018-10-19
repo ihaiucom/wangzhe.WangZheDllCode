@@ -1,0 +1,10 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_FRIEND_RELATION_TYPE
+	{
+		COM_FRIEND_RELATION_RECRUITMENT = 1,
+		COM_FRIEND_RELATION_RECRUITED
+	}
+}

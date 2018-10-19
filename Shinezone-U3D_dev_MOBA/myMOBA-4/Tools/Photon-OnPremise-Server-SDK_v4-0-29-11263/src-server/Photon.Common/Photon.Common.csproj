@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1DDB6B23-41F0-4C63-B945-0C7D3F902D1C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Photon.Common</RootNamespace>
+    <AssemblyName>Photon.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExitGames.Logging.Log4Net">
+      <HintPath>..\..\lib\ExitGames.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ExitGamesLibs">
+      <HintPath>..\..\lib\ExitGamesLibs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Newtonsoft\Newtonsoft.Json.6.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon.SocketServer">
+      <HintPath>..\..\lib\Photon.SocketServer.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonHostRuntimeInterfaces">
+      <HintPath>..\..\lib\PhotonHostRuntimeInterfaces.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Authentication\AccountServiceResult.cs" />
+    <Compile Include="Authentication\AuthenticationToken.cs" />
+    <Compile Include="Authentication\Configuration\Auth\AuthProvider.cs" />
+    <Compile Include="Authentication\Configuration\Auth\AuthProviderCollection.cs" />
+    <Compile Include="Authentication\Configuration\Auth\AuthSettings.cs" />
+    <Compile Include="Authentication\CustomAuthHandler.cs" />
+    <Compile Include="Authentication\CustomAuthentication\ClientAuthenticationQueue.cs" />
+    <Compile Include="Authentication\CustomAuthentication\CustomAuthenticationResult.cs" />
+    <Compile Include="Authentication\CustomAuthentication\CustomAuthenticationResultCode.cs" />
+    <Compile Include="Authentication\Data\ClientAuthenticationType.cs" />
+    <Compile Include="Authentication\Diagnostic\CustomAuthResultCounters.cs" />
+    <Compile Include="Authentication\Diagnostic\HttpRequestQueueCounters.cs" />
+    <Compile Include="Authentication\Diagnostic\HttpRequestQueueCountersFactory.cs" />
+    <Compile Include="Authentication\ErrorMessages.cs" />
+    <Compile Include="Authentication\IAuthenticateRequest.cs" />
+    <Compile Include="Authentication\ICustomAuthPeer.cs" />
+    <Compile Include="Authentication\AuthSettings.cs" />
+    <Compile Include="Authentication\AuthTokenFactory.cs" />
+    <Compile Include="Authentication\Settings.cs" />
+    <Compile Include="ErrorCode.cs" />
+    <Compile Include="LoadBalancer\Common\IpEndPointExtensions.cs" />
+    <Compile Include="LoadBalancer\Common\PublicIPAddressReader.cs" />
+    <Compile Include="LoadBalancer\Common\ServerState.cs" />
+    <Compile Include="LoadBalancer\Configuration\ConfigurationLoader.cs" />
+    <Compile Include="LoadBalancer\Configuration\DefaultConfiguration.cs" />
+    <Compile Include="LoadBalancer\Configuration\LoadBalancerSection.cs" />
+    <Compile Include="LoadBalancer\Configuration\LoadBalancerWeight.cs" />
+    <Compile Include="LoadBalancer\Configuration\LoadBalancerWeightsCollection.cs" />
+    <Compile Include="LoadBalancer\LoadBalancer.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\AverageCounterReader.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\ConfigurationLoader.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\DefaultConfiguration.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\FeedbackControllerElement.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\FeedbackControllerElementCollection.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\FeedbackControlSystemSection.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\FeedbackLevelElement.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Configuration\FeedbackLevelElementCollection.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\Diagnostics\Counter.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackController.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackControllerCollection.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackControlSystem.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackLevel.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackLevelOrder.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\FeedbackName.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\IFeedbackControlSystem.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\ValueHistory.cs" />
+    <Compile Include="LoadBalancer\LoadShedding\WorkloadController.cs" />
+    <Compile Include="LoadBalancer\ServerStateManager.cs" />
+    <Compile Include="Misk\UnknownTypeMapper.cs" />
+    <Compile Include="Plugins\AssemblyResolver.cs" />
+    <Compile Include="Plugins\Configuration\PluginElement.cs" />
+    <Compile Include="Plugins\Configuration\PluginElementCollection.cs" />
+    <Compile Include="Plugins\Configuration\PluginSettings.cs" />
+    <Compile Include="Plugins\IPluginManager.cs" />
+    <Compile Include="Plugins\PluginInfo.cs" />
+    <Compile Include="Plugins\PluginManagerBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Plugins\Configuration\Configuration.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

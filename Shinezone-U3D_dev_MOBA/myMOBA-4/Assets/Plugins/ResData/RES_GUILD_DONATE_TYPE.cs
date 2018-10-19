@@ -1,0 +1,12 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_GUILD_DONATE_TYPE
+	{
+		RES_GUILD_DONATE_TYPE_LOW = 1,
+		RES_GUILD_DONATE_TYPE_MID,
+		RES_GUILD_DONATE_TYPE_HIGH,
+		RES_GUILD_DONATE_TYPE_TOP
+	}
+}

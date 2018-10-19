@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<meta>
+  <types />
+  <agents>
+    <agent classfullname="behaviac::Agent" DisplayName="behaviac::Agent" Desc="" IsRefType="true" IsImplemented="true">
+      <Method Name="VectorLength" DisplayName="VectorLength" Desc="VectorLength" Class="behaviac::Agent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="IList" TypeFullName="System.Collections.IList" DisplayName="param0" Desc="param0" />
+      </Method>
+      <Method Name="VectorAdd" DisplayName="VectorAdd" Desc="VectorAdd" Class="behaviac::Agent" ReturnType="void" ReturnTypeFullName="System.Void" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="IList" TypeFullName="System.Collections.IList" DisplayName="param0" Desc="param0" />
+        <Param Name="param1" Type="Object" TypeFullName="System.Object" DisplayName="param1" Desc="param1" />
+      </Method>
+      <Method Name="VectorRemove" DisplayName="VectorRemove" Desc="VectorRemove" Class="behaviac::Agent" ReturnType="void" ReturnTypeFullName="System.Void" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="IList" TypeFullName="System.Collections.IList" DisplayName="param0" Desc="param0" />
+        <Param Name="param1" Type="Object" TypeFullName="System.Object" DisplayName="param1" Desc="param1" />
+      </Method>
+      <Method Name="VectorContains" DisplayName="VectorContains" Desc="VectorContains" Class="behaviac::Agent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="IList" TypeFullName="System.Collections.IList" DisplayName="param0" Desc="param0" />
+        <Param Name="param1" Type="Object" TypeFullName="System.Object" DisplayName="param1" Desc="param1" />
+      </Method>
+      <Method Name="VectorClear" DisplayName="VectorClear" Desc="VectorClear" Class="behaviac::Agent" ReturnType="void" ReturnTypeFullName="System.Void" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="IList" TypeFullName="System.Collections.IList" DisplayName="param0" Desc="param0" />
+      </Method>
+      <Method Name="LogMessage" DisplayName="LogMessage" Desc="LogMessage" Class="behaviac::Agent" ReturnType="void" ReturnTypeFullName="System.Void" Static="true" Public="true" istask="false">
+        <Param Name="param0" Type="string" TypeFullName="System.String" DisplayName="param0" Desc="param0" />
+      </Method>
+    </agent>
+    <agent classfullname="WrapperAgent" base="behaviac::Agent" DisplayName="WrapperAgent" Desc="" IsRefType="true" IsCustomized="true">
+      <Member Name="p_curSlotType" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="SLOT_SKILL_0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_enemyID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_srchRange" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_AttackMoveDest" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_IsAttackMove_Attack" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_AttackIsFinished" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="true" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_CmdID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_targetID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_attackPathCurTargetPos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_waitFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_restorePos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_healthRate" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="1100" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_skillAttackRange" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_captainID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_nearstMember" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_forceToApproachHero" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_direction" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_useSkillWeight" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="100" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_pursueFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_abandonTargetID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_selfID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_LowAI" DisplayName="" Desc="" Class="WrapperAgent" Type="EBTStatus" TypeFullName="behaviac.EBTStatus" defaultvalue="BT_FAILURE" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_teamTarget" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_needFarm" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_helpTargtID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_needGoHome" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_baseID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_escapeRange" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="12000" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_waitRandomFrames" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_attackRange" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_enemyCount" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_friendCount" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_idleShowFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_idleMod" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_idleShowLast" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="-1" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_waitToPlayBornAge" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_waitBornFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_useSkillWeightActually" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="100" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_captainTargetID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_terrorMeActor" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_mustToKillDragon" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_dragonHasBeKilled" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_followSoldierLine" DisplayName="" Desc="" Class="WrapperAgent" Type="bool" TypeFullName="System.Boolean" defaultvalue="false" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_targetPos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_startWaitFrames" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_goDirct1" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=500;y=0;z=400;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_goDirct2" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=400;y=0;z=500;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_tempActorID" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_randomIndex" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_targetOfTarget" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_orignalPos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_follow_range" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="9000" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_orignalDirection" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_pursuitRange" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_waitFramesToSearch" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="10" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_attackOneTime" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_nextSkill" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="SLOT_SKILL_VALID" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_randomPos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_commandTarget" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_camp" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="COM_PLAYERCAMP_1" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_pathIndex" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_attackTowerWaitFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_nearCommanTarget" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_organType" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_bornWaitFrame" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_pursueTime" DisplayName="" Desc="" Class="WrapperAgent" Type="int" TypeFullName="System.Int32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_tempTargetId" DisplayName="" Desc="" Class="WrapperAgent" Type="uint" TypeFullName="System.UInt32" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_chooseTargetCount" DisplayName="" Desc="" Class="WrapperAgent" Type="ushort" TypeFullName="System.UInt16" defaultvalue="0" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_TargetPos" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Member Name="p_TargetPosNew" DisplayName="" Desc="" Class="WrapperAgent" Type="string" TypeFullName="System.String" defaultvalue="{kEpsilon=0;x=0;y=0;z=0;}" Static="false" Public="false" Readonly="false" />
+      <Method Name="GetCurBehavior" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false" />
+      <Method Name="PlayAnimation" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="animationName" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+        <Param Name="blendTime" Type="float" TypeFullName="System.Single" DisplayName="" Desc="" />
+        <Param Name="layer" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="loop" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="PlayHelperAgeAction" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="actionName" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsSkillCDReady" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SetSkillSpecial" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="RealUseSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsUseSkillCompleted" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetRandomInt" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="maxNum" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsLowAI" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="GetMapAIMode" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false" />
+      <Method Name="GetMyObjID" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetSightArea" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="IsNeedToPlayBornAge" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="GetCampIndex" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="GetPvPLevelMaxHeroNum" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="IsPlayOnNetwork" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="PlayBornAgeAction" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="HasRoute" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SelectRouteBySelfIndex" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SelectRoute" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SelectRouteBySelfCampIndex" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="SelectNearestRoute" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsAttackedByEnemyHero" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="NotifySelfCampSelfBeAttacked" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SetIsAttackByEnemyHero" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="yesOrNot" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetActorDeadState" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false" />
+      <Method Name="IsOffline" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsFollowOtherPlayer" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="GetLeader" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="IsAlive" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetGivenActorTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetActorType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsTargetCanBeAttacked" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetActorHPPercent" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsDistanceToActorLessThanRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetHPPercent" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="GetEnemyHeroCountInRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsAroundTeamThanStrongThanEnemise" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="strengthRate" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="ClearTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsDistanceToPosLessThanRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="aimPos" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="ResetRouteStartPoint" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="TerminateMove" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="GetSummonerSkillType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="HasEnemyInRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsDistanceToPosMoreThanRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="aimPos" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="UseGoHomeSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="CanMove" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="AbortCurUseSkillByType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="abortType" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="RealMovePosition" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="dest" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsDistanceToActorMoreThanRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsOverTower" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsUseSkillCompletedOrCanAbort" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsNeedToHelpOther" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetNeedHelpTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="IsBase" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="ClearHelpOther" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="RealMoveToActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="HasEnemyBuildingAndEnemyBuildingWillAttackSelf" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SetInDanger" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="frame" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetOurCampActorsCount" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetEnemyCountInRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsCurWaypointValid" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsCurWayPointStartPoint" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsControlByMan" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetCaptain" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestMemberNotCaptain" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="IsCanMoveToActorLeft" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="unit" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="RealMoveToActorLeft" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="unit" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsCanMoveToActorRight" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="unit" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="RealMoveToActorRight" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="unit" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsCurMoveCompleted" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetHeroWhoAttackSelf" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="IsTargetCanBeAttackedIgnoreVisible" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemyWithPriorityWithoutNotInBattleJungleMonsterWithoutActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="priotity" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+        <Param Name="withOutActor" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetTeamMemberTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="CanUseSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetSkillAttackRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="CheckSkillFilter" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetSkillTargetRule" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SelectTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetLowHpTeamMember" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="HPRate" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsVisible" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="RealMoveInMoveAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SetSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="InSlot" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="HasMemberHpLessThan" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="hpRate" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsCurWaypointEndPoint" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="LookAtDirection" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="dest" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsControlByHostPlayer" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="PlayHeroActSound" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="actType" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsInBattle" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="UseHpRecoverSkillToSelf" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsAutoAI" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SetCurBehavior" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="behaviMode" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="HasMoveCMD" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="HasNormalAttackCMD" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsUseAdvanceCommonAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="CancelCommonAttackMode" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetMod" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="numA" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="numB" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetWaitFrame" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="frame" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="StopCurAgeAction" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="ExMoveCmd" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="GetSearchRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="AdvanceCommonAttackSearchEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="NormalAttackSearchEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsSearchCommonAttackTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsAttackMoveToTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="MoveToCommonAttackTargetWithRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="MoveToSkillTargetWithRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsAbortNormalAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="DisableSpecialCommonAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsImmediateAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsUseSpecialCommonAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="UseCommonAttackCache" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SwitchToNextBehavior" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsSkillMoveToTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="MoveToSkillTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsAbortUseSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsContinueAbortUseSkill" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="IsContinueCommonAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetOutOfControlType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="string" ReturnTypeFullName="System.String" Static="false" Public="true" istask="false" />
+      <Method Name="GetTerrorMeActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="LeaveActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="SetTauntMeActorAsMyTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsMoveCMDCompleted" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="PlayDeadAgeAction" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="SetIsAttackByEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="yesOrNot" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsDragonAlive" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="GetHostPlayrCaptain" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetDragonId" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestEnemyWithoutNotInBattleJungleMonster" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetBaronDeadTimes" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestEnemyWithoutNotInBattleJungleMonsterWithoutActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="withOutActor" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetAttackRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="RealMoveDirection" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="dest" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsNeedToSwitchTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="SwitchTarget" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="GetMyTargetID" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="SetIgnoreSrchrange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="ignore" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemyWithPriorityWithoutNotInBattleJungleMonster" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="priotity" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetCurLevel" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="IsLadder" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="IsUnderEnemyBuilding" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsDangerUnderEnemyBuilding" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false">
+        <Param Name="targetHeroId" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetVector3Y" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="float" ReturnTypeFullName="System.Single" Static="false" Public="true" istask="false">
+        <Param Name="par" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="HelpToAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsIgnoreSrchRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestEnemyIgnoreVisible" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="NotifySelfCampSelfWillAttack" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="ShowAtkSignal" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="ShowTogetherSignal" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="ShowRandomSignal" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="GetPursuitRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="ShowHeadExclamationMark" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="NotifyEventSysEnterCombat" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsAttackByEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false" />
+      <Method Name="ChangeTargetToAtker" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="ResetEndurance" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="SetMonsterEnduranceDown" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="state" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetMonsterEndurance" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="NotifyEventSysExitCombat" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="IsOutOfPursuitRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="bool" ReturnTypeFullName="System.Boolean" Static="false" Public="true" istask="false">
+        <Param Name="aimPos" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="ResetMustUseNextSkillSlotType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false" />
+      <Method Name="GetMaster" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestEnemyWithFilter" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="filter" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemyWithTargetPriority" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="priotity" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemyDogfaceFirstAndDogfaceHasPriority" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="IsWarmBattle" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="EBTStatus" ReturnTypeFullName="behaviac.EBTStatus" Static="false" Public="true" istask="false" />
+      <Method Name="GetNearestEnemyWithPriorityWithoutJungleMonster" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="priotity" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="NotifyTeamAttackEnemy" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="enemyObjId" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="ignoreSrchRange" Type="bool" TypeFullName="System.Boolean" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="BattleTime" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="ulong" ReturnTypeFullName="System.UInt64" Static="false" Public="true" istask="false" />
+      <Method Name="GetSmallDragon" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetHeroNumInRange" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="camp" Type="string" TypeFullName="System.String" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetSelfCampAliveHerpNum" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="GetEnemyCampAliveHerpNum" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+      <Method Name="GetBigDragon" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false" />
+      <Method Name="GetCommandAttackHero" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetCommandAttackOrgan" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="friendrange" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="enemyRange" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GerPathIndexBuTowerId" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false">
+        <Param Name="TowerID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="NotifyTeamSelectRoute" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="index" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="centerObjId" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="NotifyTeamSelectRandomRoute" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="void" ReturnTypeFullName="System.Void" Static="false" Public="true" istask="false">
+        <Param Name="range" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="centerObjId" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNearestEnemyWithoutJungleMonsterAndCallActorWithoutActor" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+        <Param Name="withOutActor" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetNewTargetByPriority" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="uint" ReturnTypeFullName="System.UInt32" Static="false" Public="true" istask="false">
+        <Param Name="objID" Type="uint" TypeFullName="System.UInt32" DisplayName="" Desc="" />
+        <Param Name="srchR" Type="int" TypeFullName="System.Int32" DisplayName="" Desc="" />
+      </Method>
+      <Method Name="GetMyOrganType" DisplayName="" Desc="" Class="WrapperAgent" ReturnType="int" ReturnTypeFullName="System.Int32" Static="false" Public="true" istask="false" />
+    </agent>
+  </agents>
+  <instances />
+</meta>

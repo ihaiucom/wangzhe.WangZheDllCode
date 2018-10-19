@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ExitgamesMSBuildTasksPath>.\</ExitgamesMSBuildTasksPath>
+    <ExitgamesMSBuildTasksLib>$(ExitgamesMSBuildTasksPath)\EGTCodeGeneration.dll</ExitgamesMSBuildTasksLib>
+  </PropertyGroup>
+
+  <UsingTask AssemblyFile="$(ExitgamesMSBuildTasksLib)" TaskName="EGBuildTasks.EGTCodeGeneration" />
+  <UsingTask AssemblyFile="$(ExitgamesMSBuildTasksLib)" TaskName="EGBuildTasks.EGTFileContentValidation" />
+  <UsingTask AssemblyFile="$(ExitgamesMSBuildTasksLib)" TaskName="EGBuildTasks.EGTRenameReplace" />
+</Project>

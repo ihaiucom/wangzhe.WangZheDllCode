@@ -1,0 +1,2591 @@
+Shader "S_Game_Particle/Additive_Dissolve" {
+Properties {
+ _TintColor ("Tint Color", Color) = (0.5,0.5,0.5,1)
+ _MainTex ("Particle Texture", 2D) = "white" {}
+ _AlphaTex ("千万不要填，系统用的", 2D) = "white" {}
+ _DissolveTex ("溶解纹理", 2D) = "white" {}
+ _CutOff ("Cut off", Float) = 0.5
+ _FadeFactor ("Fade Factor", Float) = 1
+ _ZTestMode ("ZTestMode", Float) = 4
+ _dissolveThreshold ("溶解值(0-1)", Float) = 0.5
+ _dissolveThresholdRange ("溶解范围(0-1)", Float) = 0.1
+ _edgeColor ("亮边颜色(Additive)", Color) = (0,0,0,0)
+}
+SubShader { 
+ LOD 100
+ Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" }
+ Pass {
+  Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" }
+  ZTest [_ZTestMode]
+  ZWrite Off
+  Cull Off
+  Fog { Mode Off }
+  Blend SrcAlpha One
+  ColorMask RGB
+Program "vp" {
+SubProgram "gles " {
+Keywords { "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_2;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture (_MainTex, xlv_TEXCOORD0);
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_MainTex, xlv_TEXCOORD0);
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture2D (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+uniform highp vec4 _DissolveTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * _DissolveTex_ST.xy) + _DissolveTex_ST.zw);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+uniform sampler2D _DissolveTex;
+uniform highp float _dissolveThreshold;
+uniform highp float _dissolveThresholdRange;
+uniform mediump vec4 _edgeColor;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp float edgeValue_2;
+  mediump float dissolveRate_3;
+  mediump float dissolveThresholdRange_4;
+  mediump float dissolveValue_5;
+  mediump vec4 color_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_7.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_6 = tmpvar_7;
+  lowp float tmpvar_8;
+  tmpvar_8 = texture (_DissolveTex, xlv_TEXCOORD2).x;
+  dissolveValue_5 = tmpvar_8;
+  highp float tmpvar_9;
+  tmpvar_9 = max (_dissolveThresholdRange, 0.01);
+  dissolveThresholdRange_4 = tmpvar_9;
+  highp float tmpvar_10;
+  tmpvar_10 = (clamp ((dissolveValue_5 - _dissolveThreshold), 0.0, dissolveThresholdRange_4) / dissolveThresholdRange_4);
+  dissolveRate_3 = tmpvar_10;
+  color_6.w = (color_6.w * dissolveRate_3);
+  mediump float tmpvar_11;
+  tmpvar_11 = ceil(dissolveRate_3);
+  edgeValue_2 = tmpvar_11;
+  highp vec4 tmpvar_12;
+  tmpvar_12 = (color_6 + ((
+    (1.0 - dissolveRate_3)
+   - 
+    (1.0 - edgeValue_2)
+  ) * _edgeColor));
+  color_6 = tmpvar_12;
+  if ((color_6.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_13;
+  tmpvar_13 = (color_6 * xlv_TEXCOORD1);
+  color_6.xyz = tmpvar_13.xyz;
+  color_6.w = (tmpvar_13.w * _FadeFactor);
+  tmpvar_1 = color_6;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+varying highp vec2 xlv_TEXCOORD0;
+varying mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture2D (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture2D (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+uniform highp mat4 glstate_matrix_mvp;
+uniform mediump vec4 _TintColor;
+uniform highp vec4 _MainTex_ST;
+out highp vec2 xlv_TEXCOORD0;
+out mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  tmpvar_1 = _glesColor;
+  mediump vec4 tmpvar_2;
+  tmpvar_2 = tmpvar_1;
+  mediump vec4 tmpvar_3;
+  tmpvar_3 = (tmpvar_2 * (_TintColor * 2.0));
+  tmpvar_2 = tmpvar_3;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = ((_glesMultiTexCoord0.xy * _MainTex_ST.xy) + _MainTex_ST.zw);
+  xlv_TEXCOORD1 = tmpvar_3;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform mediump float _CutOff;
+uniform mediump float _FadeFactor;
+uniform sampler2D _AlphaTex;
+in highp vec2 xlv_TEXCOORD0;
+in mediump vec4 xlv_TEXCOORD1;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  mediump vec4 color_2;
+  lowp vec4 tmpvar_3;
+  tmpvar_3.xyz = texture (_MainTex, xlv_TEXCOORD0).xyz;
+  tmpvar_3.w = texture (_AlphaTex, xlv_TEXCOORD0).x;
+  color_2 = tmpvar_3;
+  if ((color_2.w < _CutOff)) {
+    discard;
+  };
+  mediump vec4 tmpvar_4;
+  tmpvar_4 = (color_2 * xlv_TEXCOORD1);
+  color_2.xyz = tmpvar_4.xyz;
+  color_2.w = (tmpvar_4.w * _FadeFactor);
+  tmpvar_1 = color_2;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+}
+Program "fp" {
+SubProgram "gles " {
+Keywords { "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_SEPERATE_ALPHA_TEX_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_DUMMY" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_CUTOFF_ON" "_SEPERATE_ALPHA_TEX_ON" "_TINTCOLOR_ON" "_DISSOLVE_OFF" }
+"!!GLES3"
+}
+}
+ }
+}
+}

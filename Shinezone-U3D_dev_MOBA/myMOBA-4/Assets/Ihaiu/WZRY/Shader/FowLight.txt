@@ -1,0 +1,119 @@
+Shader "SGame_Post/FowLight" {
+SubShader { 
+ Pass {
+  ZTest Always
+  ZWrite Off
+  Cull Off
+  Fog { Mode Off }
+  Blend One One
+Program "vp" {
+SubProgram "gles " {
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _Transform;
+varying highp vec2 xlv_TEXCOORD0;
+void main ()
+{
+  highp vec4 tmpvar_1;
+  highp vec4 tmpvar_2;
+  tmpvar_2 = (glstate_matrix_mvp * _glesVertex);
+  tmpvar_1.zw = tmpvar_2.zw;
+  tmpvar_1.xy = ((tmpvar_2.xy * _Transform.xy) + _Transform.zw);
+  gl_Position = tmpvar_1;
+  xlv_TEXCOORD0 = tmpvar_2.xy;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+varying highp vec2 xlv_TEXCOORD0;
+void main ()
+{
+  mediump float tmpvar_1;
+  highp float tmpvar_2;
+  tmpvar_2 = clamp (((1.0 - 
+    dot (xlv_TEXCOORD0, xlv_TEXCOORD0)
+  ) * 1024.0), 0.0, 1.0);
+  tmpvar_1 = tmpvar_2;
+  mediump vec4 tmpvar_3;
+  tmpvar_3.x = tmpvar_1;
+  tmpvar_3.y = tmpvar_1;
+  tmpvar_3.z = tmpvar_1;
+  tmpvar_3.w = tmpvar_1;
+  gl_FragData[0] = tmpvar_3;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp vec4 _Transform;
+out highp vec2 xlv_TEXCOORD0;
+void main ()
+{
+  highp vec4 tmpvar_1;
+  highp vec4 tmpvar_2;
+  tmpvar_2 = (glstate_matrix_mvp * _glesVertex);
+  tmpvar_1.zw = tmpvar_2.zw;
+  tmpvar_1.xy = ((tmpvar_2.xy * _Transform.xy) + _Transform.zw);
+  gl_Position = tmpvar_1;
+  xlv_TEXCOORD0 = tmpvar_2.xy;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+in highp vec2 xlv_TEXCOORD0;
+void main ()
+{
+  mediump float tmpvar_1;
+  highp float tmpvar_2;
+  tmpvar_2 = clamp (((1.0 - 
+    dot (xlv_TEXCOORD0, xlv_TEXCOORD0)
+  ) * 1024.0), 0.0, 1.0);
+  tmpvar_1 = tmpvar_2;
+  mediump vec4 tmpvar_3;
+  tmpvar_3.x = tmpvar_1;
+  tmpvar_3.y = tmpvar_1;
+  tmpvar_3.z = tmpvar_1;
+  tmpvar_3.w = tmpvar_1;
+  _glesFragData[0] = tmpvar_3;
+}
+
+
+
+#endif"
+}
+}
+Program "fp" {
+SubProgram "gles " {
+"!!GLES"
+}
+SubProgram "gles3 " {
+"!!GLES3"
+}
+}
+ }
+}
+Fallback Off
+}

@@ -1,0 +1,11 @@
+using System;
+
+namespace ResData
+{
+	public enum HERO_ATTACK_TYPE
+	{
+		HERO_ATTACK_TYPE_RANGE_HARD = 1,
+		HERO_ATTACK_TYPE_RANGE_SOFT,
+		HERO_ATTACK_TYPE_POINT
+	}
+}

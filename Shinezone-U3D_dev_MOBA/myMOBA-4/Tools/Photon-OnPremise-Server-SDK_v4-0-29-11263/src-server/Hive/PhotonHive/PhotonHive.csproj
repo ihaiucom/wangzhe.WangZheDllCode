@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E1F918F4-F581-4280-9D91-3CF77B24C290}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Photon.Hive</RootNamespace>
+    <AssemblyName>PhotonHive</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\deploy\bin_Win32\PhotonSocketServer.exe</StartProgram>
+    <StartArguments>/debug LoadBalancing /config PhotonServer.Hive-Development.config</StartArguments>
+    <StartWorkingDirectory>..\..</StartWorkingDirectory>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\PhotonHive.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\deploy\bin_Win32\PhotonSocketServer.exe</StartProgram>
+    <StartArguments>/debug LoadBalancing /config PhotonServer.Hive-Development.config</StartArguments>
+    <StartWorkingDirectory>..\..</StartWorkingDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExitGames.Logging.Log4Net, Version=1.0.0.8, Culture=neutral, PublicKeyToken=eac0edd9746a4aa0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ExitGames.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ExitGamesLibs, Version=1.0.0.8, Culture=neutral, PublicKeyToken=eac0edd9746a4aa0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ExitGamesLibs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Newtonsoft\Newtonsoft.Json.6.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon.SocketServer, Version=3.3.14.4416, Culture=neutral, PublicKeyToken=48c2fa3b6988090e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Photon.SocketServer.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonHostRuntimeInterfaces">
+      <HintPath>..\..\..\lib\PhotonHostRuntimeInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\..\lib\ServiceStack\ServiceStack.Text.3.9.54\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="ActorGroup.cs" />
+    <Compile Include="Caching\EventCache.cs" />
+    <Compile Include="Caching\EventCacheDictionary.cs" />
+    <Compile Include="Caching\HiveGameCache.cs" />
+    <Compile Include="Caching\RoomCacheBase.cs" />
+    <Compile Include="Caching\RoomEventCache.cs" />
+    <Compile Include="Caching\RoomReference.cs" />
+    <Compile Include="Collections\ActorsManager.cs" />
+    <Compile Include="Collections\GroupManager.cs" />
+    <Compile Include="Collections\RoomEventCacheManager.cs" />
+    <Compile Include="Common\GameParameterReader.cs" />
+    <Compile Include="Common\HttpRequestQueueOptions.cs" />
+    <Compile Include="Common\Utilities.cs" />
+    <Compile Include="Diagnostics\IHiveGameAppCounters.cs" />
+    <Compile Include="Diagnostics\NullHiveGameAppCounters.cs" />
+    <Compile Include="Events\ErrorInfoEvent.cs" />
+    <Compile Include="Events\DisconnectEvent.cs" />
+    <Compile Include="Events\CacheSliceChanged.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="HiveHostGame.cs" />
+    <Compile Include="Operations\HiveErrorMessages.cs" />
+    <Compile Include="Plugin\CallInfo.cs" />
+    <Compile Include="Lobby\AppLobbyType.cs" />
+    <Compile Include="Operations\ActorParameter.cs" />
+    <Compile Include="Operations\CreateGameRequest.cs" />
+    <Compile Include="Operations\CreateGameResponse.cs" />
+    <Compile Include="Operations\DebugGameRequest.cs" />
+    <Compile Include="Operations\DebugGameResponse.cs" />
+    <Compile Include="Operations\GameParameter.cs" />
+    <Compile Include="Operations\JoinGameResponse.cs" />
+    <Compile Include="Configuration\PluginElement.cs" />
+    <Compile Include="Configuration\PluginElementCollection.cs" />
+    <Compile Include="Configuration\PluginSettings.cs" />
+    <Compile Include="Diagnostics\OperationLogging\LogEntry.cs" />
+    <Compile Include="Diagnostics\OperationLogging\LogQueue.cs" />
+    <Compile Include="Events\PropertiesChangedEvent.cs" />
+    <Compile Include="Plugin\PluginManager.cs" />
+    <Compile Include="Plugin\IPluginManager.cs" />
+    <Compile Include="HiveApplication.cs" />
+    <Compile Include="HiveGame.cs" />
+    <Compile Include="Diagnostics\CounterLogger.cs" />
+    <Compile Include="HivePeer.cs" />
+    <Compile Include="Events\LiteEventBase.cs" />
+    <Compile Include="Messages\IMessage.cs" />
+    <Compile Include="Messages\RoomMessage.cs" />
+    <Compile Include="Operations\CacheOperation.cs" />
+    <Compile Include="Operations\ChangeGroups.cs" />
+    <Compile Include="Operations\EventCode.cs" />
+    <Compile Include="Operations\CloseRequest.cs" />
+    <Compile Include="Operations\GetPropertiesRequest.cs" />
+    <Compile Include="Operations\GetPropertiesResponse.cs" />
+    <Compile Include="Operations\JoinResponse.cs" />
+    <Compile Include="Operations\OperationCode.cs" />
+    <Compile Include="Operations\ParameterKey.cs" />
+    <Compile Include="Operations\JoinGameRequest.cs" />
+    <Compile Include="Operations\LeaveRequest.cs" />
+    <Compile Include="Operations\RaiseEventRequest.cs" />
+    <Compile Include="Operations\PropertyType.cs" />
+    <Compile Include="Events\CustomEvent.cs" />
+    <Compile Include="Events\JoinEvent.cs" />
+    <Compile Include="Events\LeaveEvent.cs" />
+    <Compile Include="Messages\GameMessageCodes.cs" />
+    <Compile Include="Diagnostics\Counter.cs" />
+    <Compile Include="Operations\ReceiverGroup.cs" />
+    <Compile Include="Operations\SetPropertiesRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Room.cs" />
+    <Compile Include="WebRpc\Configuration\WebRpcBaseUrlElement.cs" />
+    <Compile Include="WebRpc\Configuration\WebRpcExtraParamsCollection.cs" />
+    <Compile Include="WebRpc\Configuration\WebRpcSettings.cs" />
+    <Compile Include="WebRpc\WebRpcHandler.cs" />
+    <Compile Include="WebRpc\WebRpcRequest.cs" />
+    <Compile Include="WebRpc\WebRpcResponse.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configuration\Configuration.txt" />
+    <Content Include="WebRpc\Configuration\Configuration.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HivePlugin\PhotonHivePlugin.csproj">
+      <Project>{223d6705-337d-409f-8524-553abc5eaabd}</Project>
+      <Name>PhotonHivePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Photon.Common\Photon.Common.csproj">
+      <Project>{1ddb6b23-41f0-4c63-b945-0c7d3f902d1c}</Project>
+      <Name>Photon.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

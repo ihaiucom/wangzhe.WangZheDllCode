@@ -1,0 +1,52 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  
+  <configSections>
+    <section name="PluginSettings" type="Lite.Configuration.PluginSettings, Lite" />
+  </configSections>
+
+  <PluginSettings Enabled="True">
+    <Plugins>
+      <Plugin Name="Ext1" Path="" Type="" Test="Hello" />
+      <Plugin Name="Ext2" Path="" Type="" />
+    </Plugins>
+  </PluginSettings>
+
+</configuration>
+
+
+
+namespace ConfigTest
+{
+    using System;
+    using System.Configuration;
+
+    using Lite.Configuration;
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var i = ConfigurationManager.AppSettings.Count;
+            var s = Settings1.Default.Tesr;
+
+            var settings = PluginSettings.Default;
+            var plugins = settings.Plugins;
+            var e = plugins[0];
+
+            foreach (PluginElement item in plugins)
+            {
+                Console.WriteLine("Plugin: name={0}", item.Name);
+                if (item.CustomAttributes.Count > 0)
+                {
+                    foreach (var att in item.CustomAttributes)
+                    {
+                        Console.WriteLine("\tAttribute: {0}={1}", att.Key, att.Value);
+                    }
+                }
+            }
+
+            Console.ReadKey();
+        }
+    }
+}

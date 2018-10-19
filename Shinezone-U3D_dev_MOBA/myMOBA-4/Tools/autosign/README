@@ -1,0 +1,6 @@
+SignApk.jar is a tool included with the Android platform source bundle.
+testkey.pk8 is the private key that is compatible with the recovery image included in this zip file
+testkey.x509.pem is the corresponding certificate/public key
+
+Usage:
+java -jar signapk.jar testkey.x509.pem testkey.pk8 update.zip update_signed.zip

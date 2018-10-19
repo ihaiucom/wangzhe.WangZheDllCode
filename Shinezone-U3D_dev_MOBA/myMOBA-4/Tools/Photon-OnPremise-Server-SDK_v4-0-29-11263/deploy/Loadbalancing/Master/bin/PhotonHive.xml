@@ -1,0 +1,2266 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PhotonHive</name>
+    </assembly>
+    <members>
+        <member name="T:Photon.Hive.Actor">
+            <summary>
+            An actor is the glue between <see cref="T:Photon.Hive.HivePeer"/> and <see cref="T:Photon.Hive.Room"/>.
+            In addition to the peer it has a <see cref="P:Photon.Hive.Actor.ActorNr">number</see> and <see cref="P:Photon.Hive.Actor.Properties"/>.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Actor.#ctor(Photon.Hive.HivePeer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Actor"/> class.
+            </summary>
+            <param name="peer">
+            The peer for this actor.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Actor.ActorNr">
+            <summary>
+            Gets or sets the actor nr.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Actor.CleanUpTimer">
+            <summary>
+            Reference to timer which will clean Actor after disconnect
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Actor.DeactivationTime">
+            <summary>
+            Time stamp when actor was deactivated
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Actor.Peer">
+            <summary>
+            Gets or sets the peer.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Actor.Properties">
+            <summary>
+            Gets the actors custom properties.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Caching.EventCache">
+            <summary>
+            A cache for events that a stored for actors that join a game later.
+            The key is the event code, the value the event content.
+            The event cache is ordered by event code.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Caching.EventCacheDictionary">
+            <summary>
+            Dictionary implementation to store <see cref="T:Photon.Hive.Caching.EventCache"/> instances by actor number.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Caching.HiveGameCache">
+            <summary>
+            The cache for <see cref="T:Photon.Hive.HiveGame"/>s.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Caching.RoomCacheBase">
+            <summary>
+            Base class for room caches.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomCacheBase.log">
+            <summary>
+            An <see cref="T:ExitGames.Logging.ILogger"/> instance used to log messages to the logging framework.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomCacheBase.RoomInstances">
+            <summary>A Dictionary used to store room instances.</summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomCacheBase.SyncRoot">
+            <summary>used to syncronize acces to the cache.</summary>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.TryGetRoomWithoutReference(System.String,Photon.Hive.Room@)">
+            <summary>
+            Tries to get room reference for a room with the specified id, without holding a reference to that room. 
+            </summary>
+            <param name="roomId">The room id.</param>
+            <param name="room">The room, in case it exists.</param>
+            <returns>
+            True if the cache contains a room with the specified room id; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.GetRoomReference(System.String,Photon.SocketServer.PeerBase,System.Object[])">
+            <summary>
+            Gets a room reference for a room with a specified id.
+            If the room with the specified id does not exists, a new room will be created.
+            </summary>
+            <param name="roomName">
+            The room id.
+            </param>
+            <param name="ownerPeer">
+            The peer that holds this reference.
+            </param>
+            <param name="args">
+            Optionally arguments used for room creation.
+            </param>
+            <returns>
+            a <see cref="T:Photon.Hive.Caching.RoomReference"/>
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.GetRoomNames">
+            <summary>
+            Returns the names of all rooms that are currently cached in this <see cref="T:Photon.Hive.Caching.RoomCacheBase"/>.
+            </summary>
+            <returns>The list of room names.</returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.GetDebugString(System.String)">
+            <summary>
+            Gathers debug information about the specified room (actors, peers, references etc.). 
+            </summary>
+            <param name="roomName">The room name.</param>
+            <returns>A string with debug information.</returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.TryCreateRoom(System.String,Photon.SocketServer.PeerBase,Photon.Hive.Caching.RoomReference@,System.Object[])">
+            <summary>
+            Tries to create a new room.
+            </summary>
+            <param name="roomName">
+            The room id.
+            </param>
+            <param name="ownerPeer">
+            The peer that holds this reference.
+            </param>
+            <param name="roomReference">
+            When this method returns true, contains a new <see cref="T:Photon.Hive.Caching.RoomReference"/> for the room 
+            with the specified room id; otherwise, set to null. 
+            </param>
+            <param name="args">
+            Optionally arguments used for room creation.
+            </param>
+            <returns>
+            False if the cache contains a room with the specified room id; otherwise, true.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.TryGetRoomReference(System.String,Photon.SocketServer.PeerBase,Photon.Hive.Caching.RoomReference@)">
+            <summary>
+            Tries to get room reference for a room with the specified id. 
+            </summary>
+            <param name="roomId">
+            The room id.
+            </param>
+            <param name="ownerPeer">
+            The peer that holds this reference.
+            </param>
+            <param name="roomReference">
+            When this method returns true, contains a new <see cref="T:Photon.Hive.Caching.RoomReference"/> for the room 
+            with the specified room id; otherwise, set to null. 
+            </param>
+            <returns>
+            True if the cache contains a room with the specified room id; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.ReleaseRoomReference(Photon.Hive.Caching.RoomReference)">
+            <summary>
+            Releases a room reference. 
+            The related room instance will be removed from the cache if 
+            no more references to the room exists.
+            </summary>
+            <param name="roomReference">
+            The room reference to relaease.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.TryRemoveRoomInstance(Photon.Hive.Room)">
+            <summary>
+            Tries to remove a romm instance from the room cache. 
+            The room will only be removed if there are no references to the romm instance left.
+            </summary>
+            <param name="room">
+            The room to remove.
+            </param>
+            <returns>
+            Returns true if the room was removed from the cache; otherwise false.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.CreateRoom(System.String,System.Object[])">
+            <summary>
+            Must be implementated by inheritors to create new room instances.
+            This method is called when a room reference is requesteted for a
+            room that does not exists in the cache.
+            </summary>
+            <param name="roomId">
+            The room id.
+            </param>
+            <param name="args">
+            Optionally arguments used for room creation.
+            </param>
+            <returns>
+            a new room
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.OnRoomRemoved(Photon.Hive.Room)">
+            <summary>
+            Invoked if the last reference for a room is released and the room was removed from the cache. 
+            Can be overloaded by inheritors to provide a custom cleanup logic after a room has been disposed. 
+            </summary>
+            <param name="room">The <see cref="T:Photon.Hive.Room"/> that was removed from the cache.</param>
+        </member>
+        <member name="T:Photon.Hive.Caching.RoomCacheBase.RoomInstance">
+            <summary>
+            Used to track references for a room instance.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomCacheBase.RoomInstance.references">
+            <summary>
+            The references.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomCacheBase.RoomInstance.roomFactory">
+            <summary>
+            The room factory.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.RoomInstance.#ctor(Photon.Hive.Caching.RoomCacheBase,Photon.Hive.Room)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Caching.RoomCacheBase.RoomInstance"/> class.
+            </summary>
+            <param name="roomFactory">
+            The room factory.
+            </param>
+            <param name="room">
+            The room.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.RoomInstance.AddReference(Photon.SocketServer.PeerBase)">
+            <summary>
+            Adds a reference to the room instance.
+            </summary>
+            <param name="ownerPeer">
+            The peer that holds this reference.
+            </param>
+            <returns>
+            a new <see cref="T:Photon.Hive.Caching.RoomReference"/>
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomCacheBase.RoomInstance.ReleaseReference(Photon.Hive.Caching.RoomReference)">
+            <summary>
+            Releases a reference from this instance.
+            </summary>
+            <param name="reference">
+            The room reference.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Caching.RoomCacheBase.RoomInstance.ReferenceCount">
+            <summary>
+            Gets the number of references for the room instance.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Caching.RoomCacheBase.RoomInstance.Room">
+            <summary>
+            Gets the room.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.HiveGameCache.Instance">
+            <summary>
+            The singleton instance.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Caching.RoomReference">
+            <summary>
+            Used to observe references to room instances from a room cache.
+            A reference to a room should be released (disposed) if it is not
+            longer needed. The related cache observes the number of references
+            to a room and removes a room if it has no references left. 
+            </summary>
+            <remarks>
+            In the Lite application the room reference will be stored in a 
+            peers state property whern the peer joines a room. When a 
+            peer leaves a room the reference to the room will be disposed.
+            This pattern ensures that room/game instances will not be 
+            disposed if there are still peers/clients holding a reference 
+            to the room/game.
+            </remarks>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomReference.id">
+            <summary>
+            The id.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Caching.RoomReference.roomCache">
+            <summary>
+            The room cache.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomReference.#ctor(Photon.Hive.Caching.RoomCacheBase,Photon.Hive.Room,Photon.SocketServer.PeerBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Caching.RoomReference"/> class.
+            </summary>
+            <param name="roomCache">
+            The room cache.
+            </param>
+            <param name="room">
+            The room.
+            </param>
+            <param name="ownerPeer">
+            An <see cref="T:Photon.SocketServer.PeerBase"/> instance which obtained the room reference.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomReference.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:Photon.Hive.Caching.RoomReference"/> class. 
+            Releases unmanaged resources and performs other cleanup operations before the
+            <see cref="T:Photon.Hive.Caching.RoomReference"/> is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomReference.Dispose">
+            <summary>
+            Removes the room reference from the associated room cache.
+            The related room instance will be removed from the cache if 
+            no more references to the room exists.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Caching.RoomReference.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing">
+            <c>true</c> to release both managed and unmanaged resources; 
+            <c>false</c> to release only unmanaged resources.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Caching.RoomReference.Id">
+            <summary>
+            Gets the unique id for this instance.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Caching.RoomReference.IsDisposed">
+            <summary>
+            Gets a value indicating whether this instance is disposed.
+            </summary>
+            <value>
+            <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Photon.Hive.Caching.RoomReference.Room">
+            <summary>
+            Gets or sets the room of this reference.
+            </summary>
+            <value>The room.</value>
+        </member>
+        <member name="F:Photon.Hive.Collections.ActorsManager.actorNumberCounter">
+            <summary>
+              The actor number counter is increase whenever a new <see cref="T:Photon.Hive.Actor"/> joins the game.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.TryAddPeerToGame(Photon.Hive.HiveGame,Photon.Hive.HivePeer,System.Int32,Photon.Hive.Actor@,System.Boolean@,Photon.Common.ErrorCode@,System.String@,Photon.Hive.Operations.JoinGameRequest)">
+            <summary>
+            Tries to add a <see cref="T:Photon.Hive.HivePeer"/> to this game instance.
+            </summary>
+            <param name="game"></param>
+            <param name="peer">
+            The peer to add.
+            </param>
+            <param name="actorNr">
+            The actor Nr.
+            </param>
+            <param name="actor">
+            When this method returns this out param contains the <see cref="T:Photon.Hive.Actor"/> associated with the <paramref name="peer"/>.
+            </param>
+            <param name="isNewActor">indicates that new actor was created</param>
+            <param name="reason">
+            reason why player can not be added
+            </param>
+            <param name="joinRequest"></param>
+            <returns>
+            Returns true if no actor exists for the specified peer and a new actor for the peer has been successfully added. 
+              The actor parameter is set to the newly created <see cref="T:Photon.Hive.Actor"/> instance.
+              Returns false if an actor for the specified peer already exists. 
+              The actor parameter is set to the existing <see cref="T:Photon.Hive.Actor"/> for the specified peer.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetActorByNumber(System.Int32)">
+            <summary>
+            Gets an actor by the actor number.
+            </summary>
+            <param name="actorNumber">
+            The actor number.
+            </param>
+            <returns>
+            Return the actor with the specified actor number if found.
+            If no actor with the specified actor number exits null will be returned.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetActorByPeer(Photon.SocketServer.PeerBase)">
+            <summary>
+            Gets an actor by a specified peer.
+            </summary>
+            <param name="peer">
+            The peer.
+            </param>
+            <returns>
+            Returns the actor for the specified peer or null 
+            if no actor for the specified peer was found.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetActorByUserId(System.String)">
+            <summary>
+            Gets an actor by userId.
+            </summary>
+            <param name="userId">
+            The userId to query for.
+            </param>
+            <returns>
+            Returns the actor for the specified userId or null 
+            if no actor was found.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetActorNumbers">
+            <summary>
+            Gets the actor numbers of all actors in this instance as an array.
+            </summary>
+            <returns>
+            Array of the actor numbers.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetActorsByNumbers(System.Int32[])">
+            <summary>
+            Returns all actors with the given actor numbers.
+            </summary>
+            <param name="actors">
+            The actor numbers.
+            </param>
+            <returns>
+            The actors with the given actor numbers.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.ActorsGetExcludedList(Photon.Hive.Actor)">
+            <summary>
+            Gets a list of actors in the room exluding a specified actor.
+            This method can be used to get the actor list for an event, 
+            where the actor causing the event should not be notified.
+            </summary>
+            <param name="actorToExclude">
+            The actor to exclude.
+            </param>
+            <returns>
+            the actors without <paramref name="actorToExclude"/>
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.IsSorted(System.Int32[])">
+            <summary>
+            Checks whether an array is sorted.
+            </summary>
+            <param name="array">
+            The array.
+            </param>
+            <returns>
+            True if the array is sorted, otherwise false.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.GetActiveActorsByNumbers(System.Collections.Generic.IList{Photon.Hive.Actor},System.Int32[])">
+            <summary>
+            Returns all actors with the given actor numbers.
+            </summary>
+            <param name="actors">
+            The actor numbers.
+            </param>
+            <returns>
+            The actors with the given actor numbers.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.GetActorByNumber(System.Collections.Generic.IEnumerable{Photon.Hive.Actor},System.Int32)">
+            <summary>
+            Gets an actor by the actor number.
+            </summary>
+            <param name="actorNumber">
+            The actor number.
+            </param>
+            <returns>
+            Return the actor with the specified actor number if found.
+            If no actor with the specified actor number exits null will be returned.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.GetActorByUserId(System.Collections.Generic.IEnumerable{Photon.Hive.Actor},System.String)">
+            <summary>
+            Gets an actor by userId.
+            </summary>
+            <param name="userId">
+            The userId to query for.
+            </param>
+            <returns>
+            Returns the actor for the specified userId or null 
+            if no actor was found.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Collections.ActorsManager.GetActorNumbers(System.Collections.Generic.IEnumerable{Photon.Hive.Actor})">
+            <summary>
+            Gets the actor numbers of all actors in this instance as an array.
+            </summary>
+            <returns>
+            Array of the actor numbers.
+            </returns>
+        </member>
+        <member name="T:Photon.Hive.Common.GameParameterReader">
+            <summary>
+            Provides methods to read build in game properties from a hashtable.
+            </summary>
+            <remarks>
+            Build in game properties in the load balancing project are stored as byte values. 
+            Because some protocols used by photon (Flash, WebSockets) does not support byte values
+            the properties will also be searched in the hashtable using there int representation.
+            If an int representation is found it will be converted to the byte representation of 
+            the game property.
+            </remarks>
+        </member>
+        <member name="T:Photon.Hive.Common.Utilities">
+            <summary>
+            A collection of methods useful in one or another context.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Common.Utilities.ConvertAs3WellKnownPropertyKeys(System.Collections.Hashtable,System.Collections.Hashtable)">
+            <summary>
+            Converts well known properties sent by AS3/Flash clients - from string to byte-keys.
+            </summary>
+            <remarks>
+            Check if peer is a flash (amf3) client because flash clients does not support byte keys in a hastable. 
+            If a flash client likes to match a game with a specific 'MaxPlayer' value 'MaxPlayer' will be sent
+            with the string key "255" and the max player value as int.
+            </remarks>
+            <param name="gameProps">A game properties hashtable.</param>
+            <param name="actorProps">A actor properties hashtable.</param>
+        </member>
+        <member name="M:Photon.Hive.Common.Utilities.ConvertAs3WellKnownPropertyKeys(System.Collections.IList,System.Collections.IList)">
+            <summary>
+            Converts well known properties sent by AS3/Flash clients - from string to byte-keys.
+            </summary>
+            <param name="gamePropertyKeys">The game properties list.</param>
+            <param name="actorPropertyKeys">The actor properties list.</param>
+        </member>
+        <member name="T:Photon.Hive.Events.HiveEventBase">
+            <summary>
+            Base class implementation for all Lite events.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.HiveEventBase.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.HiveEventBase"/> class. 
+            </summary>
+            <param name="actorNr">
+            Actor number.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.HiveEventBase.ActorNr">
+            <summary>
+            Gets or sets the actor number of the sender.
+            </summary>
+            <value>The actor nr.</value>
+        </member>
+        <member name="P:Photon.Hive.Events.HiveEventBase.Code">
+            <summary>
+            Gets or sets the event code.
+            </summary>
+            <value>The event code.</value>
+        </member>
+        <member name="T:Photon.Hive.Events.CacheSliceChanged">
+            <summary>
+            Implementation if the PropertiesChanged event.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.CacheSliceChanged.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.CacheSliceChanged"/> class.
+            </summary>
+            <param name="actorNumber">
+            The actor number.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.CacheSliceChanged.Slice">
+            <summary>
+            Gets or sets the slice that changed.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.GameState.actorEventCache">
+            <summary> 
+              Contains <see cref="T:Photon.Hive.Caching.EventCache"/>s for all actors.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.Properties">
+            <summary>
+              Gets a PropertyBag instance used to store custom room properties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.DeleteCacheOnLeave">
+            <summary>
+            Gets or sets a value indicating whether cached events are automaticly deleted for 
+            actors which are leaving a room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.LobbyProperties">
+            <summary>
+            Contains the keys of the game properties hashtable which should be listet in the lobby.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.PlayerTTL">
+            <summary>
+            Player live time
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.SuppressRoomEvents">
+            <summary>
+            Gets or sets a value indicating if common room events (Join, Leave) will suppressed.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.GameState.ActorEventCache">
+            <summary> 
+              Contains <see cref="T:Photon.Hive.Caching.EventCache"/>s for all actors.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.HiveGame">
+            <summary>
+              A <see cref="T:Photon.Hive.Room"/> that supports the following requests:
+              <list type="bullet">
+                <item>
+                  <see cref="T:Photon.Hive.Operations.JoinGameRequest"/>
+                </item>
+                <item>
+                  <see cref="T:Photon.Hive.Operations.RaiseEventRequest"/>
+                </item>
+                <item>
+                  <see cref="T:Photon.Hive.Operations.SetPropertiesRequest"/>
+                </item>
+                <item>
+                  <see cref="T:Photon.Hive.Operations.GetPropertiesRequest"/>
+                </item>
+                <item>
+                  <see cref="T:Photon.Hive.Operations.LeaveRequest"/>
+                </item>
+              </list>
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Room">
+            <summary>
+              A room has <see cref="T:Photon.Hive.Actor"/>s, can have properties, and provides an <see cref="P:Photon.Hive.Room.ExecutionFiber"/> with a few wrapper methods to solve otherwise complicated threading issues:
+              All actions enqueued to the <see cref="P:Photon.Hive.Room.ExecutionFiber"/> are executed in a serial order. Operations of all Actors in a room are handled via ExecutionFiber.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Room.Log">
+            <summary>
+              An <see cref="T:ExitGames.Logging.ILogger"/> instance used to log messages to the logging framework.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Room.name">
+            <summary>
+              The room name.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Room.#ctor(System.String,Photon.Hive.Caching.RoomCacheBase,Photon.Hive.IGameStateFactory,System.Int32,ExitGames.Concurrency.Fibers.ExtendedPoolFiber)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.Room"/> class without a room name.
+            </summary>
+            <param name="name">
+              The room name.
+            </param>
+            <param name="roomCache">
+              The <see cref="T:Photon.Hive.Caching.RoomCacheBase"/> instance to which the room belongs.
+            </param>
+            <param name="gameStateFactory">Fatory for game state</param>
+            <param name="maxEmptyRoomTTL">
+              A value indicating how long the room instance will be keeped alive 
+              in the room cache after all peers have left the room.
+            </param>
+            <param name="executionFiber">Fiber which will execute rooms actions</param>
+        </member>
+        <member name="M:Photon.Hive.Room.#ctor(System.String,ExitGames.Concurrency.Fibers.ExtendedPoolFiber,Photon.Hive.Caching.RoomCacheBase,Photon.Hive.IGameStateFactory,System.Int32)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.Room"/> class.
+            </summary>
+            <param name="name">
+              The room name.
+            </param>
+            <param name="executionFiber">
+              The execution fiber used to synchronize access to this instance.
+            </param>
+            <param name="roomCache">
+              The <see cref="T:Photon.Hive.Caching.RoomCacheBase"/> instance to which the room belongs.
+            </param>
+            <param name="gameStateFactory">Fatory for game state</param>
+            <param name="maxEmptyRoomTTL">
+              A value indicating how long the room instance will be keeped alive 
+              in the room cache after all peers have left the room.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.Finalize">
+            <summary>
+              Finalizes an instance of the <see cref="T:Photon.Hive.Room"/> class. 
+              This destructor will run only if the Dispose method does not get called.
+              It gives your base class the opportunity to finalize.
+              Do not provide destructors in types derived from this class.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Room.BeforeRemoveFromCache">
+            <summary>
+            Called by the <see cref="T:Photon.Hive.Caching.RoomCacheBase"/> if the room is about to be removed from the cache.
+            </summary>
+            <returns>
+            True if the room should be automaticly by removed by the <see cref="T:Photon.Hive.Caching.RoomCacheBase"/>.
+            False if the room has an custom remove implementation and will remove itself from the cache.
+            </returns>
+            <remarks>
+            The default implementation checks if the EmptyRoomLiveTime value is set to a value greater zero.
+            If it's set the method will return false to indicate that the cache should not remove this
+            instance automaticly. The removal of the room is then scheduled using the <see cref="P:Photon.Hive.Room.ExecutionFiber"/>.
+            </remarks>
+        </member>
+        <member name="M:Photon.Hive.Room.EnqueueMessage(Photon.Hive.Messages.IMessage)">
+            <summary>
+              Enqueues an <see cref="T:Photon.Hive.Messages.IMessage"/> to the end of the execution queue.
+            </summary>
+            <param name="message">
+              The message to enqueue.
+            </param>
+            <remarks>
+              <see cref="M:Photon.Hive.Room.ProcessMessage(Photon.Hive.Messages.IMessage)"/> is called sequentially for each operation request 
+              stored in the execution queue.
+              Using an execution queue ensures that messages are processed in order
+              and sequentially to prevent object synchronization (multi threading).
+            </remarks>
+        </member>
+        <member name="M:Photon.Hive.Room.EnqueueOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Enqueues an <see cref="T:Photon.SocketServer.OperationRequest"/> to the end of the execution queue.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="operationRequest">
+              The operation request to enqueue.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+            <remarks>
+              <see cref="M:Photon.Hive.Room.ExecuteOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)"/> is called sequentially for each operation request 
+              stored in the execution queue.
+              Using an execution queue ensures that operation request are processed in order
+              and sequentially to prevent object synchronization (multi threading).
+            </remarks>
+        </member>
+        <member name="M:Photon.Hive.Room.ScheduleMessage(Photon.Hive.Messages.IMessage,System.Int64)">
+            <summary>
+              Schedules a message to be processed after a specified time.
+            </summary>
+            <param name="message">
+              The message to schedule.
+            </param>
+            <param name="timeMs">
+              The time in milliseconds to wait before the message will be processed.
+            </param>
+            <returns>
+              an <see cref="T:System.IDisposable"/>
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.Room.Dispose">
+            <summary>
+              Releases resources used by this instance.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Room.Dispose(System.Boolean)">
+            <summary>
+              Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name = "dispose">
+              <c>true</c> to release both managed and unmanaged resources; 
+              <c>false</c> to release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.ExecuteOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              This method is invoked sequentially for each operation request 
+              enqueued in the <see cref="P:Photon.Hive.Room.ExecutionFiber"/> using the 
+              <see cref="M:Photon.Hive.Room.EnqueueOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)"/> method.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="operation">
+              The operation request.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.ProcessMessage(Photon.Hive.Messages.IMessage)">
+            <summary>
+              This method is invoked sequentially for each message enqueued 
+              by the <see cref="M:Photon.Hive.Room.EnqueueMessage(Photon.Hive.Messages.IMessage)"/> or <see cref="M:Photon.Hive.Room.ScheduleMessage(Photon.Hive.Messages.IMessage,System.Int64)"/>
+              method.
+            </summary>
+            <param name="message">
+              The message to process.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.PublishEvent(Photon.Hive.Events.HiveEventBase,Photon.Hive.Actor,Photon.SocketServer.SendParameters)">
+            <summary>
+              Publishes an event to a single actor on a specified channel.
+            </summary>
+            <param name="e">
+              The event to publish.
+            </param>
+            <param name="actor">
+              The <see cref="T:Photon.Hive.Actor"/> who should receive the event.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.PublishEvent(Photon.Hive.Events.HiveEventBase,System.Collections.Generic.IEnumerable{Photon.Hive.Actor},Photon.SocketServer.SendParameters)">
+            <summary>
+              Publishes an event to a list of actors on a specified channel.
+            </summary>
+            <param name="e">
+              The event to publish.
+            </param>
+            <param name="actorList">
+              A list of <see cref="T:Photon.Hive.Actor"/> who should receive the event.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.PublishEvent(Photon.SocketServer.EventData,System.Collections.Generic.IEnumerable{Photon.Hive.Actor},Photon.SocketServer.SendParameters)">
+            <summary>
+              Publishes an event to a list of actors on a specified channel.
+            </summary>
+            <param name="e">
+              The event to publish.
+            </param>
+            <param name="actorList">
+              A list of <see cref="T:Photon.Hive.Actor"/> who should receive the event.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.ScheduleRoomRemoval(System.Int32)">
+            <summary>
+            Schedules the removal of the room instance from the cache.
+            The room will be removed after the specified time if there are no room
+            references left.
+            </summary>
+            <param name="roomLiveTime">
+            The time to remove the room in milliseconds.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Room.TryRemoveRoomFromCache">
+            <summary>
+            Removes the room instance from the cache if there are no references to the instance left.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Room.ExecutionFiber">
+            <summary>
+              Gets a <see cref="T:ExitGames.Concurrency.Fibers.PoolFiber"/> instance used to synchronize access to this instance.
+            </summary>
+            <value>A <see cref="T:ExitGames.Concurrency.Fibers.PoolFiber"/> instance.</value>
+        </member>
+        <member name="P:Photon.Hive.Room.IsDisposed">
+            <summary>
+              Gets a value indicating whether IsDisposed.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Room.Name">
+            <summary>
+              Gets the name (id) of the room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Room.EmptyRoomLiveTime">
+            <summary>
+            Gets or sets a value indicating how long the room instance will be keeped alive 
+            in the room cache after all peers have left the room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Room.RemoveTimer">
+            <summary>
+            Timer for removing room
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Room.Properties">
+            <summary>
+              Gets a PropertyBag instance used to store custom room properties.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.#ctor(System.String,Photon.Hive.Caching.RoomCacheBase,Photon.Hive.IGameStateFactory,System.Int32,System.Int32,System.Int32,ExitGames.Concurrency.Fibers.ExtendedPoolFiber)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.HiveGame"/> class.
+            </summary>
+            <param name="gameName">
+                The name of the game.
+            </param>
+            <param name="roomCache">
+                The <see cref="T:Photon.Hive.Caching.RoomCacheBase"/> instance to which the room belongs.
+            </param>
+            <param name="gameStateFactory">Custom factory for GameState. if null is set, default factory is used</param>
+            <param name="maxEmptyRoomTTL">
+                A value indicating how long the room instance will be kept alive 
+                in the room cache after all peers have left the room.
+            </param>
+            <param name="lastTouchLimitMilliseconds">
+                Specifies to maximum value for a peers GetLastTouch in milliseconds before a peer will removed from the room.
+                If set to zero no check will bew performed.
+            </param>
+            <param name="lastTouchCheckIntervalMilliseconds">
+                Specifies the in interval in milliseconds to check peer in the room for the GetLastTouched value.
+                If set to zero no check will be performed.
+            </param>
+            <param name="executionFiber"></param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.ExecuteOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Called for each operation in the execution queue.
+              Every <see cref="T:Photon.Hive.Room"/> has a queue of incoming operations to execute. 
+              Per game <see cref="M:Photon.Hive.HiveGame.ExecuteOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)"/> is never executed multi-threaded, thus all code executed here has thread safe access to all instance members.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="operationRequest">
+              The operation request to execute.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.GetActorByPeer(Photon.Hive.HivePeer)">
+            <summary>
+              Gets the actor for a <see cref="T:Photon.Hive.HivePeer"/>.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <returns>
+              The actor for the peer or null if no actor for the peer exists (this should not happen).
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.HandleGetPropertiesOperation(Photon.Hive.HivePeer,Photon.Hive.Operations.GetPropertiesRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.GetPropertiesRequest"/> operation: Sends the properties with the <see cref="T:Photon.SocketServer.OperationResponse"/>.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="getPropertiesRequest">
+              The operation to handle.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.HandleJoinGameOperation(Photon.Hive.HivePeer,Photon.SocketServer.SendParameters,Photon.Hive.Operations.JoinGameRequest)">
+            <summary>
+            Handles the <see cref="T:Photon.Hive.Operations.JoinGameRequest"/>: Joins a peer to a room and calls <see cref="M:Photon.Hive.HiveGame.PublishJoinEvent(Photon.Hive.HivePeer,Photon.Hive.Operations.JoinGameRequest)"/>.
+              Before a JoinOperation reaches this point (inside a room), the <see cref="T:Photon.Hive.HivePeer"/> made 
+              sure that it is removed from the previous Room (if there was any).
+            </summary>
+            <param name="peer">
+            The peer.
+            </param>
+            <param name="sendParameters">
+            The send Parameters.
+            </param>
+            <param name="joinGameRequest">
+            The join Game Request.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.HandleLeaveOperation(Photon.Hive.HivePeer,Photon.SocketServer.SendParameters,Photon.Hive.Operations.LeaveRequest)">
+            <summary>
+            Handles the <see cref="T:Photon.Hive.Operations.LeaveRequest"/> and calls <see cref="M:Photon.Hive.HiveGame.RemovePeerFromGame(Photon.Hive.HivePeer,System.Boolean)"/>.
+            </summary>
+            <param name="peer">
+            The peer.
+            </param>
+            <param name="sendParameters">
+            The send Parameters.
+            </param>
+            <param name="leaveOperation">
+            The operation.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.HandleRaiseEventOperation(Photon.Hive.HivePeer,Photon.Hive.Operations.RaiseEventRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.RaiseEventRequest"/>: Sends a <see cref="T:Photon.Hive.Events.CustomEvent"/> to actors in the room.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="raiseEventRequest">
+              The operation
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.HandleSetPropertiesOperation(Photon.Hive.HivePeer,Photon.Hive.Operations.SetPropertiesRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.SetPropertiesRequest"/> and sends event <see cref="T:Photon.Hive.Events.PropertiesChangedEvent"/> to all <see cref="T:Photon.Hive.Actor"/>s in the room.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="request">
+              The <see cref="T:Photon.Hive.Operations.SetPropertiesRequest"/> operation to handle.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.ProcessMessage(Photon.Hive.Messages.IMessage)">
+            <summary>
+              Processes a game message. Messages are used for internal communication.
+              Per default only <see cref="F:Photon.Hive.Messages.GameMessageCodes.RemovePeerFromGame">message RemovePeerFromGame</see> is handled, 
+              a message that is sent when a player leaves a game due to disconnect or due to a subsequent join to a different game.
+            </summary>
+            <param name="message">
+              Message to process.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.PublishEventCache(Photon.Hive.HivePeer,Photon.Hive.Operations.JoinGameRequest)">
+            <summary>
+              Sends all cached events to a peer.
+            </summary>
+            <param name = "litePeer">
+              The lite peer that receives the events.
+            </param>
+            <param name="joinRequest"></param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.PublishJoinEvent(Photon.Hive.HivePeer,Photon.Hive.Operations.JoinGameRequest)">
+            <summary>
+              Sends a <see cref="T:Photon.Hive.Events.JoinEvent"/> to all <see cref="T:Photon.Hive.Actor"/>s.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="joinRequest">
+              The join request.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.PublishLeaveEvent(Photon.Hive.Actor,System.Nullable{System.Int32})">
+            <summary>
+              Sends a <see cref="T:Photon.Hive.Events.LeaveEvent"/> to all <see cref="T:Photon.Hive.Actor"/>s.
+            </summary>
+            <param name="actor">
+              The actor which sents the event.
+            </param>
+            <param name="newMasterClientId"></param>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.RemovePeerFromGame(Photon.Hive.HivePeer,System.Boolean)">
+            <summary>
+              Removes a peer from the game. 
+              This method is called if a client sends a <see cref="T:Photon.Hive.Operations.LeaveRequest"/> or disconnects.
+            </summary>
+            <param name="peer">
+              The <see cref="T:Photon.Hive.HivePeer"/> to remove.
+            </param>
+            <param name="isCommingBack">whether we expect peer will come back or not</param>
+            <returns>
+              The actor number of the removed actor. 
+              If the specified peer does not exists -1 will be returned.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.TryAddPeerToGame(Photon.Hive.HivePeer,System.Int32,Photon.Hive.Actor@,System.Boolean@,Photon.Common.ErrorCode@,System.String@,Photon.Hive.Operations.JoinGameRequest)">
+            <summary>
+            Tries to add a <see cref="T:Photon.Hive.HivePeer"/> to this game instance.
+            </summary>
+            <param name="peer">
+            The peer to add.
+            </param>
+            <param name="actorNr">
+            The actor Nr.
+            </param>
+            <param name="actor">
+            When this method returns this out param contains the <see cref="T:Photon.Hive.Actor"/> associated with the <paramref name="peer"/>.
+            </param>
+            <param name="errorcode">returns error code if we fail to add actor</param>
+            <param name="reason">
+            reason why player can not be added
+            </param>
+            <param name="isNewActor">returns true if actor is new</param>
+            <param name="joinRequest">join request which was sent by client</param>
+            <returns>
+            Returns true if no actor exists for the specified peer and a new actor for the peer has been successfully added. 
+              The actor parameter is set to the newly created <see cref="T:Photon.Hive.Actor"/> instance.
+              Returns false if an actor for the specified peer already exists. 
+              The actor parameter is set to the existing <see cref="T:Photon.Hive.Actor"/> for the specified peer.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.HiveGame.UpdateEventCache(Photon.Hive.Actor,Photon.Hive.Operations.RaiseEventRequest,System.String@)">
+            <summary>
+              Helper method of <see cref="M:Photon.Hive.HiveGame.HandleRaiseEventOperation(Photon.Hive.HivePeer,Photon.Hive.Operations.RaiseEventRequest,Photon.SocketServer.SendParameters)"/>.
+              Stores an event for new actors.
+            </summary>
+            <param name="actor">
+              The actor.
+            </param>
+            <param name="raiseEventRequest">
+              The raise event request.
+            </param>
+            <param name="msg">
+              Contains an error message if the method returns false.
+            </param>
+            <returns>
+              True if <see cref="P:Photon.Hive.Operations.RaiseEventRequest.Cache"/> is valid.
+            </returns>
+        </member>
+        <member name="P:Photon.Hive.HiveGame.DeleteCacheOnLeave">
+            <summary>
+            Gets or sets a value indicating whether cached events are automaticly deleted for 
+            actors which are leaving a room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.HiveGame.LobbyProperties">
+            <summary>
+            Contains the keys of the game properties hashtable which should be listet in the lobby.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.HiveGame.PlayerTTL">
+            <summary>
+            Player live time
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.HiveGame.SuppressRoomEvents">
+            <summary>
+            Gets or sets a value indicating if common room events (Join, Leave) will suppressed.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.HiveGame.ActorEventCache">
+            <summary> 
+              Contains <see cref="T:Photon.Hive.Caching.EventCache"/>s for all actors.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HiveHostGame.HandleLeaveOperation(Photon.Hive.HivePeer,Photon.SocketServer.SendParameters,Photon.Hive.Operations.LeaveRequest)">
+            <summary>
+            Handles the <see cref="T:Photon.Hive.Operations.LeaveRequest"/> and calls <see cref="M:Photon.Hive.HiveGame.RemovePeerFromGame(Photon.Hive.HivePeer,System.Boolean)"/>.
+            </summary>
+            <param name="peer">
+            The peer.
+            </param>
+            <param name="sendParameters">
+            The send Parameters.
+            </param>
+            <param name="leaveOperation">
+            The leave Operation.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HiveHostGame.HandleRaiseEventOperation(Photon.Hive.HivePeer,Photon.Hive.Operations.RaiseEventRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.RaiseEventRequest"/>: Sends a <see cref="T:Photon.Hive.Events.CustomEvent"/> to actors in the room.
+            </summary>
+            <param name="peer">
+              The peer.
+            </param>
+            <param name="raiseEventRequest">
+              The operation
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Plugin.RaiseEventCallInfo.Actors">
+            <summary>
+              Gets or sets the actors which should receive the event.
+              If set to null or an empty array the event will be sent
+              to all actors in the room.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Plugin.RaiseEventCallInfo.Cache">
+            <summary>
+              Gets or sets a value indicating how to use the <see cref="T:Photon.Hive.Caching.EventCache"/>.
+            </summary>
+            <remarks>
+              Optional request parameter.
+              Ignored if the event is sent to individual actors (submitted <see cref="P:Photon.Hive.Plugin.RaiseEventCallInfo.Actors"/> or <see cref="F:Photon.Hive.Operations.ReceiverGroup.MasterClient"/>).
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Plugin.RaiseEventCallInfo.Data">
+            <summary>
+              Gets or sets the hashtable containing the data to send.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Plugin.RaiseEventCallInfo.EvCode">
+            <summary>
+              Gets or sets a byte containing the Code to send.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="F:Photon.Hive.Common.Lobby.AppLobbyType.Default">
+            <summary> (0) </summary>
+        </member>
+        <member name="F:Photon.Hive.Common.Lobby.AppLobbyType.ChannelLobby">
+            <summary> (1) </summary>
+        </member>
+        <member name="F:Photon.Hive.Common.Lobby.AppLobbyType.SqlLobby">
+            <summary> (2) </summary>
+        </member>
+        <member name="F:Photon.Hive.Common.Lobby.AppLobbyType.AsyncRandomLobby">
+            <summary> (3) </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.ActorParameter">
+            <summary>
+            Well known actor properties (used as byte keys in actor-property hashtables).
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.JoinGameRequest">
+            <summary>
+            This class implements the Join operation.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Operations.JoinGameRequest.#ctor(Photon.SocketServer.IRpcProtocol,Photon.SocketServer.OperationRequest)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.JoinGameRequest"/> class.
+            </summary>
+            <param name="protocol">
+            The protocol.
+            </param>
+            <param name="operationRequest">
+            Operation request containing the operation parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Operations.JoinGameRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.JoinGameRequest"/> class.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.ActorProperties">
+            <summary>
+            Gets or sets custom actor properties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.BroadcastActorProperties">
+            <summary>
+            Gets or sets a value indicating whether the actor properties
+            should be included in the <see cref="T:Photon.Hive.Events.JoinEvent"/> event which 
+            will be sent to all clients currently in the room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.GameId">
+            <summary>
+            Gets or sets the name of the game (room).
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.GameProperties">
+            <summary>
+            Gets or sets custom game properties.
+            </summary>
+            <remarks>
+            Game properties will only be applied for the game creator.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.DeleteCacheOnLeave">
+            <summary>
+            Gets or sets a value indicating whether cached events are automaticly deleted for 
+            actors which are leaving a room.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.SuppressRoomEvents">
+            <summary>
+            Gets or sets a value indicating if common room events (Join, Leave) will be suppressed.
+            </summary>
+            <remarks>
+            This property will only be applied for the game creator.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.ActorNr">
+            <summary>
+            Actor number, which will be used for rejoin
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.EmptyRoomLiveTime">
+            <summary>
+            Gets or sets a value indicating how long the room instance will be keeped alive 
+            in the room cache after all peers have left the room.
+            </summary>
+            <remarks>
+            This property will only be applied for the room creator.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.PlayerTTL">
+            <summary>
+            The time a player the room waits to allow a player to rejoin after a disconnect.
+            If player should be allowed to return any time set the value less than 0.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.CheckUserOnJoin">
+            <summary>
+            Set true to restrict useres to connect only once.
+            Default is not to check.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.CacheSlice">
+            <summary>
+            The lowest slice of cached events the actor expects to recieve.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinGameRequest.Plugins">
+            <summary>Informs the server of the expected plugin setup.</summary>
+            <remarks>
+            The operation will fail in case of a plugin missmatch returning error code PluginMismatch 32757(0x7FFF - 10).
+            Setting string[]{} means the client expects no plugin to be setup.
+            Note: for backwards compatibility null omits any check.
+            </remarks>
+        </member>
+        <member name="T:Photon.Hive.Operations.CreateGameResponse">
+            <summary>
+            Defines the response paramters for create game requests.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.CreateGameResponse.Address">
+            <summary>
+            Gets or sets the address of the game server.
+            </summary>
+            <value>The game server address.</value>
+        </member>
+        <member name="P:Photon.Hive.Operations.CreateGameResponse.GameId">
+            <summary>
+            Gets or sets the game id.
+            </summary>
+            <value>The game id.</value>
+        </member>
+        <member name="T:Photon.Hive.Operations.GameParameter">
+            <summary>
+            Well known game properties (used as byte keys in game-property hashtables).
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Events.PropertiesChangedEvent">
+            <summary>
+            Implementation if the PropertiesChanged event.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.PropertiesChangedEvent.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.PropertiesChangedEvent"/> class.
+            </summary>
+            <param name="actorNumber">
+            The actor number.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.PropertiesChangedEvent.Properties">
+            <summary>
+            Gets or sets Properties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Events.PropertiesChangedEvent.TargetActorNumber">
+            <summary>
+            Gets or sets the number of the actor whos properties have been changed.
+            A value of 0 indactes that game properties have been changed.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.HiveApplication">
+            <summary>
+            Main photon application. This application is started from the photon server.
+            This class creates <see cref="T:Photon.Hive.HivePeer"/>s for new clients.
+            Operation dispatch logic is handled by the <see cref="T:Photon.Hive.HivePeer"/>. 
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HiveApplication.CreatePeer(Photon.SocketServer.InitRequest)">
+            <summary>
+            Creates a <see cref="T:Photon.Hive.HivePeer"/> to handle <see cref="T:Photon.SocketServer.OperationRequest"/>s.
+            </summary>
+            <param name="initRequest">
+            The initialization request.
+            </param>
+            <returns>
+            A new <see cref="T:Photon.Hive.HivePeer"/> instance.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.HiveApplication.Setup">
+            <summary>
+            Application initializtion.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HiveApplication.TearDown">
+            <summary>
+            Called when the server shuts down.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Diagnostics.CounterLogger">
+            <summary>
+            Logs the most intersting counters into a log file
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.CounterLogger.LogIntervalMs">
+            <summary>
+            Log interval is set to 5 seconds.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.CounterLogger.counterLog">
+            <summary>
+            Get logger for the counter log file.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.CounterLogger.log">
+            <summary>
+            Get logger for debug out.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.CounterLogger.instance">
+            <summary>
+            Singleton instance.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.CounterLogger.timer">
+            <summary>
+            Timer used to trigger log output
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Diagnostics.CounterLogger.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:Photon.Hive.Diagnostics.CounterLogger"/> class from being created.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Diagnostics.CounterLogger.Start">
+            <summary>
+            Starts the log output.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Diagnostics.CounterLogger.LogCounter(System.Object)">
+            <summary>
+            Callback to write counter values to a log counter.
+            </summary>
+            <param name="state">State value.</param>
+        </member>
+        <member name="P:Photon.Hive.Diagnostics.CounterLogger.Instance">
+            <summary>
+            Gets an sigelton instance of the <see cref="T:Photon.Hive.Diagnostics.CounterLogger"/> class.
+            </summary>
+            <value>The instance.</value>
+        </member>
+        <member name="T:Photon.Hive.HivePeer">
+            <summary>
+              Inheritance class of <see cref="T:Photon.SocketServer.PeerBase"/>.  
+              The LitePeer dispatches incoming <see cref="T:Photon.SocketServer.OperationRequest"/>s at <see cref="M:Photon.Hive.HivePeer.OnOperationRequest(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">OnOperationRequest</see>.
+              When joining a <see cref="T:Photon.Hive.Room"/> a <see cref="T:Photon.Hive.Caching.RoomReference"/> is stored in the <see cref="P:Photon.Hive.HivePeer.RoomReference"/> property.
+              An <see cref="T:ExitGames.Concurrency.Fibers.IFiber"/> guarantees that all outgoing messages (events/operations) are sent one after the other.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.HivePeer.log">
+            <summary>
+              An <see cref="T:ExitGames.Logging.ILogger"/> instance used to log messages to the logging framework.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.#ctor(Photon.SocketServer.InitRequest)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.HivePeer"/> class.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.ValidateOperation(Photon.SocketServer.Rpc.Operation,Photon.SocketServer.SendParameters)">
+            <summary>
+              Checks if a operation is valid. If the operation is not valid
+              an operation response containing a desciptive error message
+              will be sent to the peer.
+            </summary>
+            <param name = "operation">
+              The operation.
+            </param>
+            <param name = "sendParameters">
+              The send Parameters.
+            </param>
+            <returns>
+              true if the operation is valid; otherwise false.
+            </returns>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.RemovePeerFromCurrentRoom(System.Int32,System.String)">
+            <summary>
+              Checks if the the state of peer is set to a reference of a room.
+              If a room refrence is present the peer will be removed from the related room and the reference will be disposed. 
+              Disposing the reference allows the associated room factory to remove the room instance if no more references to the room exists.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.GetRoomReference(Photon.Hive.Operations.JoinGameRequest,System.Object[])">
+            <summary>
+              Called by <see cref="M:Photon.Hive.HivePeer.HandleJoinOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)"/> to get a room reference for a join operations.
+              This method can be overloaded by inheritors to provide custom room references.
+            </summary>
+            <param name="joinRequest">The join request.</param>
+            <param name="args">more arguments in order to create room</param>
+            <returns>An <see cref="T:Photon.Hive.Caching.RoomReference"/> instance.</returns>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.HandleGameOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Enqueues game related operation requests in the peers current game.
+            </summary>
+            <param name="operationRequest">
+              The operation request.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+            <remarks>
+              The current for a peer is stored in the peers state property. 
+              Using the <see cref="M:Photon.Hive.Room.EnqueueOperation(Photon.Hive.HivePeer,Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)"/> method ensures that all operation request dispatch logic has thread safe access to all room instance members since they are processed in a serial order. 
+              <para>
+                Inheritors can use this method to enqueue there custom game operation to the peers current game.
+              </para>
+            </remarks>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.HandleJoinGameOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.JoinGameRequest"/> to enter a <see cref="T:Photon.Hive.HiveGame"/>.
+              This method removes the peer from any previously joined room, finds the room intended for join
+              and enqueues the operation for it to handle.
+            </summary>
+            <param name="operationRequest">
+              The operation request to handle.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.HandleJoinOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.JoinGameRequest"/> to enter a <see cref="T:Photon.Hive.HiveGame"/>.
+              This method removes the peer from any previously joined room, finds the room intended for join
+              and enqueues the operation for it to handle.
+            </summary>
+            <param name="operationRequest">
+              The operation request to handle.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.HandleLeaveOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles the <see cref="T:Photon.Hive.Operations.LeaveRequest"/> to leave a <see cref="T:Photon.Hive.HiveGame"/>.
+            </summary>
+            <param name="operationRequest">
+              The operation request to handle.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.HandlePingOperation(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Handles a ping operation.
+            </summary>
+            <param name = "operationRequest">
+              The operation request to handle.
+            </param>
+            <param name = "sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.OnDisconnect(PhotonHostRuntimeInterfaces.DisconnectReason,System.String)">
+            <summary>
+              Called when client disconnects.
+              Ensures that disconnected players leave the game <see cref="T:Photon.Hive.Room"/>.
+              The player is not removed immediately but a message is sent to the room. This avoids
+              threading issues by making sure the player remove is not done concurrently with operations.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.HivePeer.OnOperationRequest(Photon.SocketServer.OperationRequest,Photon.SocketServer.SendParameters)">
+            <summary>
+              Called when the client sends an <see cref="T:Photon.SocketServer.OperationRequest"/>.
+            </summary>
+            <param name="operationRequest">
+              The operation request.
+            </param>
+            <param name="sendParameters">
+              The send Parameters.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.HivePeer.RoomReference">
+            <summary>
+              Gets or sets a <see cref="T:Photon.Hive.Caching.RoomReference"/> when joining a <see cref="T:Photon.Hive.Room"/>.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Messages.IMessage">
+            <summary>
+            Interface of a message.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Messages.IMessage.Action">
+            <summary>
+            Gets the action.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Messages.IMessage.Message">
+            <summary>
+            Gets the message.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Messages.RoomMessage">
+            <summary>
+            Represents a message for rooms.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Messages.RoomMessage.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Messages.RoomMessage"/> class.
+            </summary>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:Photon.Hive.Messages.RoomMessage.#ctor(System.Byte,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Messages.RoomMessage"/> class.
+            </summary>
+            <param name="action">The action.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="P:Photon.Hive.Messages.RoomMessage.Message">
+            <summary>
+            Gets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="P:Photon.Hive.Messages.RoomMessage.Action">
+            <summary>
+            Gets the action.
+            </summary>
+            <value>The action.</value>
+        </member>
+        <member name="T:Photon.Hive.Operations.CacheOperation">
+            <summary>
+              Parameter value of RaiseEventRequest.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.DoNotCache">
+            <summary>
+              Don't cache the event. (default)
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.MergeCache">
+            <summary>
+              Merge cached event with data.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.ReplaceCache">
+            <summary>
+              Replace cached event with data.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.RemoveCache">
+            <summary>
+              Remove cached event.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.AddToRoomCache">
+            <summary>
+            Add to the room cache.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.SliceIncreaseIndex">
+            <summary>
+              Increase the index of the sliced cache. (default)
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.SliceSetIndex">
+            <summary>
+              Set the index of the sliced cache. (default)
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.SlicePurgeIndex">
+            <summary>
+              Purge cache slice with index.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.CacheOperation.SlicePurgeUpToIndex">
+            <summary>
+              Purge cache slice up to index.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.ChangeGroups.Add">
+            <summary>
+            Gets or sets an array of group identifiers the actor whants to join.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.ChangeGroups.Remove">
+            <summary>
+            Gets or sets an array of group identifiers the actor whants to leave.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.EventCode">
+            <summary>
+              Event codes of events (defining their type and keys).
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.NoCodeSet">
+            <summary>
+              Specifies that no event code is set.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.Join">
+            <summary>
+              The event code for the <see cref="T:Photon.Hive.Events.JoinEvent"/>.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.Leave">
+            <summary>
+              The event code for the <see cref="T:Photon.Hive.Events.LeaveEvent"/>.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.PropertiesChanged">
+            <summary>
+              The event code for the <see cref="T:Photon.Hive.Events.PropertiesChangedEvent"/>.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.Disconnect">
+            <summary>
+            The event code for the <see cref="T:Photon.Hive.Events.DisconnectEvent"/>.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.EventCode.ErrorInfo">
+            <summary>
+            The event code for the <see cref="T:Photon.Hive.Events.ErrorInfoEvent"/>.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.GetPropertiesRequest">
+            <summary>
+              The get properties request.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Operations.GetPropertiesRequest.#ctor(Photon.SocketServer.IRpcProtocol,Photon.SocketServer.OperationRequest)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.Operations.GetPropertiesRequest"/> class.
+            </summary>
+            <param name="protocol">
+              The protocol.
+            </param>
+            <param name="operationRequest">
+              Operation request containing the operation parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Operations.GetPropertiesRequest.#ctor">
+            <summary>
+              Initializes a new instance of the <see cref="T:Photon.Hive.Operations.GetPropertiesRequest"/> class.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesRequest.ActorNumbers">
+            <summary>
+              Gets or sets the actor numbers for which to get the properties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesRequest.ActorPropertyKeys">
+            <summary>
+              Gets or sets ActorPropertyKeys.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesRequest.GamePropertyKeys">
+            <summary>
+              Gets or sets GamePropertyKeys.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesRequest.PropertyType">
+            <summary>
+              Gets or sets PropertyType.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.GetPropertiesResponse">
+            <summary>
+              Response for <see cref="T:Photon.Hive.Operations.GetPropertiesRequest"/>.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesResponse.ActorProperties">
+            <summary>
+              Gets or sets ActorProperties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.GetPropertiesResponse.GameProperties">
+            <summary>
+              Gets or sets GameProperties.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.JoinResponse">
+            <summary>
+              Response for <see cref="T:Photon.Hive.Operations.JoinGameRequest"/>.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinResponse.ActorNr">
+            <summary>
+              Gets or sets the actor number for the joined player.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinResponse.CurrentActorProperties">
+            <summary>
+              Gets or sets the current actor properties for all existing actors in the game
+              that will be returned to the client in the operation response.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.JoinResponse.CurrentGameProperties">
+            <summary>
+              Gets or sets the current game properties that will be returned 
+              to the client in the operation response.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.OperationCode">
+            <summary>
+              Defines the operation codes used by the Lite application.
+              These codes match events (in parts).
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.Join">
+            <summary>
+              The operation code for the <see cref="T:Photon.Hive.Operations.JoinGameRequest">join</see> operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.Leave">
+            <summary>
+              Operation code for the <see cref="T:Photon.Hive.Operations.LeaveRequest">leave</see> operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.RaiseEvent">
+            <summary>
+              Operation code for the <see cref="T:Photon.Hive.Operations.RaiseEventRequest">raise event</see> operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.SetProperties">
+            <summary>
+              Operation code for the <see cref="T:Photon.Hive.Operations.SetPropertiesRequest">set properties</see> operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.GetProperties">
+            <summary>
+              Operation code for the <see cref="T:Photon.Hive.Operations.GetPropertiesRequest">get properties</see> operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.Ping">
+            <summary>
+              Operation code for the ping operation.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.OperationCode.ChangeGroups">
+            <summary>
+              Operation code for the <see cref="F:Photon.Hive.Operations.OperationCode.ChangeGroups"/> operation.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.ParameterKey">
+            <summary>
+              Parameter keys are used as event-keys, operation-parameter keys and operation-return keys alike.
+              The values are partly taken from Exit Games Photon, which contains many more keys.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.GameId">
+            <summary>
+              The game id.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.ActorNr">
+            <summary>
+              The actor nr
+              used as op-key and ev-key
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.TargetActorNr">
+            <summary>
+              The target actor nr.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Actors">
+            <summary>
+              The actors.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Properties">
+            <summary>
+              The properties.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Broadcast">
+            <summary>
+              The broadcast.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.ActorProperties">
+            <summary>
+              The actor properties.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.GameProperties">
+            <summary>
+              The game properties.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Cache">
+            <summary>
+              Event parameter to indicate whether events are cached for new actors.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.ReceiverGroup">
+            <summary>
+              Event parameter containing a <see cref="T:Photon.Hive.Operations.ReceiverGroup"/> value.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Data">
+            <summary>
+              The data.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Code">
+            <summary>
+              The paramter code for the <see cref="T:Photon.Hive.Operations.RaiseEventRequest">raise event</see> operations event code.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Flush">
+            <summary>
+              the flush event code for raise event.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.DeleteCacheOnLeave">
+            <summary>
+            Event parameter to indicate whether cached events are deleted automaticly for actors leaving a room.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.Group">
+            <summary>
+            The group this event should be sent to. No error is happening if the group is empty or not existing.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.GroupsForRemove">
+            <summary>
+            Groups to leave. Null won't remove any groups. byte[0] will remove ALL groups. Otherwise only the groups listed will be removed.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.PublishUserId">
+            <summary>
+            Should or not JoinGame response and JoinEvent contain user ids
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.GroupsForAdd">
+            <summary>
+            Groups to enter. Null won't add groups. byte[0] will add ALL groups. Otherwise only the groups listed will be added.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.SuppressRoomEvents">
+            <summary>
+            A parameter indicating if common room events (Join, Leave) will be suppressed.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.EmptyRoomLiveTime">
+            <summary>
+            A parameter indicating how long a room instance should be kept alive in the 
+            room cache after all players left the room.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.PlayerTTL">
+            <summary>
+            A parameter indicating how long a player is allowd to rejoin.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.HttpForward">
+            <summary>
+            A parameter indicating that content of room event should be forwarded to some server
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.IsInactive">
+            <summary>
+            Allows the player to re-join the game.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.CheckUserOnJoin">
+            <summary>
+            Activates UserId checks on joining - allowing a users to be only once in the room.
+            Default is deactivated for backwards compatibility, but we recomend to use in future
+            Note: Should be active for saved games.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ParameterKey.ExpectedValues">
+            <summary>
+            Expected values for actor and game properties
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.LeaveRequest">
+            <summary>
+            Implements the Leave operation.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Operations.LeaveRequest.#ctor(Photon.SocketServer.IRpcProtocol,Photon.SocketServer.OperationRequest)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.LeaveRequest"/> class.
+            </summary>
+            <param name="protocol">
+            The protocol.
+            </param>
+            <param name="operationRequest">
+            Operation request containing the operation parameters.
+            </param>
+        </member>
+        <member name="T:Photon.Hive.Operations.RaiseEventRequest">
+            <summary>
+              Implements the RaiseEvent operation.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Operations.RaiseEventRequest.#ctor(Photon.SocketServer.IRpcProtocol,Photon.SocketServer.OperationRequest)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.RaiseEventRequest"/> class.
+            </summary>
+            <param name="protocol">
+            The protocol.
+            </param>
+            <param name="operationRequest">
+            Operation request containing the operation parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Operations.RaiseEventRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.RaiseEventRequest"/> class.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.Actors">
+            <summary>
+              Gets or sets the actors which should receive the event.
+              If set to null or an empty array the event will be sent
+              to all actors in the room.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.Cache">
+            <summary>
+              Gets or sets a value indicating how to use the <see cref="T:Photon.Hive.Caching.EventCache"/>.
+            </summary>
+            <remarks>
+              Optional request parameter.
+              Ignored if the event is sent to individual actors (submitted <see cref="P:Photon.Hive.Operations.RaiseEventRequest.Actors"/> or <see cref="F:Photon.Hive.Operations.ReceiverGroup.MasterClient"/>).
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.Data">
+            <summary>
+              Gets or sets the hashtable containing the data to send.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.EvCode">
+            <summary>
+              Gets or sets a byte containing the Code to send.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.Flush">
+            <summary>
+              Gets or sets a value indicating whether to flush the send queue.
+              Flushing the send queue will override the configured photon send delay.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.GameId">
+            <summary>
+              Gets or sets the game id.
+            </summary>
+            <remarks>
+              Optional request parameter.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.ReceiverGroup">
+            <summary>
+              Gets or sets the <see cref="T:Photon.Hive.Operations.ReceiverGroup"/> for the event.
+            </summary>
+            <remarks>
+              Optional request parameter.
+              Ignored if <see cref="P:Photon.Hive.Operations.RaiseEventRequest.Actors"/> are set.
+            </remarks>
+        </member>
+        <member name="P:Photon.Hive.Operations.RaiseEventRequest.Group">
+            <summary>
+              Gets or sets the <see cref="T:Photon.Hive.Operations.ReceiverGroup"/> for the event.
+            </summary>
+            <remarks>
+              Optional request parameter.
+              Ignored if <see cref="P:Photon.Hive.Operations.RaiseEventRequest.Actors"/> are set.
+            </remarks>
+        </member>
+        <member name="T:Photon.Hive.Operations.PropertyType">
+            <summary>
+              The property type.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.PropertyType.None">
+            <summary>
+              The none.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.PropertyType.Game">
+            <summary>
+              The game.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.PropertyType.Actor">
+            <summary>
+              The actor.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.PropertyType.GameAndActor">
+            <summary>
+              The game and actor.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Events.CustomEvent">
+            <summary>
+            Implementation of a custom event.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.CustomEvent.#ctor(System.Int32,System.Byte,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.CustomEvent"/> class.
+            </summary>
+            <param name="actorNr">
+            The actor nr.
+            </param>
+            <param name="eventCode">
+            The event code.
+            </param>
+            <param name="data">
+            The event data.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.CustomEvent.Data">
+            <summary>
+            Gets or sets the event data.
+            </summary>
+            <value>The event data.</value>
+        </member>
+        <member name="T:Photon.Hive.Events.JoinEvent">
+            <summary>
+            This class implements the Join event.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.JoinEvent.#ctor(System.Int32,System.Int32[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.JoinEvent"/> class.
+            </summary>
+            <param name="actorNr">
+            The sender actor nr.
+            </param>
+            <param name="actors">
+            The actors in the game.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.JoinEvent.ActorProperties">
+            <summary>
+            Gets or sets the actor properties of the joined actor.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Events.JoinEvent.Actors">
+            <summary>
+            Gets or sets the actors in the game.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Events.LeaveEvent">
+            <summary>
+            This class implements the Leave event.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Events.LeaveEvent.#ctor(System.Int32,System.Int32[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Events.LeaveEvent"/> class.
+            </summary>
+            <param name="actorNr">
+            The sender actor nr.
+            </param>
+            <param name="actors">
+            The actors in the game.
+            </param>
+        </member>
+        <member name="P:Photon.Hive.Events.LeaveEvent.Actors">
+            <summary>
+            Gets or sets the actors.
+            </summary>
+            <value>The actors.</value>
+        </member>
+        <member name="T:Photon.Hive.Messages.GameMessageCodes">
+            <summary>
+            GameMessagCodes define the type of a "LiteGame" Message, the meaning and its content.
+            Messages are used to communicate async with rooms and games.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Messages.GameMessageCodes.Operation">
+            <summary>
+            Message is an operatzion.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Messages.GameMessageCodes.RemovePeerFromGame">
+            <summary>
+            Message to remove peer from game.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Diagnostics.Counter">
+            <summary>
+            Counter on application level
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Diagnostics.Counter.Games">
+            <summary>
+            Absolute number of games active (in the game cache).
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.ReceiverGroup">
+            <summary>
+              Possible groups of receivers for events.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ReceiverGroup.Others">
+            <summary>
+              Send to all actors but the sender.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ReceiverGroup.All">
+            <summary>
+              Send to all actors including the sender.
+            </summary>
+        </member>
+        <member name="F:Photon.Hive.Operations.ReceiverGroup.MasterClient">
+            <summary>
+              Send to the peer with the lowest actor number.
+            </summary>
+        </member>
+        <member name="T:Photon.Hive.Operations.SetPropertiesRequest">
+            <summary>
+            The set properties operation.
+            </summary>
+        </member>
+        <member name="M:Photon.Hive.Operations.SetPropertiesRequest.#ctor(Photon.SocketServer.IRpcProtocol,Photon.SocketServer.OperationRequest)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.SetPropertiesRequest"/> class.
+            </summary>
+            <param name="protocol">
+            The protocol.
+            </param>
+            <param name="operationRequest">
+            Operation request containing the operation parameters.
+            </param>
+        </member>
+        <member name="M:Photon.Hive.Operations.SetPropertiesRequest.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Photon.Hive.Operations.SetPropertiesRequest"/> class.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.SetPropertiesRequest.ActorNumber">
+            <summary>
+            Gets or sets ActorNumber.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.SetPropertiesRequest.Broadcast">
+            <summary>
+            Gets or sets a value indicating whether Broadcast.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.SetPropertiesRequest.Properties">
+            <summary>
+            Gets or sets Properties.
+            </summary>
+        </member>
+        <member name="P:Photon.Hive.Operations.SetPropertiesRequest.ExpectedValues">
+            <summary>
+            Expected values for properties, which we are going to set
+            </summary>
+        </member>
+    </members>
+</doc>

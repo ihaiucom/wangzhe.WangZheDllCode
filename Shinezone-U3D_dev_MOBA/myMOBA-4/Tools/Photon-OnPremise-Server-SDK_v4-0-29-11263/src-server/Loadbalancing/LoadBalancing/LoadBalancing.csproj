@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{918525F6-635E-4D56-A85C-7F4C5E95E822}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Photon.LoadBalancing</RootNamespace>
+    <AssemblyName>Photon.LoadBalancing</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\deploy\bin_Win32\PhotonSocketServer.exe</StartProgram>
+    <StartArguments>/debug LoadBalancing /config PhotonServer.LoadBalancing-Development.config</StartArguments>
+    <StartWorkingDirectory>..\..</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <StartAction>Program</StartAction>
+    <StartProgram>..\..\deploy\bin_Win32\PhotonSocketServer.exe</StartProgram>
+    <StartArguments>/config PhotonServer.LoadBalancing-Development.config</StartArguments>
+    <StartWorkingDirectory>..\..</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Newtonsoft\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\..\..\lib\ServiceStack\ServiceStack.Common.3.9.71\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\..\lib\ServiceStack\ServiceStack.Common.3.9.71\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis">
+      <HintPath>..\..\..\lib\ServiceStack\ServiceStack.Redis.3.9.71\lib\net35\ServiceStack.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\..\lib\ServiceStack\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\lib\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="ExitGames.Logging.Log4Net">
+      <HintPath>..\..\..\lib\ExitGames.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ExitGamesLibs">
+      <HintPath>..\..\..\lib\ExitGamesLibs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon.SocketServer">
+      <HintPath>..\..\..\lib\Photon.SocketServer.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonHostRuntimeInterfaces">
+      <HintPath>..\..\..\lib\PhotonHostRuntimeInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\CommonSettings.cs" />
+    <Compile Include="Common\LBErrorMessages.cs" />
+    <Compile Include="Common\S2SCustomTypeCacheMan.cs" />
+    <Compile Include="Common\DictionaryExtensions.cs" />
+    <Compile Include="GameServer\ApplicationStatsPublisher.cs" />
+    <Compile Include="GameServer\GameServerSettings.cs" />
+    <Compile Include="GameServer\MasterServerConnection.cs" />
+    <Compile Include="GameServer\MasterServerConnectionBase.cs" />
+    <Compile Include="Events\AppStatsEvent.cs" />
+    <Compile Include="Events\EventCode.cs" />
+    <Compile Include="Events\GameListEvent.cs" />
+    <Compile Include="Events\GameListUpdateEvent.cs" />
+    <Compile Include="Events\GameServerOfflineEvent.cs" />
+    <Compile Include="Events\QueueEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameServer\GameMessageCodes.cs" />
+    <Compile Include="GameServer\Game.cs" />
+    <Compile Include="GameServer\GameApplication.cs" />
+    <Compile Include="GameServer\GameCache.cs" />
+    <Compile Include="GameServer\GameClientPeer.cs" />
+    <Compile Include="GameServer\Global.cs" />
+    <Compile Include="GameServer\OutgoingMasterServerPeer.cs" />
+    <Compile Include="MasterServer\ApplicationStats.cs" />
+    <Compile Include="MasterServer\ChannelLobby\GameChannel.cs" />
+    <Compile Include="MasterServer\ChannelLobby\GameChannelKey.cs" />
+    <Compile Include="MasterServer\ChannelLobby\GameChannelList.cs" />
+    <Compile Include="MasterServer\GameApplication.cs" />
+    <Compile Include="MasterServer\GameServer\GameServerCollection.cs" />
+    <Compile Include="MasterServer\GameServer\GameServerState.cs" />
+    <Compile Include="MasterServer\GameServer\IncomingGameServerPeer.cs" />
+    <Compile Include="MasterServer\Lobby\AppLobby.cs" />
+    <Compile Include="MasterServer\Lobby\GameDataBase.cs" />
+    <Compile Include="MasterServer\Lobby\GameList.cs" />
+    <Compile Include="MasterServer\Lobby\GameListBase.cs" />
+    <Compile Include="MasterServer\Lobby\GameState.cs" />
+    <Compile Include="MasterServer\Lobby\IGameList.cs" />
+    <Compile Include="MasterServer\Lobby\IGameListSubscription.cs" />
+    <Compile Include="MasterServer\Lobby\ILobbyPeer.cs" />
+    <Compile Include="MasterServer\Lobby\LinkedListDictionary.cs" />
+    <Compile Include="MasterServer\Lobby\LobbyFactory.cs" />
+    <Compile Include="MasterServer\Lobby\LobbyStatsPublisher.cs" />
+    <Compile Include="MasterServer\Lobby\PeerState.cs" />
+    <Compile Include="MasterServer\Lobby\AsyncRandomGameList.cs" />
+    <Compile Include="MasterServer\Lobby\SqlGameList.cs" />
+    <Compile Include="MasterServer\MasterApplication.cs" />
+    <Compile Include="MasterServer\MasterClientPeer.cs" />
+    <Compile Include="MasterServer\MasterServerSettings.cs" />
+    <Compile Include="MasterServer\OperationHandler\OperationHandlerAuthenticating.cs" />
+    <Compile Include="Common\OperationHandlerBase.cs" />
+    <Compile Include="MasterServer\OperationHandler\OperationHandlerDefault.cs" />
+    <Compile Include="MasterServer\OperationHandler\OperationHandlerInitial.cs" />
+    <Compile Include="MasterServer\OperationHelper.cs" />
+    <Compile Include="Common\NodesReader.cs" />
+    <Compile Include="MasterServer\PlayerCache.cs" />
+    <Compile Include="MasterServer\RedirectedClientPeer.cs" />
+    <Compile Include="Operations\AuthenticateRequest.cs" />
+    <Compile Include="Operations\AuthenticateResponse.cs" />
+    <Compile Include="Operations\FindFriendsResponse.cs" />
+    <Compile Include="Operations\FindFriendsRequest.cs" />
+    <Compile Include="Operations\GetLobbyStatsRequest.cs" />
+    <Compile Include="Operations\GetLobbyStatsResponse.cs" />
+    <Compile Include="Operations\JoinLobbyRequest.cs" />
+    <Compile Include="Operations\JoinRandomType.cs" />
+    <Compile Include="Operations\RedirectRepeatResponse.cs" />
+    <Compile Include="ServerToServer\Events\AuthenticateUpdateEvent.cs" />
+    <Compile Include="ServerToServer\Events\ServerParameterCode.cs" />
+    <Compile Include="ServerToServer\Events\RemoveGameEvent.cs" />
+    <Compile Include="ServerToServer\Events\ServerEventCode.cs" />
+    <Compile Include="ServerToServer\Events\UpdateAppStatsEvent.cs" />
+    <Compile Include="ServerToServer\Events\UpdateGameEvent.cs" />
+    <Compile Include="ServerToServer\Events\UpdateServerEvent.cs" />
+    <Compile Include="Operations\JoinRandomGameRequest.cs" />
+    <Compile Include="Operations\JoinRandomGameResponse.cs" />
+    <Compile Include="Operations\OperationCode.cs" />
+    <Compile Include="Operations\ParameterCode.cs" />
+    <Compile Include="ServerToServer\Operations\OperationCode.cs" />
+    <Compile Include="ServerToServer\Operations\RegisterGameServer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerToServer\Operations\RegisterGameServerResponse.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="properties.proj" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HivePlugin\PhotonHivePlugin.csproj">
+      <Project>{223d6705-337d-409f-8524-553abc5eaabd}</Project>
+      <Name>PhotonHivePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hive\PhotonHive\PhotonHive.csproj">
+      <Project>{E1F918F4-F581-4280-9D91-3CF77B24C290}</Project>
+      <Name>PhotonHive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Photon.Common\Photon.Common.csproj">
+      <Project>{1ddb6b23-41f0-4c63-b945-0c7d3f902d1c}</Project>
+      <Name>Photon.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\SQLite.Interop.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>  
+  -->
+  <!-- execute only on local VS Builds. -->
+  <Target Name="AfterBuild" Condition="'$(transformConfig)'!='false'">
+    <PropertyGroup>
+      <PropertyFile Condition=" '$(PropertyFile)' == '' ">$(ProjectDir)\properties.proj</PropertyFile>
+    </PropertyGroup>
+    <MSBuild Projects="..\..\..\build\transformConfig.proj" Targets="TransformConfig" Properties="PropertyFile=$(PropertyFile);RootDir=$(TargetDir)" />
+  </Target>
+</Project>

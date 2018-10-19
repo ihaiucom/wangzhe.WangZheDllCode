@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Behavior Version="5" NoError="true">
+  <Node Class="Behaviac.Design.Nodes.Behavior" AgentType="WrapperAgent" Domains="" Enable="True" HasOwnPrefabData="false" Id="-1" PrefabName="" PrefabNodeId="-1">
+    <Comment Background="NoColor" Text="" />
+    <DescriptorRefs value="0:" />
+    <Connector Identifier="GenericChildren">
+      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="411" PrefabName="" PrefabNodeId="-1">
+        <Comment Background="NoColor" Text="" />
+        <Connector Identifier="GenericChildren">
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="658" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_selfID" Opr="Self.WrapperAgent::GetMyObjID()">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="1035" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,true)">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="14" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+            <Comment Background="NoColor" Text="" />
+            <Connector Identifier="GenericChildren">
+              <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="69" PrefabName="" PrefabNodeId="-1">
+                <Comment Background="NoColor" Text="" />
+                <Connector Identifier="GenericChildren">
+                  <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="205" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="_condition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="207" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::HasRoute()" Opr="const bool true">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="_if">
+                      <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="210" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="_else">
+                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="211" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="597" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectNearestRoute()">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="235" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_direction" Opr="const string &quot;((ObjAgent)pAgent).GetCurRouteLastForward();&quot;">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                  <Node Class="PluginBehaviac.Nodes.SelectorLoop" Enable="true" HasOwnPrefabData="false" Id="1" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="GenericChildren">
+                      <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="107" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="Precondition">
+                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="108" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_AutoAI&quot;">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                        <Connector Identifier="Action">
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="135" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="136" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_attackPathCurTargetPos" Opr="const string &quot;((ObjAgent)pAgent).GetRouteCurWaypointPos();&quot;">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="327" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="_condition">
+                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="328" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsCurWaypointEndPoint()" Opr="const bool true">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_if">
+                                  <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="335" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="_condition">
+                                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="336" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToPosLessThanRange(string Self.WrapperAgent::p_attackPathCurTargetPos,600)" Opr="const bool true">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                    </Connector>
+                                    <Connector Identifier="_if">
+                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="337" PrefabName="" PrefabNodeId="-1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="338" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::ResetRouteStartPoint()">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                          <Node Class="PluginBehaviac.Nodes.WaitFrames" Enable="true" HasOwnPrefabData="false" Id="445" PrefabName="" PrefabNodeId="-1" Frames="const int 2">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                    <Connector Identifier="_else">
+                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="340" PrefabName="" PrefabNodeId="-1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="444" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::AbortCurUseSkillByType(SkillAbortType.TYPE_MOVE)">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="341" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Run&quot;,0.15,0,true)">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="342" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealMovePosition(string Self.WrapperAgent::p_attackPathCurTargetPos)">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_else">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="329" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="447" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::AbortCurUseSkillByType(SkillAbortType.TYPE_MOVE)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="137" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Run&quot;,0.15,0,true)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="138" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealMovePosition(string Self.WrapperAgent::p_attackPathCurTargetPos)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                      <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="60" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="Precondition">
+                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="61" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_Idle&quot;">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                        <Connector Identifier="Action">
+                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="64" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetCurBehavior(ObjBehaviMode.State_AutoAI)">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                      </Node>
+                      <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="2" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="Precondition">
+                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="3" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_Dead&quot;">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                        <Connector Identifier="Action">
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="59" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="487" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="GenericChildren">
+                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="488" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayDeadAgeAction()">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="4" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Dead&quot;,0.15,0,false)">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="65" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="GenericChildren">
+                                  <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="66" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                      <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="450" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="Precondition">
+                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="454" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_GameOver&quot;">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                        </Connector>
+                        <Connector Identifier="Action">
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="455" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="456" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,false)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="457" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="GenericChildren">
+                                  <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="458" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                </Connector>
+              </Node>
+            </Connector>
+          </Node>
+        </Connector>
+      </Node>
+    </Connector>
+  </Node>
+</Behavior>

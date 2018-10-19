@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F5D7FE2F-87B4-4FBA-BC03-D4C8944AEE0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{33F2A6FC-D582-42C0-953A-B27CA5E5079D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Server", "Photon.MmoDemo.Server\Photon.MmoDemo.Server.csproj", "{889BEFC8-4AA4-4561-9CA0-7F6550AD0ACA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Tests", "Photon.MmoDemo.Tests\Photon.MmoDemo.Tests.csproj", "{2F8E27D5-9DF4-4183-BF73-62C1F144D12F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Client.WinGrid", "Photon.MmoDemo.Client.WinGrid\Photon.MmoDemo.Client.WinGrid.csproj", "{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Client.DotNet", "Photon.MmoDemo.Client.DotNet\Photon.MmoDemo.Client.DotNet.csproj", "{3D1BDDDB-7B35-4A5A-999F-0E269C23B603}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Client.Unity3D", "Photon.MmoDemo.Client.Unity3D\Photon.MmoDemo.Client.Unity3D.csproj", "{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photon.MmoDemo.Common", "Photon.MmoDemo.Common\Photon.MmoDemo.Common.csproj", "{8C1F7F02-10EA-436F-9679-D4DB5B666BDB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{889BEFC8-4AA4-4561-9CA0-7F6550AD0ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889BEFC8-4AA4-4561-9CA0-7F6550AD0ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889BEFC8-4AA4-4561-9CA0-7F6550AD0ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889BEFC8-4AA4-4561-9CA0-7F6550AD0ACA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F8E27D5-9DF4-4183-BF73-62C1F144D12F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F8E27D5-9DF4-4183-BF73-62C1F144D12F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F8E27D5-9DF4-4183-BF73-62C1F144D12F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F8E27D5-9DF4-4183-BF73-62C1F144D12F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D1BDDDB-7B35-4A5A-999F-0E269C23B603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D1BDDDB-7B35-4A5A-999F-0E269C23B603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D1BDDDB-7B35-4A5A-999F-0E269C23B603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D1BDDDB-7B35-4A5A-999F-0E269C23B603}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C1F7F02-10EA-436F-9679-D4DB5B666BDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C1F7F02-10EA-436F-9679-D4DB5B666BDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C1F7F02-10EA-436F-9679-D4DB5B666BDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C1F7F02-10EA-436F-9679-D4DB5B666BDB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F8E27D5-9DF4-4183-BF73-62C1F144D12F} = {F5D7FE2F-87B4-4FBA-BC03-D4C8944AEE0D}
+		{414BBF18-9BCC-42B6-B65D-F8D44AEB45DA} = {33F2A6FC-D582-42C0-953A-B27CA5E5079D}
+		{3D1BDDDB-7B35-4A5A-999F-0E269C23B603} = {33F2A6FC-D582-42C0-953A-B27CA5E5079D}
+		{170CE1BC-2D9C-4344-8E9D-07BAA2E3FB94} = {33F2A6FC-D582-42C0-953A-B27CA5E5079D}
+	EndGlobalSection
+EndGlobal

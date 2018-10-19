@@ -1,0 +1,12 @@
+using System;
+
+namespace Apollo
+{
+	public enum APO_PAY_STATUS
+	{
+		APO_PAYSTATE_PAYUNKOWN = -1,
+		APO_PAYSTATE_PAYSUCC,
+		APO_PAYSTATE_PAYCANCEL,
+		APO_PAYSTATE_PAYERROR
+	}
+}

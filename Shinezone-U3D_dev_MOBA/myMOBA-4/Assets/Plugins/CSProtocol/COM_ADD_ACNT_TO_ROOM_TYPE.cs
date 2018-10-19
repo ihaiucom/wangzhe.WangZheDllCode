@@ -1,0 +1,12 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_ADD_ACNT_TO_ROOM_TYPE
+	{
+		COM_ADD_ACNT_TO_ROOM_CAMP1,
+		COM_ADD_ACNT_TO_ROOM_CAMP2,
+		COM_ADD_ACNT_TO_ROOM_MID,
+		COM_ADD_ACNT_TO_ROOM_SEQ
+	}
+}

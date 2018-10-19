@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_RESERVE_MSG_RESULT_TYPE
+	{
+		COM_RESERVE_MSG_RESULT_NULL,
+		COM_RESERVE_MSG_RESULT_REFUSE,
+		COM_RESERVE_MSG_RESULT_ACCEPT
+	}
+}

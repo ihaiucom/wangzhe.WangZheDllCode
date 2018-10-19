@@ -1,0 +1,676 @@
+Shader "S_Game_Scene/Light/TerrainVertexColor2Layers_GreenYellow" {
+Properties {
+ _uvGrade0 ("Layer1 grade", Float) = 0
+ _Splat0 ("Layer 1", 2D) = "white" {}
+ _Splat1 ("Layer 2", 2D) = "black" {}
+ _pow ("Pow", Float) = 2
+}
+SubShader { 
+ Tags { "QUEUE"="Geometry+3" "RenderType"="Opaque" }
+ Pass {
+  Tags { "LIGHTMODE"="ForwardBase" "QUEUE"="Geometry+3" "RenderType"="Opaque" }
+Program "vp" {
+SubProgram "gles " {
+Keywords { "_DUMMY" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture2D (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture2D (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  gl_FragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+out highp vec2 xlv_TEXCOORD0;
+out highp vec2 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+out highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+in highp vec2 xlv_TEXCOORD0;
+in highp vec2 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+in highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  _glesFragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_FOG_OF_WAR_ON" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp mat4 _Object2World;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+varying highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+  xlv_TEXCOORD4 = (_Object2World * _glesVertex);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform highp vec3 _WorldSpaceCameraPos;
+uniform sampler2D _FogOfWar;
+uniform highp vec4 _InvSceneSize;
+uniform mediump vec4 _FOWColor;
+uniform mediump vec4 _FOWParams;
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+varying highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture2D (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture2D (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  mediump float PointToEyeDist_7;
+  mediump float fowLum_8;
+  mediump vec2 fowUv_9;
+  highp vec2 tmpvar_10;
+  tmpvar_10 = ((xlv_TEXCOORD4.xz * _InvSceneSize.xy) + 0.5);
+  fowUv_9 = tmpvar_10;
+  lowp float tmpvar_11;
+  tmpvar_11 = texture2D (_FogOfWar, fowUv_9).x;
+  fowLum_8 = tmpvar_11;
+  highp vec3 tmpvar_12;
+  tmpvar_12 = (xlv_TEXCOORD4.xyz - _WorldSpaceCameraPos);
+  highp float tmpvar_13;
+  tmpvar_13 = sqrt(dot (tmpvar_12, tmpvar_12));
+  PointToEyeDist_7 = tmpvar_13;
+  mediump float tmpvar_14;
+  tmpvar_14 = clamp (((PointToEyeDist_7 * _FOWParams.x) + _FOWParams.y), 0.0, 1.0);
+  mediump vec3 tmpvar_15;
+  tmpvar_15 = (color_1.xyz * color_1.xyz);
+  color_1.xyz = mix (((tmpvar_15 + 
+    ((_FOWColor.xyz - tmpvar_15) * (tmpvar_14 * tmpvar_14))
+  ) * _FOWParams.z), color_1.xyz, vec3(fowLum_8));
+  gl_FragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_FOG_OF_WAR_ON" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp mat4 _Object2World;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+out highp vec2 xlv_TEXCOORD0;
+out highp vec2 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+out highp vec4 xlv_TEXCOORD3;
+out highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+  xlv_TEXCOORD4 = (_Object2World * _glesVertex);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform highp vec3 _WorldSpaceCameraPos;
+uniform sampler2D _FogOfWar;
+uniform highp vec4 _InvSceneSize;
+uniform mediump vec4 _FOWColor;
+uniform mediump vec4 _FOWParams;
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+in highp vec2 xlv_TEXCOORD0;
+in highp vec2 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+in highp vec4 xlv_TEXCOORD3;
+in highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  mediump float PointToEyeDist_7;
+  mediump float fowLum_8;
+  mediump vec2 fowUv_9;
+  highp vec2 tmpvar_10;
+  tmpvar_10 = ((xlv_TEXCOORD4.xz * _InvSceneSize.xy) + 0.5);
+  fowUv_9 = tmpvar_10;
+  lowp float tmpvar_11;
+  tmpvar_11 = texture (_FogOfWar, fowUv_9).x;
+  fowLum_8 = tmpvar_11;
+  highp vec3 tmpvar_12;
+  tmpvar_12 = (xlv_TEXCOORD4.xyz - _WorldSpaceCameraPos);
+  highp float tmpvar_13;
+  tmpvar_13 = sqrt(dot (tmpvar_12, tmpvar_12));
+  PointToEyeDist_7 = tmpvar_13;
+  mediump float tmpvar_14;
+  tmpvar_14 = clamp (((PointToEyeDist_7 * _FOWParams.x) + _FOWParams.y), 0.0, 1.0);
+  mediump vec3 tmpvar_15;
+  tmpvar_15 = (color_1.xyz * color_1.xyz);
+  color_1.xyz = mix (((tmpvar_15 + 
+    ((_FOWColor.xyz - tmpvar_15) * (tmpvar_14 * tmpvar_14))
+  ) * _FOWParams.z), color_1.xyz, vec3(fowLum_8));
+  _glesFragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles " {
+Keywords { "_FOG_OF_WAR_ON_LOW" }
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesColor;
+attribute vec4 _glesMultiTexCoord0;
+attribute vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp mat4 _Object2World;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+varying highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+  xlv_TEXCOORD4 = (_Object2World * _glesVertex);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _FogOfWar;
+uniform highp vec4 _InvSceneSize;
+uniform mediump vec4 _FOWColor;
+uniform mediump vec4 _FOWParams;
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec2 xlv_TEXCOORD1;
+varying highp vec2 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+varying highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture2D (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture2D (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture2D (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  mediump float fowLum_7;
+  mediump vec2 fowUv_8;
+  highp vec2 tmpvar_9;
+  tmpvar_9 = ((xlv_TEXCOORD4.xz * _InvSceneSize.xy) + 0.5);
+  fowUv_8 = tmpvar_9;
+  lowp float tmpvar_10;
+  tmpvar_10 = texture2D (_FogOfWar, fowUv_8).x;
+  fowLum_7 = tmpvar_10;
+  mediump vec3 tmpvar_11;
+  tmpvar_11 = (color_1.xyz * color_1.xyz);
+  color_1.xyz = mix (((tmpvar_11 + 
+    ((_FOWColor.xyz - tmpvar_11) * 0.85)
+  ) * _FOWParams.z), color_1.xyz, vec3(fowLum_7));
+  gl_FragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+Keywords { "_FOG_OF_WAR_ON_LOW" }
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesColor;
+in vec4 _glesMultiTexCoord0;
+in vec4 _glesMultiTexCoord1;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp mat4 _Object2World;
+uniform highp float _uvGrade0;
+uniform highp vec4 _Splat0_ST;
+uniform highp vec4 _Splat1_ST;
+uniform highp vec4 unity_LightmapST;
+out highp vec2 xlv_TEXCOORD0;
+out highp vec2 xlv_TEXCOORD1;
+out highp vec2 xlv_TEXCOORD2;
+out highp vec4 xlv_TEXCOORD3;
+out highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp vec2 tmpvar_1;
+  tmpvar_1 = ((_glesMultiTexCoord0.xy * _Splat0_ST.xy) + _Splat0_ST.zw);
+  highp float tmpvar_2;
+  tmpvar_2 = sqrt((pow (
+    abs(tmpvar_1.x)
+  , 2.0) + pow (
+    abs(tmpvar_1.y)
+  , 2.0)));
+  highp float tmpvar_3;
+  tmpvar_3 = (tmpvar_1.y / tmpvar_2);
+  highp float tmpvar_4;
+  tmpvar_4 = (tmpvar_1.x / tmpvar_2);
+  highp vec2 tmpvar_5;
+  highp float cse_6;
+  cse_6 = cos(_uvGrade0);
+  highp float cse_7;
+  cse_7 = sin(_uvGrade0);
+  tmpvar_5.x = (tmpvar_2 * ((tmpvar_3 * cse_6) + (tmpvar_4 * cse_7)));
+  tmpvar_5.y = (tmpvar_2 * ((tmpvar_4 * cse_6) - (tmpvar_3 * cse_7)));
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = tmpvar_5;
+  xlv_TEXCOORD1 = ((_glesMultiTexCoord0.xy * _Splat1_ST.xy) + _Splat1_ST.zw);
+  xlv_TEXCOORD2 = ((_glesMultiTexCoord1.xy * unity_LightmapST.xy) + unity_LightmapST.zw);
+  xlv_TEXCOORD3 = _glesColor;
+  xlv_TEXCOORD4 = (_Object2World * _glesVertex);
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _FogOfWar;
+uniform highp vec4 _InvSceneSize;
+uniform mediump vec4 _FOWColor;
+uniform mediump vec4 _FOWParams;
+uniform sampler2D _Splat0;
+uniform sampler2D _Splat1;
+uniform sampler2D unity_Lightmap;
+uniform highp float _pow;
+in highp vec2 xlv_TEXCOORD0;
+in highp vec2 xlv_TEXCOORD1;
+in highp vec2 xlv_TEXCOORD2;
+in highp vec4 xlv_TEXCOORD3;
+in highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  mediump vec4 color_1;
+  lowp vec4 tmpvar_2;
+  tmpvar_2 = texture (_Splat0, xlv_TEXCOORD0);
+  lowp vec4 tmpvar_3;
+  tmpvar_3 = texture (_Splat1, xlv_TEXCOORD1);
+  highp vec4 tmpvar_4;
+  tmpvar_4.w = 1.0;
+  tmpvar_4.xyz = mix (tmpvar_2.xyz, tmpvar_3.xyz, vec3(clamp (pow (
+    (((xlv_TEXCOORD3.w * tmpvar_3.x) * tmpvar_3.y) * 10.0)
+  , _pow), 0.0, 1.0)));
+  color_1 = tmpvar_4;
+  highp vec3 tmpvar_5;
+  tmpvar_5 = (color_1.xyz * (xlv_TEXCOORD3.xyz * 2.0));
+  color_1.xyz = tmpvar_5;
+  lowp vec3 tmpvar_6;
+  tmpvar_6 = (2.0 * texture (unity_Lightmap, xlv_TEXCOORD2).xyz);
+  color_1.xyz = (color_1.xyz * tmpvar_6);
+  mediump float fowLum_7;
+  mediump vec2 fowUv_8;
+  highp vec2 tmpvar_9;
+  tmpvar_9 = ((xlv_TEXCOORD4.xz * _InvSceneSize.xy) + 0.5);
+  fowUv_8 = tmpvar_9;
+  lowp float tmpvar_10;
+  tmpvar_10 = texture (_FogOfWar, fowUv_8).x;
+  fowLum_7 = tmpvar_10;
+  mediump vec3 tmpvar_11;
+  tmpvar_11 = (color_1.xyz * color_1.xyz);
+  color_1.xyz = mix (((tmpvar_11 + 
+    ((_FOWColor.xyz - tmpvar_11) * 0.85)
+  ) * _FOWParams.z), color_1.xyz, vec3(fowLum_7));
+  _glesFragData[0] = color_1;
+}
+
+
+
+#endif"
+}
+}
+Program "fp" {
+SubProgram "gles " {
+Keywords { "_DUMMY" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_DUMMY" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_FOG_OF_WAR_ON" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_FOG_OF_WAR_ON" }
+"!!GLES3"
+}
+SubProgram "gles " {
+Keywords { "_FOG_OF_WAR_ON_LOW" }
+"!!GLES"
+}
+SubProgram "gles3 " {
+Keywords { "_FOG_OF_WAR_ON_LOW" }
+"!!GLES3"
+}
+}
+ }
+}
+Fallback "Diffuse"
+}

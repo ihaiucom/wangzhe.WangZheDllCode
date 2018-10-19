@@ -1,0 +1,11 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_TROPHYLVLT_STATE
+	{
+		COM_TROPHYLVL_STATE_UNFIN,
+		COM_TROPHYLVL_STATE_FIN,
+		COM_TROPHYLVL_STATE_REWARD
+	}
+}

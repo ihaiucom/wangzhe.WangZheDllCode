@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D2F474E-6F09-49A4-954B-31279FAE7E62}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TestPlugins</RootNamespace>
+    <AssemblyName>TestPlugins</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExitGamesLibs">
+      <HintPath>..\..\..\lib\ExitGamesLibs.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Newtonsoft\Newtonsoft.Json.6.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\nunit\2.6.3\bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BanTestPlugin.cs" />
+    <Compile Include="BroadcastEventPlugin.cs" />
+    <Compile Include="ChangeGamePropertiesOnJoinPlugin.cs" />
+    <Compile Include="CustomTypeCheckPlugin.cs" />
+    <Compile Include="CustomTypeMapperPlugin.cs" />
+    <Compile Include="JoinExceptionsPlugin.cs" />
+    <Compile Include="JoinFailuresCheckPlugin.cs" />
+    <Compile Include="BasicTestsPlugin.cs" />
+    <Compile Include="LongOnClosePlugin.cs" />
+    <Compile Include="MasterClientIdPlugin.cs" />
+    <Compile Include="PluginFactory.cs" />
+    <Compile Include="PluginHostWrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemovingActorPlugin.cs" />
+    <Compile Include="ScheduleBroadcastTestPlugin.cs" />
+    <Compile Include="RaiseEventChecksPlugin.cs" />
+    <Compile Include="SaveLoadStateTestPlugin.cs" />
+    <Compile Include="ScheduleSetPropertiesTestPlugin.cs" />
+    <Compile Include="SecureCheckPlugin.cs" />
+    <Compile Include="SetPropertiesCheckPlugin.cs" />
+    <Compile Include="StrictModeFailurePlugin.cs" />
+    <Compile Include="StripedGameStatePlugin.cs" />
+    <Compile Include="SyncAsyncHttpTestPlugin.cs" />
+    <Compile Include="TestPluginBase.cs" />
+    <Compile Include="WrongUrlTestPlugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HivePlugin\PhotonHivePlugin.csproj">
+      <Project>{223D6705-337D-409F-8524-553ABC5EAABD}</Project>
+      <Name>PhotonHivePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hive\PhotonHive\PhotonHive.csproj">
+      <Project>{E1F918F4-F581-4280-9D91-3CF77B24C290}</Project>
+      <Name>PhotonHive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebHooks1.2\WebHooks1.2.csproj">
+      <Project>{795871dc-8978-4b00-be4e-ca72c1344538}</Project>
+      <Name>WebHooks1.2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y /Q "$(TargetDir)*.*" "$(SolutionDir)..\..\deploy\Plugins\TestPlugins\bin\"
+xcopy /Y /Q "$(TargetDir)*.*" "$(SolutionDir)..\LoadBalancing\Plugins\TestPlugins\bin\"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

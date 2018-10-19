@@ -1,0 +1,10 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_INBATTLE_MSG_CAMP_TYPE
+	{
+		RES_INBATTLE_MSG_CAMP_TYPE_SIGNAL = 1,
+		RES_INBATTLE_MSG_CAMP_TYPE_BUBBLE
+	}
+}

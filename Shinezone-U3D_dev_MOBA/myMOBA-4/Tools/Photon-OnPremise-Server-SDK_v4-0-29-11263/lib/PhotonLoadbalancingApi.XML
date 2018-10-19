@@ -1,0 +1,2638 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PhotonLoadbalancingApi</name>
+    </assembly>
+    <members>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Extensions.Merge(System.Collections.IDictionary,System.Collections.IDictionary)">
+            <summary>
+            Merges all keys from addHash into the target. Adds new keys and updates the values of existing keys in target.
+            </summary>
+            <param name="target">The IDictionary to update.</param>
+            <param name="addHash">The IDictionary containing data to merge into target.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Extensions.MergeStringKeys(System.Collections.IDictionary,System.Collections.IDictionary)">
+            <summary>
+            Merges keys of type string to target Hashtable.
+            </summary>
+            <remarks>
+            Does not remove keys from target (so non-string keys CAN be in target if they were before).
+            </remarks>
+            <param name="target">The target IDicitionary passed in plus all string-typed keys from the addHash.</param>
+            <param name="addHash">A IDictionary that should be merged partly into target to update it.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Extensions.StripToStringKeys(System.Collections.IDictionary)">
+            <summary>
+            This method copies all string-typed keys of the original into a new Hashtable.
+            </summary>
+            <remarks>
+            Does not recurse (!) into hashes that might be values in the root-hash.
+            This does not modify the original.
+            </remarks>
+            <param name="original">The original IDictonary to get string-typed keys from.</param>
+            <returns>New Hashtable containing parts ot fht original.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Extensions.StripKeysWithNullValues(System.Collections.IDictionary)">
+            <summary>
+            This removes all key-value pairs that have a null-reference as value.
+            Photon properties are removed by setting their value to null.
+            Changes the original passed IDictionary!
+            </summary>
+            <param name="original">The IDictionary to strip of keys with null-values.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Extensions.Contains(System.Int32[],System.Int32)">
+            <summary>
+            Checks if a particular integer value is in an int-array.
+            </summary>
+            <remarks>This might be useful to look up if a particular actorNumber is in the list of players of a room.</remarks>
+            <param name="target">The array of ints to check.</param>
+            <param name="nr">The number to lookup in target.</param>
+            <returns>True if nr was found in target.</returns>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.ClientState">
+            <summary>Possible states for a LoadBalancingClient.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Uninitialized">
+            <summary>Peer is created but not used yet.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectingToMasterserver">
+            <summary>Connecting to master (includes connect, authenticate and joining the lobby)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectedToMaster">
+            <summary>Connected to master server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Queued">
+            <summary>Currently not used.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Authenticated">
+            <summary>Usually when Authenticated, the client will join a game or the lobby (if AutoJoinLobby is true).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.JoinedLobby">
+            <summary>Connected to master and joined lobby. Display room list and join/create rooms at will.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.DisconnectingFromMasterserver">
+            <summary>Transition from master to game server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectingToGameserver">
+            <summary>Transition to gameserver (client will authenticate and join/create game).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectedToGameserver">
+            <summary>Connected to gameserver (going to auth and join game).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Joining">
+            <summary>Joining game on gameserver.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Joined">
+            <summary>The client arrived inside a room. CurrentRoom and Players are known. Send events with OpRaiseEvent.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Leaving">
+            <summary>Currently not used. Instead of OpLeave, the client disconnects from a server (which also triggers a leave immediately).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Left">
+            <summary>Currently not used.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.DisconnectingFromGameserver">
+            <summary>Transition from gameserver to master (after leaving a room/game).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.QueuedComingFromGameserver">
+            <summary>Currently not used.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Disconnecting">
+            <summary>The client disconnects (from any server).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Disconnected">
+            <summary>The client is no longer connected (to any server). Connect to master to go on.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectingToNameServer">
+            <summary>Client connects to the NameServer. This process includes low level connecting and setting up encryption. When done, state becomes ConnectedToNameServer.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.ConnectedToNameServer">
+            <summary>Client is connected to the NameServer and established enctryption already. You should call OpGetRegions or ConnectToRegionMaster.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.Authenticating">
+            <summary>Client authenticates itself with the server. On the Photon Cloud this sends the AppId of your game. Used with Master Server and Game Server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ClientState.DisconnectingFromNameServer">
+            <summary>Clients disconnects (specifically) from the NameServer to reconnect to the master server.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.JoinType">
+            <summary>Ways a room can be created or joined.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinType.CreateRoom">
+            <summary>This client creates a room, gets into it (no need to join) and can set room properties.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinType.JoinRoom">
+            <summary>The room existed already and we join into it (not setting room properties).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinType.JoinRandomRoom">
+            <summary>Done on Master Server and (if successful) followed by a Join on Game Server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinType.JoinOrCreateRoom">
+            <summary>Client is either joining or creating a room. On Master- and Game-Server.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.DisconnectCause">
+            <summary>Enumaration of causes for Disconnects (used in LoadBalancingClient.DisconnectedCause).</summary>
+            <remarks>Read the individual descriptions to find out what to do about this type of disconnect.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.None">
+            <summary>No error was tracked.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.DisconnectByServerUserLimit">
+            <summary>OnStatusChanged: The CCUs count of your Photon Server License is exausted (temporarily).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.ExceptionOnConnect">
+            <summary>OnStatusChanged: The server is not available or the address is wrong. Make sure the port is provided and the server is up.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.DisconnectByServer">
+            <summary>OnStatusChanged: The server disconnected this client. Most likely the server's send buffer is full (receiving too much from other clients).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.TimeoutDisconnect">
+            <summary>OnStatusChanged: This client detected that the server's responses are not received in due time. Maybe you send / receive too much?</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.Exception">
+            <summary>OnStatusChanged: Some internal exception caused the socket code to fail. Contact Exit Games.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.InvalidAuthentication">
+            <summary>OnOperationResponse: Authenticate in the Photon Cloud with invalid AppId. Update your subscription or contact Exit Games.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.MaxCcuReached">
+            <summary>OnOperationResponse: Authenticate (temporarily) failed when using a Photon Cloud subscription without CCU Burst. Update your subscription.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.InvalidRegion">
+            <summary>OnOperationResponse: Authenticate when the app's Photon Cloud subscription is locked to some (other) region(s). Update your subscription or master server address.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.OperationNotAllowedInCurrentState">
+            <summary>OnOperationResponse: Operation that's (currently) not available for this client (not authorized usually). Only tracked for op Authenticate.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.DisconnectCause.CustomAuthenticationFailed">
+            <summary>OnOperationResponse: Authenticate in the Photon Cloud with invalid client values or custom authentication setup in Cloud Dashboard.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient">
+            <summary>
+            This class implements the Photon LoadBalancing workflow by using a LoadBalancingPeer.
+            It keeps a state and will automatically execute transitions between the Master and Game Servers.
+            </summary>
+            <remarks>
+            This class (and the Player class) should be extended to implement your own game logic.
+            You can override CreatePlayer as "factory" method for Players and return your own Player instances.
+            The State of this class is essential to know when a client is in a lobby (or just on the master)
+            and when in a game where the actual gameplay should take place.
+            Extension notes:
+            An extension of this class should override the methods of the IPhotonPeerListener, as they
+            are called when the state changes. Call base.method first, then pick the operation or state you
+            want to react to and put it in a switch-case.
+            We try to provide demo to each platform where this api can be used, so lookout for those.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.loadBalancingPeer">
+            <summary>
+            The client uses a LoadBalancingPeer as API to communicate with the server.
+            This is public for ease-of-use: Some methods like OpRaiseEvent are not relevant for the connection state and don't need a override.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.NameServerHost">
+            <summary>Name Server Host Name for Photon Cloud. Without port and without any prefix.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.NameServerHttp">
+            <summary>Name Server for HTTP connections to the Photon Cloud. Includes prefix and port.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ProtocolToNameServerPort">
+            <summary>Name Server port per protocol (the UDP port is different than TCP, etc).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.state">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.autoJoinLobby">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.EnableLobbyStatistics">
+             <summary>
+             If set to true, the Master Server will report the list of used lobbies to the client. This sets and updates LobbyStatistics.
+             </summary>
+             <remarks>
+             Lobby Statistics can be useful if a game uses multiple lobbies and you want
+             to show activity of each to players.
+            
+             LobbyStatistics are updated when you connect to the Master Server.
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.RoomInfoList">
+            <summary>This "list" is populated while being in the lobby of the Master. It contains RoomInfo per roomName (keys).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CurrentRoom">
+            <summary>The current room this client is connected to (null if none available).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.localPlayer">
+            <summary>Private field for LocalPlayer.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.lastJoinType">
+            <summary>Internally used to decide if a room must be created or joined on game server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.didAuthenticate">
+            <summary>Internally used to trigger OpAuthenticate when encryption was established after a connect.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.friendListRequested">
+            <summary>Contains the list of names of friends to look up their state on the server.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.friendListTimestamp">
+            <summary>Private timestamp (in ms) of the last friendlist update.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.isFetchingFriendList">
+            <summary>Internal flag to know if the client currently fetches a friend list.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.GetNameServerAddress">
+            <summary>
+            Gets the NameServer Address (with prefix and port), based on the set protocol (this.loadBalancingPeer.UsedProtocol).
+            </summary>
+            <returns>NameServer Address (with prefix and port).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.Connect(System.String,System.String,System.String,System.String,ExitGames.Client.Photon.LoadBalancing.AuthenticationValues)">
+             <summary>
+             Starts the "process" to connect to the master server. Relevant connection-values parameters can be set via parameters.
+             </summary>
+             <remarks>
+             The process to connect includes several steps: the actual connecting, establishing encryption, authentification
+             (of app and optionally the user) and joining a lobby (if AutoJoinLobby is true).
+            
+             Instead of providing all these parameters, you can also set the individual properties of a client before calling Connect().
+            
+             Users can connect either anonymously or use "Custom Authentication" to verify each individual player's login.
+             Custom Authentication in Photon uses external services and communities to verify users. While the client provides a user's info,
+             the service setup is done in the Photon Cloud Dashboard.
+             The parameter authValues will set this.AuthValues and use them in the connect process.
+            
+             To connect to the Photon Cloud, a valid AppId must be provided. This is shown in the Photon Cloud Dashboard.
+             https://cloud.photonengine.com/dashboard
+             Connecting to the Photon Cloud might fail due to:
+             - Network issues (OnStatusChanged() StatusCode.ExceptionOnConnect)
+             - Region not available (OnOperationResponse() for OpAuthenticate with ReturnCode == ErrorCode.InvalidRegion)
+             - Subscription CCU limit reached (OnOperationResponse() for OpAuthenticate with ReturnCode == ErrorCode.MaxCcuReached)
+             More about the connection limitations:
+             http://doc.photonengine.com/photon-cloud/SubscriptionErrorCases/#cat-references
+             </remarks>
+             <param name="masterServerAddress">Set a master server address instead of using the default. Uses default if null or empty.</param>
+             <param name="appId">Your application's name or the AppID assigned by Photon Cloud (as listed in Dashboard). Uses default if null or empty.</param>
+             <param name="appVersion">Can be used to separate users by their client's version (useful to add features without breaking older clients). Uses default if null or empty.</param>
+             <param name="nickName">Optional name for this player.</param>
+             <param name="authValues">Authentication values for this user. Optional. If you provide a unique userID it is used for FindFriends.</param>
+             <returns>If the operation could be send (can be false for bad server urls).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.Connect">
+             <summary>
+             Starts the "process" to connect to a Master Server, using MasterServerAddress and AppId properties.
+             </summary>
+             <remarks>
+             To connect to the Photon Cloud, use ConnectToRegionMaster().
+            
+             The process to connect includes several steps: the actual connecting, establishing encryption, authentification
+             (of app and optionally the user) and joining a lobby (if AutoJoinLobby is true).
+            
+             Users can connect either anonymously or use "Custom Authentication" to verify each individual player's login.
+             Custom Authentication in Photon uses external services and communities to verify users. While the client provides a user's info,
+             the service setup is done in the Photon Cloud Dashboard.
+             The parameter authValues will set this.AuthValues and use them in the connect process.
+            
+             Connecting to the Photon Cloud might fail due to:
+             - Network issues (OnStatusChanged() StatusCode.ExceptionOnConnect)
+             - Region not available (OnOperationResponse() for OpAuthenticate with ReturnCode == ErrorCode.InvalidRegion)
+             - Subscription CCU limit reached (OnOperationResponse() for OpAuthenticate with ReturnCode == ErrorCode.MaxCcuReached)
+             More about the connection limitations:
+             http://doc.photonengine.com/photon-cloud/SubscriptionErrorCases/#cat-references
+             </remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ConnectToNameServer">
+            <summary>
+            Connects to the NameServer for Photon Cloud, where a region and server list can be obtained.
+            </summary>
+            <see cref="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpGetRegions"/>
+            <returns>If the workflow was started or failed right away.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ConnectToRegionMaster(System.String)">
+            <summary>
+            Connects you to a specific region's Master Server, using the Name Server to find the IP.
+            </summary>
+            <returns>If the operation could be sent. If false, no operation was sent.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.Disconnect">
+            <summary>Disconnects this client from any server and sets this.State if the connection is successfuly closed.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.Service">
+             <summary>
+             This method dispatches all available incoming commands and then sends this client's outgoing commands.
+             It uses DispatchIncomingCommands and SendOutgoingCommands to do that.
+             </summary>
+             <remarks>
+             The Photon client libraries are designed to fit easily into a game or application. The application
+             is in control of the context (thread) in which incoming events and responses are executed and has
+             full control of the creation of UDP/TCP packages.
+            
+             Sending packages and dispatching received messages are two separate tasks. Service combines them
+             into one method at the cost of control. It calls DispatchIncomingCommands and SendOutgoingCommands.
+            
+             Call this method regularly (2..20 times a second).
+            
+             This will Dispatch ANY received commands (unless a reliable command in-order is still missing) and
+             events AND will send queued outgoing commands. Fewer calls might be more effective if a device
+             cannot send many packets per second, as multiple operations might be combined into one package.
+             </remarks>
+             <example>
+             You could replace Service by:
+            
+                 while (DispatchIncomingCommands()); //Dispatch until everything is Dispatched...
+                 SendOutgoingCommands(); //Send a UDP/TCP package with outgoing messages
+             </example>
+             <seealso cref="M:ExitGames.Client.Photon.PhotonPeer.DispatchIncomingCommands"/>
+             <seealso cref="M:ExitGames.Client.Photon.PhotonPeer.SendOutgoingCommands"/>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.DisconnectToReconnect">
+            <summary>
+            Private Disconnect variant that sets the state, too.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ConnectToGameServer">
+            <summary>
+            Privately used only.
+            Starts the "process" to connect to the game server (connect before a game is joined).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpGetRegions">
+            <summary>
+            While on the NameServer, this gets you the list of regional servers (short names and their IPs to ping them).
+            </summary>
+            <returns>If the operation could be sent. If false, no operation was sent (e.g. while not connected to the NameServer).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinLobby(ExitGames.Client.Photon.LoadBalancing.TypedLobby)">
+            <summary>
+            Joins the lobby on the Master Server, where you get a list of RoomInfos of currently open rooms.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <param name="lobby">The lobby join to. Use null for default lobby.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpLeaveLobby">
+            <summary>Opposite of joining a lobby. You don't have to explicitly leave a lobby to join another (client can be in one max, at any time).</summary>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinRandomRoom(System.Collections.Hashtable,System.Byte)">
+             <summary>Operation to join a random room if available. You can use room properties to filter accepted rooms.</summary>
+             <remarks>
+             You can use expectedCustomRoomProperties and expectedMaxPlayers as filters for accepting rooms.
+             If you set expectedCustomRoomProperties, a room must have the exact same key values set at Custom Properties.
+             You need to define which Custom Room Properties will be available for matchmaking when you create a room.
+             See: OpCreateRoom(string roomName, RoomOptions roomOptions, TypedLobby lobby)
+            
+             This operation fails if no rooms are fitting or available (all full, closed or not visible).
+             Override this class and implement OnOperationResponse(OperationResponse operationResponse).
+            
+             OpJoinRandomRoom can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             While the server is looking for a game, the State will be Joining. It's set immediately when this method sent the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When joining a room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+            
+             More about matchmaking:
+             http://doc.photonengine.com/en/realtime/current/reference/matchmaking-and-lobby
+             </remarks>
+             <param name="expectedCustomRoomProperties">Optional. A room will only be joined, if it matches these custom properties (with string keys).</param>
+             <param name="expectedMaxPlayers">Filters for a particular maxplayer setting. Use 0 to accept any maxPlayer value.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinRandomRoom(System.Collections.Hashtable,System.Byte,ExitGames.Client.Photon.LoadBalancing.MatchmakingMode)">
+             <summary>Operation to join a random room if available. You can use room properties to filter accepted rooms.</summary>
+             <remarks>
+             You can use expectedCustomRoomProperties and expectedMaxPlayers as filters for accepting rooms.
+             If you set expectedCustomRoomProperties, a room must have the exact same key values set at Custom Properties.
+             You need to define which Custom Room Properties will be available for matchmaking when you create a room.
+             See: OpCreateRoom(string roomName, RoomOptions roomOptions, TypedLobby lobby)
+            
+             This operation fails if no rooms are fitting or available (all full, closed or not visible).
+             Override this class and implement OnOperationResponse(OperationResponse operationResponse).
+            
+             OpJoinRandomRoom can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             While the server is looking for a game, the State will be Joining. It's set immediately when this method sent the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When joining a room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+            
+             More about matchmaking:
+             http://doc.photonengine.com/en/realtime/current/reference/matchmaking-and-lobby
+             </remarks>
+             <param name="expectedCustomRoomProperties">Optional. A room will only be joined, if it matches these custom properties (with string keys).</param>
+             <param name="expectedMaxPlayers">Filters for a particular maxplayer setting. Use 0 to accept any maxPlayer value.</param>
+             <param name="matchmakingMode">Selects one of the available matchmaking algorithms. See MatchmakingMode enum for options.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinRandomRoom(System.Collections.Hashtable,System.Byte,ExitGames.Client.Photon.LoadBalancing.MatchmakingMode,ExitGames.Client.Photon.LoadBalancing.TypedLobby,System.String)">
+             <summary>Operation to join a random room if available. You can use room properties to filter accepted rooms.</summary>
+             <remarks>
+             You can use expectedCustomRoomProperties and expectedMaxPlayers as filters for accepting rooms.
+             If you set expectedCustomRoomProperties, a room must have the exact same key values set at Custom Properties.
+             You need to define which Custom Room Properties will be available for matchmaking when you create a room.
+             See: OpCreateRoom(string roomName, RoomOptions roomOptions, TypedLobby lobby)
+            
+             This operation fails if no rooms are fitting or available (all full, closed or not visible).
+             Override this class and implement OnOperationResponse(OperationResponse operationResponse).
+            
+             OpJoinRandomRoom can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             While the server is looking for a game, the State will be Joining.
+             It's set immediately when this method sent the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When joining a room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+            
+             The parameter lobby can be null (using the defaul lobby) or a typed lobby you make up.
+             Lobbies are created on the fly, as required by the clients. If you organize matchmaking with lobbies,
+             keep in mind that they also fragment your matchmaking. Using more lobbies will put less rooms in each.
+            
+             The parameter sqlLobbyFilter can only be combined with the LobbyType.SqlLobby. In that case, it's used
+             to define a sql-like "WHERE" clause for filtering rooms. This is useful for skill-based matchmaking e.g..
+            
+             More about matchmaking:
+             http://doc.photonengine.com/en/realtime/current/reference/matchmaking-and-lobby
+             </remarks>
+             <param name="expectedCustomRoomProperties">Optional. A room will only be joined, if it matches these custom properties (with string keys).</param>
+             <param name="expectedMaxPlayers">Filters for a particular maxplayer setting. Use 0 to accept any maxPlayer value.</param>
+             <param name="matchmakingMode">Selects one of the available matchmaking algorithms. See MatchmakingMode enum for options.</param>
+             <param name="lobby">The lobby in which to find a room. Use null for default lobby.</param>
+             <param name="sqlLobbyFilter">Can be used with LobbyType.SqlLobby only. This is a "where" clause of a sql statement. Use null for random game.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinRoom(System.String)">
+             <summary>
+             Joins a room by roomName. Useful when using room lists in lobbies or when you know the name otherwise.
+             </summary>
+             <remarks>
+             This method is useful when you are using a lobby to list rooms and know their names.
+             A room's name has to be unique (per region and game version), so it does not matter which lobby it's in.
+            
+             If the room is full, closed or not existing, this will fail. Override this class and implement
+             OnOperationResponse(OperationResponse operationResponse) to get the errors.
+            
+             OpJoinRoom can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             While the server is joining the game, the State will be ClientState.Joining.
+             It's set immediately when this method sends the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When joining a room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+            
+             It's usually better to use OpJoinOrCreateRoom for invitations.
+             Then it does not matter if the room is already setup.
+             </remarks>
+             <param name="roomName">The name of the room to join. Must be existing already, open and non-full or can't be joined.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinRoom(System.String,System.Int32)">
+             <summary>
+             Joins a room by roomName. If this client returns to the room, set the previously used Player.ID as actorNumber.
+             </summary>
+             <remarks>
+             This method is useful when you are using a lobby to list rooms and know their names.
+             A room's name has to be unique (per region and game version), so it does not matter which lobby it's in.
+            
+             If this client returns to the room, set the previously used Player.ID as actorNumber.
+             When you are using Custom Authentication with unique user IDs, the server will use the userID
+             to find the previously assigned actorNumber in the room.
+            
+             For turnbased games, this is especially useful as rooms can be continued after hours or days.
+             To return to a room, set the actorNumber to anything but 0. It's best practice to use -1 with
+             Custom Authentication and unique user accounts.
+            
+             If the room is full, closed or not existing, this will fail. Override this class and implement
+             OnOperationResponse(OperationResponse operationResponse) to get the errors.
+            
+             OpJoinRoom can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             While the server is joining the game, the State will be ClientState.Joining.
+             It's set immediately when this method sends the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When joining a room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+            
+             It's usually better to use OpJoinOrCreateRoom for invitations.
+             Then it does not matter if the room is already setup.
+             </remarks>
+             <param name="roomName">The name of the room to join. Must be existing already, open and non-full or can't be joined.</param>
+             <param name="actorNumber">When returning to a room, use a non-0 value. For Turnbased games, set the previously assigned Player.ID or -1 when using Custom Authentication.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpJoinOrCreateRoom(System.String,ExitGames.Client.Photon.LoadBalancing.RoomOptions,ExitGames.Client.Photon.LoadBalancing.TypedLobby)">
+             <summary>
+             Joins a specific room by name. If the room does not exist (yet), it will be created implicitly.
+             </summary>
+             <remarks>
+             Unlike OpJoinRoom, this operation does not fail if the room does not exist.
+             This can be useful when you send invitations to a room before actually creating it:
+             Any invited player (whoever is first) can call this and on demand, the room gets created implicitly.
+            
+             This operation does not allow you to re-join a game. To return to a room, use OpJoinRoom with
+             the actorNumber which was assigned previously.
+            
+             If you set room properties in RoomOptions, they get ignored when the room is existing already.
+             This avoids changing the room properties by late joining players. Only when the room gets created,
+             the RoomOptions are set in this case.
+            
+             If the room is full or closed, this will fail. Override this class and implement
+             OnOperationResponse(OperationResponse operationResponse) to get the errors.
+            
+             This method can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before
+             calling this method. Alternatively, check the returned bool value.
+            
+             While the server is joining the game, the State will be ClientState.Joining.
+             It's set immediately when this method sends the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and join the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When entering the room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+             </remarks>
+             <param name="roomName">The name of the room to join (might be created implicitly).</param>
+             <param name="roomOptions">Contains the parameters and properties of the new room. See RoomOptions class for a description of each.</param>
+             <param name="lobby">Typed lobby to be used if the roomname is not in use (and room gets created). If != null, it will also set CurrentLobby.</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpCreateRoom(System.String,ExitGames.Client.Photon.LoadBalancing.RoomOptions,ExitGames.Client.Photon.LoadBalancing.TypedLobby)">
+             <summary>
+             Creates a new room on the server (or fails if the name is already in use).
+             </summary>
+             <remarks>
+             If you don't want to create a unique room-name, pass null or "" as name and the server will assign a
+             roomName (a GUID as string). Room names are unique.
+            
+             A room will be attached to the specified lobby. Use null as lobby to attach the
+             room to the lobby you are now in. If you are in no lobby, the default lobby is used.
+            
+             Multiple lobbies can help separate players by map or skill or game type. Each room can only be found
+             in one lobby (no matter if defined by name and type or as default).
+            
+             This method can only be called while the client is connected to a Master Server.
+             You should check LoadBalancingClient.Server and LoadBalancingClient.IsConnectedAndReady before calling this method.
+             Alternatively, check the returned bool value.
+            
+             Even when sent, the Operation will fail (on the server) if the roomName is in use.
+             Override this class and implement  OnOperationResponse(OperationResponse operationResponse) to get the errors.
+            
+            
+             While the server is creating the game, the State will be ClientState.Joining.
+             The state Joining is used because the client is on the way to enter a room (no matter if joining or creating).
+             It's set immediately when this method sends the Operation.
+            
+             If successful, the LoadBalancingClient will get a Game Server Address and use it automatically
+             to switch servers and enter the room. When you're in the room, this client's State will become
+             ClientState.Joined (both, for joining or creating it).
+             Set a OnStateChangeAction method to check for states.
+            
+             When entering the room, this client's Player Custom Properties will be sent to the room.
+             Use LocalPlayer.SetCustomProperties to set them, even while not yet in the room.
+             Note that the player properties will be cached locally and sent to any next room you would join, too.
+             </remarks>
+             <param name="roomName">The name to create a room with. Must be unique and not in use or can't be created. If null, the server will assign a GUID as name.</param>
+             <param name="roomOptions">Contains the parameters and properties of the new room. See RoomOptions class for a description of each.</param>
+             <param name="lobby">The lobby (name and type) in which to create the room. Null uses the current lobby or the default lobby (if not in a lobby).</param>
+             <returns>If the operation could be sent currently (requires connection to Master Server).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpLeaveRoom">
+            <summary>
+            Leaves the CurrentRoom and returns to the Master server (back to the lobby).
+            OpLeaveRoom skips execution when the room is null or the server is not GameServer or the client is disconnecting from GS already.
+            OpLeaveRoom returns false in those cases and won't change the state, so check return of this method.
+            </summary>
+            <remarks>
+            This method actually is not an operation per se. It sets a state and calls Disconnect().
+            This is is quicker than calling OpLeave and then disconnect (which also triggers a leave).
+            </remarks>
+            <returns>If the current room could be left (impossible while not in a room).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpLeaveRoom(System.Boolean)">
+             <summary>
+             Leaves the current room, optionally telling the server that the user is just becoming inactive.
+             </summary>
+            
+             <param name="becomeInactive">If true, this player becomes inactive in the game and can return later (if PlayerTTL of the room is > 0).</param>
+             <remarks>
+             OpLeaveRoom skips execution when the room is null or the server is not GameServer or the client is disconnecting from GS already.
+             OpLeaveRoom returns false in those cases and won't change the state, so check return of this method.
+            
+             In some cases, this method will skip the OpLeave call and just call Disconnect(),
+             which not only leaves the room but also the server. Disconnect also triggers a leave and so that workflow is is quicker.
+             </remarks>
+             <returns>If the current room could be left (impossible while not in a room).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpFindFriends(System.String[])">
+             <summary>
+             Request the rooms and online status for a list of friends. All clients should set a unique UserId before connecting. The result is available in this.FriendList.
+             </summary>
+             <remarks>
+             Used on Master Server to find the rooms played by a selected list of users.
+             The result will be stored in LoadBalancingClient.FriendList, which is null before the first server response.
+            
+             Users identify themselves by setting a UserId in the LoadBalancingClient instance.
+             This will send the ID in OpAuthenticate during connect (to master and game servers).
+             Note: Changing a player's name doesn't make sense when using a friend list.
+            
+             The list of usernames must be fetched from some other source (not provided by Photon).
+            
+            
+             Internal:
+             The server response includes 2 arrays of info (each index matching a friend from the request):
+             ParameterCode.FindFriendsResponseOnlineList = bool[] of online states
+             ParameterCode.FindFriendsResponseRoomIdList = string[] of room names (empty string if not in a room)
+             </remarks>
+             <param name="friendsToFind">Array of friend's names (make sure they are unique).</param>
+             <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpSetCustomPropertiesOfActor(System.Int32,System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+              <summary>
+              Updates and synchronizes a Player's Custom Properties. Optionally, expectedProperties can be provided as condition.
+              </summary>
+              <remarks>
+              Custom Properties are a set of string keys and arbitrary values which is synchronized
+              for the players in a Room. They are available when the client enters the room, as
+              they are in the response of OpJoin and OpCreate.
+            
+              Custom Properties either relate to the (current) Room or a Player (in that Room).
+            
+              Both classes locally cache the current key/values and make them available as
+              property: CustomProperties. This is provided only to read them.
+              You must use the method SetCustomProperties to set/modify them.
+            
+              Any client can set any Custom Properties anytime. It's up to the game logic to organize
+              how they are best used.
+            
+              You should call SetCustomProperties only with key/values that are new or changed. This reduces
+              traffic and performance.
+            
+              Unless you define some expectedProperties, setting key/values is always permitted.
+              In this case, the property-setting client will not receive the new values from the server but
+              instead update its local cache in SetCustomProperties.
+            
+              If you define expectedProperties, the server will skip updates if the server property-cache
+              does not contain all expectedProperties with the same values.
+              In this case, the property-setting client will get an update from the server and update it's
+              cached key/values at about the same time as everyone else.
+            
+              The benefit of using expectedProperties can be only one client successfully sets a key from
+              one known value to another.
+              As example: Store who owns an item in a Custom Property "ownedBy". It's 0 initally.
+              When multiple players reach the item, they all attempt to change "ownedBy" from 0 to their
+              actorNumber. If you use expectedProperties {"ownedBy", 0} as condition, the first player to
+              take the item will have it (and the others fail to set the ownership).
+            
+              Properties get saved with the game state for Turnbased games (which use IsPersistent = true).
+              </remarks>
+             <param name="actorNr">Defines which player the Custom Properties belong to. ActorID of a player.</param>
+             <param name="propertiesToSet">Hashtable of Custom Properties that changes.</param>
+             <param name="expectedProperties">Provide some keys/values to use as condition for setting the new values.</param>
+             <param name="webForward">Defines if the set properties should be forwarded to a WebHook.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpSetPropertiesOfActor(System.Int32,System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+            <summary>Internally used to cache and set properties (including well known properties).</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpSetCustomPropertiesOfRoom(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+              <summary>
+              Updates and synchronizes this Room's Custom Properties. Optionally, expectedProperties can be provided as condition.
+              </summary>
+              <remarks>
+              Custom Properties are a set of string keys and arbitrary values which is synchronized
+              for the players in a Room. They are available when the client enters the room, as
+              they are in the response of OpJoin and OpCreate.
+            
+              Custom Properties either relate to the (current) Room or a Player (in that Room).
+            
+              Both classes locally cache the current key/values and make them available as
+              property: CustomProperties. This is provided only to read them.
+              You must use the method SetCustomProperties to set/modify them.
+            
+              Any client can set any Custom Properties anytime. It's up to the game logic to organize
+              how they are best used.
+            
+              You should call SetCustomProperties only with key/values that are new or changed. This reduces
+              traffic and performance.
+            
+              Unless you define some expectedProperties, setting key/values is always permitted.
+              In this case, the property-setting client will not receive the new values from the server but
+              instead update its local cache in SetCustomProperties.
+            
+              If you define expectedProperties, the server will skip updates if the server property-cache
+              does not contain all expectedProperties with the same values.
+              In this case, the property-setting client will get an update from the server and update it's
+              cached key/values at about the same time as everyone else.
+            
+              The benefit of using expectedProperties can be only one client successfully sets a key from
+              one known value to another.
+              As example: Store who owns an item in a Custom Property "ownedBy". It's 0 initally.
+              When multiple players reach the item, they all attempt to change "ownedBy" from 0 to their
+              actorNumber. If you use expectedProperties {"ownedBy", 0} as condition, the first player to
+              take the item will have it (and the others fail to set the ownership).
+            
+              Properties get saved with the game state for Turnbased games (which use IsPersistent = true).
+              </remarks>
+             <param name="propertiesToSet">Hashtable of Custom Properties that changes.</param>
+             <param name="expectedProperties">Provide some keys/values to use as condition for setting the new values.</param>
+             <param name="webForward">Defines if the set properties should be forwarded to a WebHook.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpSetPropertiesOfRoom(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+            <summary>Internally used to cache and set properties (including well known properties).</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpRaiseEvent(System.Byte,System.Object,System.Boolean,ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions)">
+            <summary>
+            Send an event with custom code/type and any content to the other players in the same room.
+            </summary>
+            <remarks>This override explicitly uses another parameter order to not mix it up with the implementation for Hashtable only.</remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="customEventContent">Any serializable datatype (including Hashtable like the other OpRaiseEvent overloads).</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <param name="raiseEventOptions">Contains (slightly) less often used options. If you pass null, the default options will be used.</param>
+            <returns>If operation could be enqueued for sending. Sent when calling: Service or SendOutgoingCommands.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OpWebRpc(System.String,System.Object)">
+             <summary>
+             This operation makes Photon call your custom web-service by path/name with the given parameters (converted into JSon).
+             </summary>
+             <remarks>
+             This is a "Photon Turnbased" feature and you have to setup your Photon Cloud Application prior to use.
+            
+             The response by Photon will call OnOperationResponse() with Code: OperationCode.WebRpc.
+             It's important to understand that the OperationResponse tells you if the WebRPC could be called or not
+             but the content of the response will contain the values the web-service sent (if any).
+             If the web-service could not execute the request, it might return another error and a message. This is
+             inside of the (wrapping) OperationResponse.
+             The class WebRpcResponse is a helper-class that extracts the most valuable content from the WebRPC
+             response.
+            
+             See the Turnbased Feature Overview for a short intro.
+             http://doc.photonengine.com/en/turnbased/current/getting-started/feature-overview
+             </remarks>
+             <example>
+             It's best to inherit a LoadBalancingClient into your own. Implement something like:
+            
+                 public override void OnOperationResponse(OperationResponse operationResponse)
+                 {
+                     base.OnOperationResponse(operationResponse);  // important to call, to keep state up to date
+            
+                     switch (operationResponse.OperationCode) {
+                     case OperationCode.WebRpc:
+            
+                         if (operationResponse.ReturnCode != 0)
+                         {
+                             DebugReturn(DebugLevel.ERROR, "WebRpc failed. Response: " + operationResponse.ToStringFull());
+                         }
+                         else
+                         {
+                             WebRpcResponse webResponse = new WebRpcResponse(operationResponse);
+                             this.OnWebRpcResponse(webResponse);
+                         }
+                         break;
+            
+                     // more code [...]
+             </example>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ReadoutProperties(System.Collections.Hashtable,System.Collections.Hashtable,System.Int32)">
+            <summary>
+            Privately used to read-out properties coming from the server in events and operation responses (which might be a bit tricky).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ReadoutPropertiesForActorNr(System.Collections.Hashtable,System.Int32)">
+            <summary>
+            Privately used only to read properties for a distinct actor (which might be the hashtable OR a key-pair value IN the actorProperties).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ChangeLocalID(System.Int32)">
+            <summary>
+            Internally used to set the LocalPlayer's ID (from -1 to the actual in-room ID).
+            </summary>
+            <param name="newID">New actor ID (a.k.a actorNr) assigned when joining a room.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CleanCachedValues">
+            <summary>
+            Internally used to clean up local instances of players and room.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.GameEnteredOnGameServer(ExitGames.Client.Photon.OperationResponse)">
+            <summary>
+            Called internally, when a game was joined or created on the game server.
+            This reads the response, finds out the local player's actorNumber (a.k.a. Player.ID) and applies properties of the room and players.
+            </summary>
+            <param name="operationResponse">Contains the server's response for an operation called by this peer.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CreatePlayer(System.String,System.Int32,System.Boolean,System.Collections.Hashtable)">
+            <summary>
+            Factory method to create a player instance - override to get your own player-type with custom features.
+            </summary>
+            <param name="actorName">The name of the player to be created. </param>
+            <param name="actorNumber">The player ID (a.k.a. actorNumber) of the player to be created.</param>
+            <param name="isLocal">Sets the distinction if the player to be created is your player or if its assigned to someone else.</param>
+            <param name="actorProperties">The custom properties for this new player</param>
+            <returns>The newly created player</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CreateRoom(System.String,ExitGames.Client.Photon.LoadBalancing.RoomOptions)">
+            <summary>Internal "factory" method to create a room-instance.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.DebugReturn(ExitGames.Client.Photon.DebugLevel,System.String)">
+            <summary>Debug output of low level api (and this client).</summary>
+            <remarks>This method is not responsible to keep up the state of a LoadBalancingClient. Calling base.DebugReturn on overrides is optional.</remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnOperationResponse(ExitGames.Client.Photon.OperationResponse)">
+             <summary>
+             Uses the OperationResponses provided by the server to advance the internal state and call ops as needed.
+             </summary>
+             <remarks>
+             When this method finishes, it will call your OnOpResponseAction (if any). This way, you can get any
+             operation response without overriding this class.
+            
+             To implement a more complex game/app logic, you should implement your own class that inherits the
+             LoadBalancingClient. Override this method to use your own operation-responses easily.
+            
+             This method is essential to update the internal state of a LoadBalancingClient, so overriding methods
+             must call base.OnOperationResponse().
+             </remarks>
+             <param name="operationResponse">Contains the server's response for an operation called by this peer.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnStatusChanged(ExitGames.Client.Photon.StatusCode)">
+            <summary>
+            Uses the connection's statusCodes to advance the internal state and call operations as needed.
+            </summary>
+            <remarks>This method is essential to update the internal state of a LoadBalancingClient. Overriding methods must call base.OnStatusChanged.</remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnEvent(ExitGames.Client.Photon.EventData)">
+            <summary>
+            Uses the photonEvent's provided by the server to advance the internal state and call ops as needed.
+            </summary>
+            <remarks>This method is essential to update the internal state of a LoadBalancingClient. Overriding methods must call base.OnEvent.</remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnMessage(System.Object)">
+            <summary>In Photon 4, "raw messages" will get their own callback method in the interface. Not used yet.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AppVersion">
+            <summary>The version of your client. A new version also creates a new "virtual app" to separate players from older client versions.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AppId">
+            <summary>The AppID as assigned from the Photon Cloud. If you host yourself, this is the "regular" Photon Server Application Name (most likely: "LoadBalancing").</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AuthValues">
+            <summary>A user's authentication values for authentication in Photon.</summary>
+            <remarks>Set this property or pass AuthenticationValues by Connect(..., authValues).</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.IsUsingNameServer">
+            <summary>True if this client uses a NameServer to get the Master Server address.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.NameServerAddress">
+            <summary>Name Server Address for Photon Cloud (based on current protocol). You can use the default values and usually won't have to set this value.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CurrentServerAddress">
+            <summary>The currently used server address (if any). The type of server is define by Server property.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.MasterServerAddress">
+            <summary>Your Master Server address. In PhotonCloud, call ConnectToRegionMaster() to find your Master Server.</summary>
+            <remarks>
+            In the Photon Cloud, explicit definition of a Master Server Address is not best practice.
+            The Photon Cloud has a "Name Server" which redirects clients to a specific Master Server (per Region and AppId).
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.GameServerAddress">
+            <summary>The game server's address for a particular room. In use temporarily, as assigned by master.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.Server">
+            <summary>The server this client is currently connected or connecting to.</summary>
+            <remarks>
+            Each server (NameServer, MasterServer, GameServer) allow some operations and reject others.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.State">
+            <summary>Current state this client is in. Careful: several states are "transitions" that lead to other states.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.IsConnected">
+            <summary>Returns if this client is currently connected or connecting to some type of server.</summary>
+            <remarks>This is even true while switching servers. Use IsConnectedAndReady to check only for those states that enable you to send Operations.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.IsConnectedAndReady">
+            <summary>
+            A refined version of IsConnected which is true only if your connection to the server is ready to accept operations.
+            </summary>
+            <remarks>
+            Which operations are available, depends on the Server. For example, the NameServer allows OpGetRegions which is not available anywhere else.
+            The MasterServer does not allow you to send events (OpRaiseEvent) and on the GameServer you are unable to join a lobby (OpJoinLobby).
+            Check which server you are on with PhotonNetwork.Server.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnStateChangeAction">
+            <summary>Register a method to be called when this client's ClientState gets set.</summary>
+            <remarks>This can be useful to react to being connected, joined into a room, etc.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnEventAction">
+             <summary>Register a method to be called when an event got dispatched. Gets called at the end of OnEvent().</summary>
+             <remarks>
+             This is an alternative to extending LoadBalancingClient to override OnEvent().
+            
+             Note that OnEvent is executing before your Action is called.
+             That means for example: Joining players will already be in the player list but leaving
+             players will already be removed from the room.
+             </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.OnOpResponseAction">
+             <summary>Register a method to be called when this client's ClientState gets set.</summary>
+             <remarks>
+             This is an alternative to extending LoadBalancingClient to override OnOperationResponse().
+            
+             Note that OnOperationResponse gets executed before your Action is called.
+             That means for example: The OpJoinLobby response already set the state to "JoinedLobby"
+             and the response to OpLeave already triggered the Disconnect before this is called.
+             </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.DisconnectedCause">
+            <summary>Summarizes (aggregates) the different causes for disconnects of a client.</summary>
+            <remarks>
+            A disconnect can be caused by: errors in the network connection or some vital operation failing
+            (which is considered "high level"). While operations always trigger a call to OnOperationResponse,
+            connection related changes are treated in OnStatusChanged.
+            The DisconnectCause is set in either case and summarizes the causes for any disconnect in a single
+            state value which can be used to display (or debug) the cause for disconnection.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CurrentLobby">
+            <summary>The lobby this client currently uses.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CurrentLobbyName">
+            \deprecated Use CurrentLobby.Name
+            <summary>The name of the lobby this client currently uses.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CurrentLobbyType">
+            \deprecated Use CurrentLobby.Type
+            <summary>The type of the lobby this client currently uses. There are "default" and "SQL" typed lobbies. See: LobbyType.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AutoJoinLobby">
+            <summary>If your client should join random games, you can skip joining the lobby. Call OpJoinRandomRoom and create a room if that fails.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.requestLobbyStatistics">
+            <summary>Internally used as easy check if we should request lobby statistics from "this" particular server.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.LobbyStatistics">
+             <summary>
+             If RequestLobbyStatistics is true, this provides a list of used lobbies (their name, type, room- and player-count) of this application, while on the Master Server.
+             </summary>
+             <remarks>
+             If turned on, the Master Server will provide information about active lobbies for this application.
+            
+             Lobby Statistics can be useful if a game uses multiple lobbies and you want
+             to show activity of each to players. Per lobby, you get: name, type, room- and player-count.
+            
+             Lobby Statistics are not turned on by default.
+             Enable them by setting RequestLobbyStatistics to true before you connect.
+            
+             LobbyStatistics are updated when you connect to the Master Server.
+             You can check in OnEvent if EventCode.LobbyStats arrived. This the updates.
+             </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.PlayerName">
+            <summary>
+            Same as NickName.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.NickName">
+            <summary>
+            The nickname of the player (synced with others). Same as client.LocalPlayer.NickName.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.UserId">
+             <summary>An ID for this user. Sent in OpAuthenticate when you connect. If not set, the PlayerName is applied during connect.</summary>
+             <remarks>
+             On connect, if the UserId is null or empty, the client will copy the PlayName to UserId. If PlayerName is not set either
+             (before connect), the server applies a temporary ID which stays unknown to this client and other clients.
+            
+             The UserId is what's used in FindFriends and for fetching data for your account (with WebHooks e.g.).
+            
+             By convention, set this ID before you connect, not while being connected.
+             There is no error but the ID won't change while being connected.
+             </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.LocalPlayer">
+            <summary>The local player is never null but not valid unless the client is in a room, too. The ID will be -1 outside of rooms.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.PlayersOnMasterCount">
+            <summary>Statistic value available on master server: Players on master (looking for games).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.PlayersInRoomsCount">
+            <summary>Statistic value available on master server: Players in rooms (playing).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.RoomsCount">
+            <summary>Statistic value available on master server: Rooms currently created.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.FriendList">
+            <summary>
+            List of friends, their online status and the room they are in. Null until initialized by OpFindFriends response.
+            </summary>
+            <remarks>
+            Do not modify this list! It's internally handled by OpFindFriends and meant as read-only.
+            The value of FriendListAge gives you a hint how old the data is. Don't get this list more often than useful (> 10 seconds).
+            In best case, keep the list you fetch really short. You could (e.g.) get the full list only once, then request a few updates
+            only for friends who are online. After a while (e.g. 1 minute), you can get the full list again.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.FriendListAge">
+            <summary>
+            Age of friend list info (in milliseconds). It's 0 until a friend list is fetched.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.IsAuthorizeSecretAvailable">
+            <summary>Internally used to check if a "Secret" is available to use. Sent by Photon Cloud servers, it simplifies authentication when switching servers.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AvailableRegions">
+            <summary>A list of region names for the Photon Cloud. Set by the result of OpGetRegions().</summary>
+            <remarks>Put a "case OperationCode.GetRegions:" into your OnOperationResponse method to notice when the result is available.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.AvailableRegionsServers">
+            <summary>A list of region server (IP addresses with port) for the Photon Cloud. Set by the result of OpGetRegions().</summary>
+            <remarks>Put a "case OperationCode.GetRegions:" into your OnOperationResponse method to notice when the result is available.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.CloudRegion">
+            <summary>The cloud region this client connects to. Set by ConnectToRegionMaster(). Not set if you don't use a NameServer!</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.LoadBalancingClient.ServerConnection">
+            <summary>Available server (types) for internally used field: server.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer">
+            <summary>
+            A LoadbalancingPeer provides the operations and enum definitions needed to use the loadbalancing server application which is also used in Photon Cloud.
+            </summary>
+            <remarks>
+            The LoadBalancingPeer does not keep a state, instead this is done by a LoadBalancingClient.
+            </remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.#ctor(ExitGames.Client.Photon.ConnectionProtocol)">
+            <summary>
+            Creates a Peer with selected connection protocol.
+            </summary>
+            <remarks>Each connection protocol has it's own default networking ports for Photon.</remarks>
+            <param name="protocolType">The preferred option is UDP.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.#ctor(ExitGames.Client.Photon.IPhotonPeerListener,ExitGames.Client.Photon.ConnectionProtocol)">
+            <summary>
+            Creates a Peer with default connection protocol (UDP).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpJoinLobby">
+            <summary>
+            Calls OpJoinLobby(string name, LobbyType lobbyType).
+            </summary>
+            <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpJoinLobby(ExitGames.Client.Photon.LoadBalancing.TypedLobby)">
+            <summary>
+            Joins the lobby on the Master Server, where you get a list of RoomInfos of currently open rooms.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <param name="lobby">The lobby join to.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpLeaveLobby">
+            <summary>
+            Leaves the lobby on the Master Server.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpCreateRoom(ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.EnterRoomParams)">
+            <summary>
+            Creates a room (on either Master or Game Server).
+            The OperationResponse depends on the server the peer is connected to:
+            Master will return a Game Server to connect to.
+            Game Server will return the joined Room's data.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <remarks>
+            If the room is already existing, the OperationResponse will have a returnCode of ErrorCode.GameAlreadyExists.
+            </remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpJoinRoom(ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.EnterRoomParams)">
+            <summary>
+            Joins a room by name or creates new room if room with given name not exists.
+            The OperationResponse depends on the server the peer is connected to:
+            Master will return a Game Server to connect to.
+            Game Server will return the joined Room's data.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <remarks>
+            If the room is not existing (anymore), the OperationResponse will have a returnCode of ErrorCode.GameDoesNotExist.
+            Other possible ErrorCodes are: GameClosed, GameFull.
+            </remarks>
+            <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpJoinRandomRoom(ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpJoinRandomRoomParams)">
+            <summary>
+            Operation to join a random, available room. Overloads take additional player properties.
+            This is an async request which triggers a OnOperationResponse() call.
+            If all rooms are closed or full, the OperationResponse will have a returnCode of ErrorCode.NoRandomMatchFound.
+            If successful, the OperationResponse contains a gameserver address and the name of some room.
+            </summary>
+            <returns>If the operation could be sent currently (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpLeaveRoom(System.Boolean)">
+            <summary>
+            Leaves a room with option to come back later or "for good".
+            </summary>
+            <param name="becomeInactive">Async games can be re-joined (loaded) later on. Set to false, if you want to abandon a game entirely.</param>
+            <returns>If the opteration can be send currently.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpFindFriends(System.String[])">
+             <summary>
+             Request the rooms and online status for a list of friends (each client must set a unique username via OpAuthenticate).
+             </summary>
+             <remarks>
+             Used on Master Server to find the rooms played by a selected list of users.
+             Users identify themselves by using OpAuthenticate with a unique username.
+             The list of usernames must be fetched from some other source (not provided by Photon).
+            
+             The server response includes 2 arrays of info (each index matching a friend from the request):
+             ParameterCode.FindFriendsResponseOnlineList = bool[] of online states
+             ParameterCode.FindFriendsResponseRoomIdList = string[] of room names (empty string if not in a room)
+             </remarks>
+             <param name="friendsToFind">Array of friend's names (make sure they are unique).</param>
+             <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpSetPropertiesOfActor(System.Int32,System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Sets properties of a player / actor.
+            Internally this uses OpSetProperties, which can be used to either set room or player properties.
+            </summary>
+            <param name="actorNr">The payer ID (a.k.a. actorNumber) of the player to attach these properties to.</param>
+            <param name="actorProperties">The properties to add or update.</param>
+            <param name="expectedProperties">The properties expected when update occurs. (CAS : "Check And Swap")</param>
+            <param name="webForward"></param>
+            <returns>If the operation could be sent (requires connection).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpSetPropertiesOfRoom(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Sets properties of a room.
+            Internally this uses OpSetProperties, which can be used to either set room or player properties.
+            </summary>
+            <param name="gameProperties">The properties to add or update.</param>
+            <param name="expectedProperties">The properties expected when update occurs. (CAS : "Check And Swap")</param>
+            <param name="webForward">"WebFlag" to indicate if request should be forwarded as "PathProperties" webhook or not.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpAuthenticate(System.String,System.String,ExitGames.Client.Photon.LoadBalancing.AuthenticationValues,System.String,System.Boolean)">
+            <summary>
+            Sends this app's appId and appVersion to identify this application server side.
+            This is an async request which triggers a OnOperationResponse() call.
+            </summary>
+            <remarks>
+            This operation makes use of encryption, if that is established before.
+            See: EstablishEncryption(). Check encryption with IsEncryptionAvailable.
+            This operation is allowed only once per connection (multiple calls will have ErrorCode != Ok).
+            </remarks>
+            <param name="appId">Your application's name or ID to authenticate. This is assigned by Photon Cloud (webpage).</param>
+            <param name="appVersion">The client's version (clients with differing client appVersions are separated and players don't meet).</param>
+            <param name="authValues">Optional authentication values. The client can set no values or a UserId or some parameters for Custom Authentication by a server.</param>
+            <param name="regionCode">Optional region code, if the client should connect to a specific Photon Cloud Region.</param>
+            <param name="getLobbyStatistics">Set to true on Master Server to receive "Lobby Statistics" events.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpChangeGroups(System.Byte[],System.Byte[])">
+             <summary>
+             Operation to handle this client's interest groups (for events in room).
+             </summary>
+             <remarks>
+             Note the difference between passing null and byte[0]:
+               null won't add/remove any groups.
+               byte[0] will add/remove all (existing) groups.
+             First, removing groups is executed. This way, you could leave all groups and join only the ones provided.
+            
+             Changes become active not immediately but when the server executes this operation (approximately RTT/2).
+             </remarks>
+             <param name="groupsToRemove">Groups to remove from interest. Null will not leave any. A byte[0] will remove all.</param>
+             <param name="groupsToAdd">Groups to add to interest. Null will not add any. A byte[0] will add all current.</param>
+             <returns></returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Boolean,System.Object)">
+            <summary>
+            Send an event with custom code/type and any content to the other players in the same room.
+            </summary>
+            <remarks>This override explicitly uses another parameter order to not mix it up with the implementation for Hashtable only.</remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <param name="customEventContent">Any serializable datatype (including Hashtable like the other OpRaiseEvent overloads).</param>
+            <returns>If operation could be enqueued for sending. Sent when calling: Service or SendOutgoingCommands.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Boolean,System.Object,System.Byte,ExitGames.Client.Photon.LoadBalancing.EventCaching,System.Int32[],ExitGames.Client.Photon.LoadBalancing.ReceiverGroup,System.Byte)">
+            <summary>
+            Send an event with custom code/type and any content to the other players in the same room.
+            </summary>
+            <remarks>This override explicitly uses another parameter order to not mix it up with the implementation for Hashtable only.</remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <param name="customEventContent">Any serializable datatype (including Hashtable like the other OpRaiseEvent overloads).</param>
+            <param name="channelId">Command sequence in which this command belongs. Must be less than value of ChannelCount property. Default: 0.</param>
+            <param name="cache">Affects how the server will treat the event caching-wise. Can cache events for players joining later on or remove previously cached events. Default: DoNotCache.</param>
+            <param name="targetActors">List of ActorNumbers (in this room) to send the event to. Overrides caching. Default: null.</param>
+            <param name="receivers">Defines a target-player group. Default: Others.</param>
+            <param name="interestGroup">Defines to which interest group the event is sent. Players can subscribe or unsibscribe to groups. Group 0 is always sent to all. Default: 0.</param>
+            <returns>If operation could be enqueued for sending. Sent when calling: Service or SendOutgoingCommands.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Boolean,System.Object,System.Byte,ExitGames.Client.Photon.LoadBalancing.EventCaching,System.Int32[],ExitGames.Client.Photon.LoadBalancing.ReceiverGroup,System.Byte,System.Boolean)">
+            <summary>
+            Send an event with custom code/type and any content to the other players in the same room.
+            </summary>
+            <remarks>This override explicitly uses another parameter order to not mix it up with the implementation for Hashtable only.</remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <param name="customEventContent">Any serializable datatype (including Hashtable like the other OpRaiseEvent overloads).</param>
+            <param name="channelId">Command sequence in which this command belongs. Must be less than value of ChannelCount property. Default: 0.</param>
+            <param name="cache">Affects how the server will treat the event caching-wise. Can cache events for players joining later on or remove previously cached events. Default: DoNotCache.</param>
+            <param name="targetActors">List of ActorNumbers (in this room) to send the event to. Overrides caching. Default: null.</param>
+            <param name="receivers">Defines a target-player group. Default: Others.</param>
+            <param name="interestGroup">Defines to which interest group the event is sent. Players can subscribe or unsibscribe to groups. Group 0 is always sent to all. Default: 0.</param>
+            <param name="forwardToWebhook">Tells the server to send this event to the "WebHook" configured for your Application in the Dashboard. Should only be used in Turnbased games.</param>
+            <returns>If operation could be enqueued for sending. Sent when calling: Service or SendOutgoingCommands.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Byte,System.Collections.Hashtable,System.Boolean)">
+            <summary>
+            Send your custom data as event to an "interest group" in the current Room.
+            </summary>
+            <remarks>
+            No matter if reliable or not, when an event is sent to a interest Group, some users won't get this data.
+            Clients can control the groups they are interested in by using OpChangeGroups.
+            </remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="interestGroup">The ID of the interest group this event goes to (exclusively).</param>
+            <param name="customEventContent">Custom data you want to send along (use null, if none).</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <returns>If operation could be enqueued for sending</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Collections.Hashtable,System.Boolean,System.Byte)">
+            <summary>
+            Used in a room to raise (send) an event to the other players.
+            Multiple overloads expose different parameters to this frequently used operation.
+            This is an async request will trigger a OnOperationResponse() call only in error-cases,
+            because it's called many times per second and can hardly fail.
+            </summary>
+            <param name="eventCode">Code for this "type" of event (assign a code, "meaning" and content at will, starting at code 1).</param>
+            <param name="evData">Data to send. Hashtable that contains key-values of Photon serializable datatypes.</param>
+            <param name="sendReliable">Use false if the event is replaced by a newer rapidly. Reliable events add overhead and add lag when repeated.</param>
+            <param name="channelId">The "channel" to which this event should belong. Per channel, the sequence is kept in order.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Collections.Hashtable,System.Boolean,System.Byte,System.Int32[])">
+            <summary>
+            Used in a room to raise (send) an event to the other players.
+            Multiple overloads expose different parameters to this frequently used operation.
+            </summary>
+            <param name="eventCode">Code for this "type" of event (use a code per "meaning" or content).</param>
+            <param name="evData">Data to send. Hashtable that contains key-values of Photon serializable datatypes.</param>
+            <param name="sendReliable">Use false if the event is replaced by a newer rapidly. Reliable events add overhead and add lag when repeated.</param>
+            <param name="channelId">The "channel" to which this event should belong. Per channel, the sequence is kept in order.</param>
+            <param name="targetActors">Defines the target players who should receive the event (use only for small target groups).</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Collections.Hashtable,System.Boolean,System.Byte,System.Int32[],ExitGames.Client.Photon.LoadBalancing.EventCaching)">
+            <summary>
+            Used in a room to raise (send) an event to the other players.
+            Multiple overloads expose different parameters to this frequently used operation.
+            </summary>
+            <param name="eventCode">Code for this "type" of event (use a code per "meaning" or content).</param>
+            <param name="evData">Data to send. Hashtable that contains key-values of Photon serializable datatypes.</param>
+            <param name="sendReliable">Use false if the event is replaced by a newer rapidly. Reliable events add overhead and add lag when repeated.</param>
+            <param name="channelId">The "channel" to which this event should belong. Per channel, the sequence is kept in order.</param>
+            <param name="targetActors">Defines the target players who should receive the event (use only for small target groups).</param>
+            <param name="cache">Use EventCaching options to store this event for players who join.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Collections.Hashtable,System.Boolean,System.Byte,ExitGames.Client.Photon.LoadBalancing.EventCaching,ExitGames.Client.Photon.LoadBalancing.ReceiverGroup)">
+            <summary>
+            Used in a room to raise (send) an event to the other players.
+            Multiple overloads expose different parameters to this frequently used operation.
+            </summary>
+            <param name="eventCode">Code for this "type" of event (use a code per "meaning" or content).</param>
+            <param name="evData">Data to send. Hashtable that contains key-values of Photon serializable datatypes.</param>
+            <param name="sendReliable">Use false if the event is replaced by a newer rapidly. Reliable events add overhead and add lag when repeated.</param>
+            <param name="channelId">The "channel" to which this event should belong. Per channel, the sequence is kept in order.</param>
+            <param name="cache">Use EventCaching options to store this event for players who join.</param>
+            <param name="receivers">ReceiverGroup defines to which group of players the event is passed on.</param>
+            <returns>If the operation could be sent (has to be connected).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.LoadBalancingPeer.OpRaiseEvent(System.Byte,System.Object,System.Boolean,ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions)">
+            <summary>
+            Send an event with custom code/type and any content to the other players in the same room.
+            </summary>
+            <remarks>This override explicitly uses another parameter order to not mix it up with the implementation for Hashtable only.</remarks>
+            <param name="eventCode">Identifies this type of event (and the content). Your game's event codes can start with 0.</param>
+            <param name="customEventContent">Any serializable datatype (including Hashtable like the other OpRaiseEvent overloads).</param>
+            <param name="sendReliable">If this event has to arrive reliably (potentially repeated if it's lost).</param>
+            <param name="raiseEventOptions">Contains (slightly) less often used options. If you pass null, the default options will be used.</param>
+            <returns>If operation could be enqueued for sending. Sent when calling: Service or SendOutgoingCommands.</returns>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.ErrorCode">
+            <summary>
+            ErrorCode defines the default codes associated with Photon client/server communication.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.Ok">
+            <summary>(0) is always "OK", anything else an error or specific situation.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.OperationNotAllowedInCurrentState">
+            <summary>
+            (-3) Operation can't be executed yet (e.g. OpJoin can't be called before being authenticated, RaiseEvent cant be used before getting into a room).
+            </summary>
+            <remarks>
+            Before you call any operations on the Cloud servers, the automated client workflow must complete its authorization.
+            In PUN, wait until State is: JoinedLobby (with AutoJoinLobby = true) or ConnectedToMaster (AutoJoinLobby = false)
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.InvalidOperationCode">
+            <summary>(-2) The operation you called is not implemented on the server (application) you connect to. Make sure you run the fitting applications.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.InvalidOperation">
+             <summary>(-2) The operation you called could not be executed on the server.</summary>
+             <remarks>
+             Make sure you are connected to the server you expect.
+            
+             This code is used in several cases:
+             The arguments/parameters of the operation might be out of range, missing entirely or conflicting.
+             The operation you called is not implemented on the server (application). Server-side plugins affect the available operations.
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.InternalServerError">
+            <summary>(-1) Something went wrong in the server. Try to reproduce and contact Exit Games.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.InvalidAuthentication">
+            <summary>(32767) Authentication failed. Possible cause: AppId is unknown to Photon (in cloud service).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.GameIdAlreadyExists">
+            <summary>(32766) GameId (name) already in use (can't create another). Change name.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.GameFull">
+            <summary>(32765) Game is full. This rarely happens when some player joined the room before your join completed.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.GameClosed">
+            <summary>(32764) Game is closed and can't be joined. Join another game.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.ServerFull">
+            <summary>(32762) Not in use currently.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.UserBlocked">
+            <summary>(32761) Not in use currently.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.NoRandomMatchFound">
+            <summary>(32760) Random matchmaking only succeeds if a room exists thats neither closed nor full. Repeat in a few seconds or create a new room.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.GameDoesNotExist">
+            <summary>(32758) Join can fail if the room (name) is not existing (anymore). This can happen when players leave while you join.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.MaxCcuReached">
+             <summary>(32757) Authorization on the Photon Cloud failed becaus the concurrent users (CCU) limit of the app's subscription is reached.</summary>
+             <remarks>
+             Unless you have a plan with "CCU Burst", clients might fail the authentication step during connect.
+             Affected client are unable to call operations. Please note that players who end a game and return
+             to the master server will disconnect and re-connect, which means that they just played and are rejected
+             in the next minute / re-connect.
+             This is a temporary measure. Once the CCU is below the limit, players will be able to connect an play again.
+            
+             OpAuthorize is part of connection workflow but only on the Photon Cloud, this error can happen.
+             Self-hosted Photon servers with a CCU limited license won't let a client connect at all.
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.InvalidRegion">
+             <summary>(32756) Authorization on the Photon Cloud failed because the app's subscription does not allow to use a particular region's server.</summary>
+             <remarks>
+             Some subscription plans for the Photon Cloud are region-bound. Servers of other regions can't be used then.
+             Check your master server address and compare it with your Photon Cloud Dashboard's info.
+             https://cloud.photonengine.com/dashboard
+            
+             OpAuthorize is part of connection workflow but only on the Photon Cloud, this error can happen.
+             Self-hosted Photon servers with a CCU limited license won't let a client connect at all.
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.CustomAuthenticationFailed">
+            <summary>
+            (32755) Custom Authentication of the user failed due to setup reasons (see Cloud Dashboard) or the provided user data (like username or token). Check error message for details.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.AuthenticationTicketExpired">
+            <summary>(32753) The Authentication ticket expired. Usually, this is refreshed behind the scenes. Connect (and authorize) again.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.PluginReportedError">
+            <summary>
+            (32752) A server-side plugin failed to execute and reported an error. Check the OperationResponse.DebugMessage.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.PluginMismatch">
+            <summary>
+            (32751) CreateGame/JoinGame/Join operation fails if expected plugin does not correspond to loaded one.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.JoinFailedPeerAlreadyJoined">
+            <summary>
+            (32750) for join requests. Indicates the current peer already called join and is joined to the room.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.JoinFailedFoundInactiveJoiner">
+            <summary>
+            (32749)  for join requests. Indicates the list of InactiveActors already contains an actor with the requested ActorNr or UserId.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.JoinFailedWithRejoinerNotFound">
+            <summary>
+            (32748) for join requests. Indicates the list of Actors (active and inactive) did not contain an actor with the requested ActorNr or UserId.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.JoinFailedFoundExcludedUserId">
+            <summary>
+            (32747) for join requests. Note: for future use - Indicates the requested UserId was found in the ExcludedList.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.JoinFailedFoundActiveJoiner">
+            <summary>
+            (32746) for join requests. Indicates the list of ActiveActors already contains an actor with the requested ActorNr or UserId.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.HttpLimitReached">
+            <summary>
+            (32745)  for SetProerties and Raisevent (if flag HttpForward is true) requests. Indicates the maximum allowd http requests per minute was reached.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ErrorCode.ExternalHttpCallFailed">
+            <summary>
+            (32744) for WebRpc requests. Indicates the the call to the external service failed.
+            </summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.ActorProperties">
+            <summary>
+            These (byte) values define "well known" properties for an Actor / Player.
+            </summary>
+            <remarks>
+            "Custom properties" have to use a string-type as key. They can be assigned at will.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ActorProperties.PlayerName">
+            <summary>(255) Name of a player/actor.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ActorProperties.IsInactive">
+            <summary>(254) Tells you if the player is currently in this game (getting events live).</summary>
+            <remarks>A server-set value for async games, where players can leave the game and return later.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ActorProperties.UserId">
+            <summary>(253) UserId of the player. Sent when room gets created with RoomOptions.publishUserId = true.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey">
+            <summary>
+            Class for constants. These (byte) values are for "well known" room/game properties used in Photon Loadbalancing.
+            </summary>
+            <remarks>
+            "Custom properties" have to use a string-type as key. They can be assigned at will.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.MaxPlayers">
+            <summary>(255) Max number of players that "fit" into this room. 0 is for "unlimited".</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.IsVisible">
+            <summary>(254) Makes this room listed or not in the lobby on master.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.IsOpen">
+            <summary>(253) Allows more players to join a room (or not).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.PlayerCount">
+            <summary>(252) Current count of players in the room. Used only in the lobby on master.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.Removed">
+            <summary>(251) True if the room is to be removed from room listing (used in update to room list in lobby on master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.PropsListedInLobby">
+            <summary>(250) A list of the room properties to pass to the RoomInfo list in a lobby. This is used in CreateRoom, which defines this list once per room.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.CleanupCacheOnLeave">
+            <summary>(249) Equivalent of Operation Join parameter CleanupCacheOnLeave.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.GamePropertyKey.MasterClientId">
+            <summary>(248) Code for MasterClientId, which is synced by server. When sent as op-parameter this is (byte)203. As room property this is (byte)248.</summary>
+            <remarks>Tightly related to ParameterCode.MasterClientId.</remarks>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.EventCode">
+            <summary>
+            These values are for events defined by Photon Loadbalancing.
+            </summary>
+            <remarks>They start at 255 and go DOWN. Your own in-game events can start at 0.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.GameList">
+            <summary>(230) Initial list of RoomInfos (in lobby on Master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.GameListUpdate">
+            <summary>(229) Update of RoomInfos to be merged into "initial" list (in lobby on Master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.QueueState">
+            <summary>(228) Currently not used. State of queueing in case of server-full</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.Match">
+            <summary>(227) Currently not used. Event for matchmaking</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.AppStats">
+            <summary>(226) Event with stats about this application (players, rooms, etc)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.LobbyStats">
+            <summary>(224) This event provides a list of lobbies with their player and game counts.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.AzureNodeInfo">
+            <summary>(210) Internally used in case of hosting by Azure</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.Join">
+            <summary>(255) Event Join: someone joined the game. The new actorNumber is provided as well as the properties of that actor (if set in OpJoin).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.Leave">
+            <summary>(254) Event Leave: The player who left the game can be identified by the actorNumber.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.PropertiesChanged">
+            <summary>(253) When you call OpSetProperties with the broadcast option "on", this event is fired. It contains the properties being set.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.SetProperties">
+            <summary>(253) When you call OpSetProperties with the broadcast option "on", this event is fired. It contains the properties being set.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.ErrorInfo">
+            <summary>(251) Sent by Photon Cloud when a plugin-call failed. Usually, the execution on the server continues, despite the issue. Contains: ParameterCode.Info.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCode.CacheSliceChanged">
+            <summary>(250) Sent by Photon whent he event cache slice was changed. Done by OpRaiseEvent.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.ParameterCode">
+            <summary>
+            Class for constants. Codes for parameters of Operations and Events.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.SuppressRoomEvents">
+            <summary>(237) A bool parameter for creating games. If set to true, no room events are sent to the clients on join and leave. Default: false (and not sent).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.EmptyRoomTTL">
+            <summary>(236) Time To Live (TTL) for a room when the last player leaves. Keeps room in memory for case a player re-joins soon. In milliseconds.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PlayerTTL">
+            <summary>(235) Time To Live (TTL) for an 'actor' in a room. If a client disconnects, this actor is inactive first and removed after this timeout. In milliseconds.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.EventForward">
+            <summary>(234) Optional parameter of OpRaiseEvent and OpSetCustomProperties to forward the event/operation to a web-service.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.IsComingBack">
+            <summary>(233) Optional parameter of OpLeave in async games. If false, the player does abandons the game (forever). By default players become inactive and can re-join.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.IsInactive">
+            <summary>(233) Used to define if a user is inactive (and might come back) or not. In rooms with PlayerTTL, becoming inactive is the default case.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.CheckUserOnJoin">
+            <summary>(232) Used when creating rooms to define if any userid can join the room only once.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ExpectedValues">
+            <summary>(231) Code for "Check And Swap" (CAS) when changing properties.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Address">
+            <summary>(230) Address of a (game) server to use.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PeerCount">
+            <summary>(229) Count of players in this application in a rooms (used in stats event)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.GameCount">
+            <summary>(228) Count of games in this application (used in stats event)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.MasterPeerCount">
+            <summary>(227) Count of players on the master server (in this app, looking for rooms)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.UserId">
+            <summary>(225) User's ID</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ApplicationId">
+            <summary>(224) Your application's ID: a name on your own Photon or a GUID on the Photon Cloud</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Position">
+            <summary>(223) Not used currently (as "Position"). If you get queued before connect, this is your position</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.MatchMakingType">
+            <summary>(223) Modifies the matchmaking algorithm used for OpJoinRandom. Allowed parameter values are defined in enum MatchmakingMode.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.GameList">
+            <summary>(222) List of RoomInfos about open / listed rooms</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Secret">
+            <summary>(221) Internally used to establish encryption</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.AppVersion">
+            <summary>(220) Version of your application</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.AzureNodeInfo">
+            <summary>(210) Internally used in case of hosting by Azure</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.AzureLocalNodeId">
+            <summary>(209) Internally used in case of hosting by Azure</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.AzureMasterNodeId">
+            <summary>(208) Internally used in case of hosting by Azure</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.RoomName">
+            <summary>(255) Code for the gameId/roomName (a unique name per room). Used in OpJoin and similar.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Broadcast">
+            <summary>(250) Code for broadcast parameter of OpSetProperties method.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ActorList">
+            <summary>(252) Code for list of players in a room. Currently not used.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ActorNr">
+            <summary>(254) Code of the Actor of an operation. Used for property get and set.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PlayerProperties">
+            <summary>(249) Code for property set (Hashtable).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.CustomEventContent">
+            <summary>(245) Code of data/custom content of an event. Used in OpRaiseEvent.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Data">
+            <summary>(245) Code of data of an event. Used in OpRaiseEvent.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Code">
+            <summary>(244) Code used when sending some code-related parameter, like OpRaiseEvent's event-code.</summary>
+            <remarks>This is not the same as the Operation's code, which is no longer sent as part of the parameter Dictionary in Photon 3.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.GameProperties">
+            <summary>(248) Code for property set (Hashtable).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Properties">
+            <summary>
+            (251) Code for property-set (Hashtable). This key is used when sending only one set of properties.
+            If either ActorProperties or GameProperties are used (or both), check those keys.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.TargetActorNr">
+            <summary>(253) Code of the target Actor of an operation. Used for property set. Is 0 for game</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ReceiverGroup">
+            <summary>(246) Code to select the receivers of events (used in Lite, Operation RaiseEvent).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Cache">
+            <summary>(247) Code for caching events while raising them.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.CleanupCacheOnLeave">
+            <summary>(241) Bool parameter of CreateGame Operation. If true, server cleans up roomcache of leaving players (their cached events get removed).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Group">
+            <summary>(240) Code for "group" operation-parameter (as used in Op RaiseEvent).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Remove">
+            <summary>(239) The "Remove" operation-parameter can be used to remove something from a list. E.g. remove groups from player's interest groups.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PublishUserId">
+            <summary>(239) Used in Op Join to define if UserIds of the players are broadcast in the room. Useful for FindFriends and reserving slots for expected users.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Add">
+            <summary>(238) The "Add" operation-parameter can be used to add something to some list or set. E.g. add groups to player's interest groups.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Info">
+            <summary>(218) Content for EventCode.ErrorInfo and internal debug operations.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ClientAuthenticationType">
+            <summary>(217) This key's (byte) value defines the target custom authentication type/service the client connects with. Used in OpAuthenticate</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ClientAuthenticationParams">
+            <summary>(216) This key's (string) value provides parameters sent to the custom authentication type/service the client connects with. Used in OpAuthenticate</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.JoinMode">
+            <summary>(215) The JoinMode enum defines which variant of joining a room will be executed: Join only if available, create if not exists or re-join.</summary>
+            <remarks>Replaces CreateIfNotExists which was only a bool-value.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.ClientAuthenticationData">
+            <summary>(214) This key's (string or byte[]) value provides parameters sent to the custom authentication service setup in Photon Dashboard. Used in OpAuthenticate</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.MasterClientId">
+            <summary>(203) Code for MasterClientId, which is synced by server. When sent as op-parameter this is code 203.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.FindFriendsRequestList">
+            <summary>(1) Used in Op FindFriends request. Value must be string[] of friends to look up.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.FindFriendsResponseOnlineList">
+            <summary>(1) Used in Op FindFriends response. Contains bool[] list of online states (false if not online).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.FindFriendsResponseRoomIdList">
+            <summary>(2) Used in Op FindFriends response. Contains string[] of room names ("" where not known or no room joined).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.LobbyName">
+            <summary>(213) Used in matchmaking-related methods and when creating a room to name a lobby (to join or to attach a room to).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.LobbyType">
+            <summary>(212) Used in matchmaking-related methods and when creating a room to define the type of a lobby. Combined with the lobby name this identifies the lobby.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.LobbyStats">
+            <summary>(211) This (optional) parameter can be sent in Op Authenticate to turn on Lobby Stats (info about lobby names and their user- and game-counts). See: PhotonNetwork.Lobbies</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Region">
+            <summary>(210) Used for region values in OpAuth and OpGetRegions.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.UriPath">
+            <summary>(209) Path of the WebRPC that got called. Also known as "WebRpc Name". Type: string.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.WebRpcParameters">
+            <summary>(208) Parameters for a WebRPC as: Dictionary&lt;string, object&gt;. This will get serialized to JSon.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.WebRpcReturnCode">
+            <summary>(207) ReturnCode for the WebRPC, as sent by the web service (not by Photon, which uses ErrorCode). Type: byte.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.WebRpcReturnMessage">
+            <summary>(206) Message returned by WebRPC server. Analog to Photon's debug message. Type: string.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.CacheSliceIndex">
+            <summary>(205) Used to define a "slice" for cached events. Slices can easily be removed from cache. Type: int.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.Plugins">
+            <summary>
+            Informs the server of the expected plugin setup.
+            The operation will fail in case of a plugin mismatch returning error code PluginMismatch 32751(0x7FFF - 16).
+            Setting string[]{} means the client expects no plugin to be setup.
+            Note: for backwards compatibility null omits any check.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PluginName">
+            <summary>(201) Informs user about name of plugin load to game</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ParameterCode.PluginVersion">
+            <summary>(200) Informs user about version of plugin load to game</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.OperationCode">
+            <summary>
+            Codes for parameters and events used in PhotonLoadbalancingAPI
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.Join">
+            <summary>(255) Code for OpJoin, to get into a room.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.Authenticate">
+            <summary>(230) Authenticates this peer and connects to a virtual application</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.JoinLobby">
+            <summary>(229) Joins lobby (on master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.LeaveLobby">
+            <summary>(228) Leaves lobby (on master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.CreateGame">
+            <summary>(227) Creates a game (or fails if name exists)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.JoinGame">
+            <summary>(226) Join game (by name)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.JoinRandomGame">
+            <summary>(225) Joins random game (on master)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.Leave">
+            <summary>(254) Code for OpLeave, to get out of a room.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.RaiseEvent">
+            <summary>(253) Raise event (in a room, for other actors/players)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.SetProperties">
+            <summary>(252) Set Properties (of room or actor/player)</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.GetProperties">
+            <summary>(251) Get Properties</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.ChangeGroups">
+            <summary>(248) Operation code to change interest groups in Rooms (Lite application and extending ones).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.FindFriends">
+            <summary>(222) Request the rooms and online status for a list of friends (by name, which should be unique).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.GetLobbyStats">
+            <summary>(221) Request statistics about a specific list of lobbies (their user and game count).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.GetRegions">
+            <summary>(220) Get list of regional servers from a NameServer.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.OperationCode.WebRpc">
+            <summary>(219) WebRpc Operation.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.JoinMode">
+            <summary>Defines possible values for OpJoinRoom and OpJoinOrCreate. It tells the server if the room can be only be joined normally, created implicitly or found on a web-service for Turnbased games.</summary>
+            <remarks>These values are not directly used by a game but implicitly set.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinMode.Default">
+            <summary>Regular join. The room must exist.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinMode.CreateIfNotExists">
+            <summary>Join or create the room if it's not existing. Used for OpJoinOrCreate for example.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinMode.JoinOrRejoin">
+            <summary>The room might be out of memory and should be loaded (if possible) from a Turnbased web-service.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.JoinMode.RejoinOnly">
+            <summary>Only re-join will be allowed. If the user is not yet in the room, this will fail.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.MatchmakingMode">
+            <summary>
+            Options for matchmaking rules for OpJoinRandom.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.MatchmakingMode.FillRoom">
+            <summary>Fills up rooms (oldest first) to get players together as fast as possible. Default.</summary>
+            <remarks>Makes most sense with MaxPlayers > 0 and games that can only start with more players.</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.MatchmakingMode.SerialMatching">
+            <summary>Distributes players across available rooms sequentially but takes filter into account. Without filter, rooms get players evenly distributed.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.MatchmakingMode.RandomMatching">
+            <summary>Joins a (fully) random room. Expected properties must match but aside from this, any available room might be selected.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.ReceiverGroup">
+            <summary>
+            Lite - OpRaiseEvent lets you chose which actors in the room should receive events.
+            By default, events are sent to "Others" but you can overrule this.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ReceiverGroup.Others">
+            <summary>Default value (not sent). Anyone else gets my event.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ReceiverGroup.All">
+            <summary>Everyone in the current room (including this peer) will get this event.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.ReceiverGroup.MasterClient">
+            <summary>The server sends this event only to the actor with the lowest actorNumber.</summary>
+            <remarks>The "master client" does not have special rights but is the one who is in this room the longest time.</remarks>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.EventCaching">
+            <summary>
+            Lite - OpRaiseEvent allows you to cache events and automatically send them to joining players in a room.
+            Events are cached per event code and player: Event 100 (example!) can be stored once per player.
+            Cached events can be modified, replaced and removed.
+            </summary>
+            <remarks>
+            Caching works only combination with ReceiverGroup options Others and All.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.DoNotCache">
+            <summary>Default value (not sent).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.MergeCache">
+            <summary>Will merge this event's keys with those already cached.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.ReplaceCache">
+            <summary>Replaces the event cache for this eventCode with this event's content.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.RemoveCache">
+            <summary>Removes this event (by eventCode) from the cache.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.AddToRoomCache">
+            <summary>Adds an event to the room's cache</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.AddToRoomCacheGlobal">
+            <summary>Adds this event to the cache for actor 0 (becoming a "globally owned" event in the cache).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.RemoveFromRoomCache">
+            <summary>Remove fitting event from the room's cache.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.RemoveFromRoomCacheForActorsLeft">
+            <summary>Removes events of players who already left the room (cleaning up).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.SliceIncreaseIndex">
+            <summary>Increase the index of the sliced cache.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.SliceSetIndex">
+            <summary>Set the index of the sliced cache. You must set RaiseEventOptions.CacheSliceIndex for this.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.SlicePurgeIndex">
+            <summary>Purge cache slice with index. Exactly one slice is removed from cache. You must set RaiseEventOptions.CacheSliceIndex for this.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.EventCaching.SlicePurgeUpToIndex">
+            <summary>Purge cache slices with specified index and anything lower than that. You must set RaiseEventOptions.CacheSliceIndex for this.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.PropertyTypeFlag">
+            <summary>
+            Flags for "types of properties", being used as filter in OpGetProperties.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.PropertyTypeFlag.None">
+            <summary>(0x00) Flag type for no property type.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.PropertyTypeFlag.Game">
+            <summary>(0x01) Flag type for game-attached properties.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.PropertyTypeFlag.Actor">
+            <summary>(0x02) Flag type for actor related propeties.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.PropertyTypeFlag.GameAndActor">
+            <summary>(0x01) Flag type for game AND actor properties. Equal to 'Game'</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.RoomOptions">
+            <summary>Wraps up common room properties needed when you create rooms. Read the individual entries for more details.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.MaxPlayers">
+            <summary>Max number of players that can be in the room at any time. 0 means "no limit".</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.PlayerTtl">
+            <summary>Time To Live (TTL) for an 'actor' in a room. If a client disconnects, this actor is inactive first and removed after this timeout. In milliseconds.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.EmptyRoomTtl">
+            <summary>Time To Live (TTL) for a room when the last player leaves. Keeps room in memory for case a player re-joins soon. In milliseconds.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.CustomRoomProperties">
+            <summary>The room's custom properties to set. Use string keys!</summary>
+            <remarks>
+            Custom room properties are any key-values you need to define the game's setup.
+            The shorter your keys are, the better.
+            Example: Map, Mode (could be "m" when used with "Map"), TileSet (could be "t").
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.CustomRoomPropertiesForLobby">
+             <summary>Defines the custom room properties that get listed in the lobby.</summary>
+             <remarks>
+             Name the custom room properties that should be available to clients that are in a lobby.
+             Use with care. Unless a custom property is essential for matchmaking or user info, it should
+             not be sent to the lobby, which causes traffic and delays for clients in the lobby.
+            
+             Default: No custom properties are sent to the lobby.
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomOptions.Plugins">
+            <summary>Informs the server of the expected plugin setup.</summary>
+            <remarks>
+            The operation will fail in case of a plugin missmatch returning error code PluginMismatch 32757(0x7FFF - 10).
+            Setting string[]{} means the client expects no plugin to be setup.
+            Note: for backwards compatibility null omits any check.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.IsVisible">
+             <summary>Defines if this room is listed in the lobby. If not, it also is not joined randomly.</summary>
+             <remarks>
+             A room that is not visible will be excluded from the room lists that are sent to the clients in lobbies.
+             An invisible room can be joined by name but is excluded from random matchmaking.
+            
+             Use this to "hide" a room and simulate "private rooms". Players can exchange a roomname and create it
+             invisble to avoid anyone else joining it.
+             </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.IsOpen">
+            <summary>Defines if this room can be joined at all.</summary>
+            <remarks>
+            If a room is closed, no player can join this. As example this makes sense when 3 of 4 possible players
+            start their gameplay early and don't want anyone to join during the game.
+            The room can still be listed in the lobby (set isVisible to control lobby-visibility).
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.CheckUserOnJoin">
+            <summary>Activates UserId checks on joining - allowing a users to be only once in the room.</summary>
+            <remarks>
+            Turnbased rooms should be created with this check turned on! They should also use custom authentication.
+            Disabled by default for backwards-compatibility.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.CleanupCacheOnLeave">
+            <summary>Removes a user's events and properties from the room when a user leaves.</summary>
+            <remarks>
+            This makes sense when in rooms where players can't place items in the room and just vanish entirely.
+            When you disable this, the event history can become too long to load if the room stays in use indefinitely.
+            Default: true. Cleans up the cache and props of leaving users.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.SuppressRoomEvents">
+            <summary>
+            Tells the server to skip room events for joining and leaving players.
+            </summary>
+            <remarks>
+            Using this makes the client unaware of the other players in a room.
+            That can save some traffic if you have some server logic that updates players
+            but it can also limit the client's usability.
+            PUN will break, if you use this.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomOptions.PublishUserId">
+            <summary>
+            Defines if the UserIds of players get "published" in the room. Useful for FindFriends, if players want to play another game together.
+            </summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions">
+            <summary>Aggregates several less-often used options for operation RaiseEvent. See field descriptions for usage details.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.Default">
+            <summary>Default options: CachingOption: DoNotCache, InterestGroup: 0, targetActors: null, receivers: Others, sequenceChannel: 0.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.CachingOption">
+            <summary>Defines if the server should simply send the event, put it in the cache or remove events that are like this one.</summary>
+            <remarks>
+            When using option: SliceSetIndex, SlicePurgeIndex or SlicePurgeUpToIndex, set a CacheSliceIndex. All other options except SequenceChannel get ignored.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.InterestGroup">
+            <summary>The number of the Interest Group to send this to. 0 goes to all users but to get 1 and up, clients must subscribe to the group first.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.TargetActors">
+            <summary>A list of PhotonPlayer.IDs to send this event to. You can implement events that just go to specific users this way.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.Receivers">
+            <summary>Sends the event to All, MasterClient or Others (default). Be careful with MasterClient, as the client might disconnect before it got the event and it gets lost.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.SequenceChannel">
+            <summary>Events are ordered per "channel". If you have events that are independent of others, they can go into another sequence or channel.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RaiseEventOptions.ForwardToWebhook">
+            <summary>Events can be forwarded to Webhooks, which can evaluate and use the events to follow the game's state.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.LobbyType">
+            <summary>
+            Options of lobby types available. Lobby types might be implemented in certain Photon versions and won't be available on older servers.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LobbyType.Default">
+            <summary>This lobby is used unless another is defined by game or JoinRandom. Room-lists will be sent and JoinRandomRoom can filter by matching properties.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LobbyType.SqlLobby">
+            <summary>This lobby type lists rooms like Default but JoinRandom has a parameter for SQL-like "where" clauses for filtering. This allows bigger, less, or and and combinations.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.LobbyType.AsyncRandomLobby">
+            <summary>This lobby does not send lists of games. It is only used for OpJoinRandomRoom. It keeps rooms available for a while when there are only inactive users left.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.TypedLobby">
+            <summary>Refers to a specific lobby (and type) on the server.</summary>
+            <remarks>
+            The name and type are the unique identifier for a lobby.<br/>
+            Join a lobby via PhotonNetwork.JoinLobby(TypedLobby lobby).<br/>
+            The current lobby is stored in PhotonNetwork.lobby.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.TypedLobby.Name">
+            <summary>Name of the lobby this game gets added to. Default: null, attached to default lobby. Lobbies are unique per lobbyName plus lobbyType, so the same name can be used when several types are existing.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.TypedLobby.Type">
+            <summary>Type of the (named)lobby this game gets added to</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.CustomAuthenticationType">
+            <summary>
+            Options for optional "Custom Authentication" services used with Photon. Used by OpAuthenticate after connecting to Photon.
+            </summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.CustomAuthenticationType.Custom">
+            <summary>Use a custom authentification service. Currently the only implemented option.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.CustomAuthenticationType.Steam">
+            <summary>Authenticates users by their Steam Account. Set auth values accordingly!</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.CustomAuthenticationType.Facebook">
+            <summary>Authenticates users by their Facebook Account. Set auth values accordingly!</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.CustomAuthenticationType.None">
+            <summary>Disables custom authentification. Same as not providing any AuthenticationValues for connect (more precisely for: OpAuthenticate).</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues">
+             <summary>
+             Container for user authentication in Photon. Set AuthValues before you connect - all else is handled.
+             </summary>
+             <remarks>
+             On Photon, user authentication is optional but can be useful in many cases.
+             If you want to FindFriends, a unique ID per user is very practical.
+            
+             There are basically three options for user authentification: None at all, the client sets some UserId
+             or you can use some account web-service to authenticate a user (and set the UserId server-side).
+            
+             Custom Authentication lets you verify end-users by some kind of login or token. It sends those
+             values to Photon which will verify them before granting access or disconnecting the client.
+            
+             The Photon Cloud Dashboard will let you enable this feature and set important server values for it.
+             https://www.photonengine.com/dashboard
+             </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.AuthType">
+            <summary>The type of custom authentication provider that should be used. Currently only "Custom" or "None" (turns this off).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.AuthGetParameters">
+            <summary>This string must contain any (http get) parameters expected by the used authentication service. By default, username and token.</summary>
+            <remarks>Standard http get parameters are used here and passed on to the service that's defined in the server (Photon Cloud Dashboard).</remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.Token">
+            <summary>After initial authentication, Photon provides a token for this client / user, which is subsequently used as (cached) validation.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.#ctor">
+            <summary>Creates empty auth values without any info.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.#ctor(System.String)">
+            <summary>Creates minimal info about the user. If this is authenticated or not, depends on the set AuthType.</summary>
+            <param name="userId">Some UserId to set in Photon.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.SetAuthPostData(System.String)">
+            <summary>Sets the data to be passed-on to the auth service via POST.</summary>
+            <param name="stringData">String data to be used in the body of the POST request. Null or empty string will set AuthPostData to null.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.SetAuthPostData(System.Byte[])">
+            <summary>Sets the data to be passed-on to the auth service via POST.</summary>
+            <param name="byteData">Binary token / auth-data to pass on.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.AddAuthParameter(System.String,System.String)">
+            <summary>Adds a key-value pair to the get-parameters used for Custom Auth.</summary>
+            <remarks>This method does uri-encoding for you.</remarks>
+            <param name="key">Key for the value to set.</param>
+            <param name="value">Some value relevant for Custom Authentication.</param>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.AuthPostData">
+            <summary>Data to be passed-on to the auth service via POST. Default: null (not sent). Either string or byte[] (see setters).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.AuthenticationValues.UserId">
+            <summary>The UserId should be a unique identifier per user. This is for finding friends, etc..</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.Player">
+            <summary>
+            Summarizes a "player" within a room, identified (in that room) by ID (or "actorID").
+            </summary>
+            <remarks>
+            Each player has a actorID, valid for that room. It's -1 until assigned by server (and client logic).
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.Player.actorID">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.Player.IsLocal">
+            <summary>Only one player is controlled by each client. Others are not local.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.Player.nickName">
+            <summary>Background field for nickName.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.Player.Tag">
+            <summary>Custom object associated with this Player. Not synchronized!</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Creates a player instance.
+            To extend and replace this Player, override LoadBalancingPeer.CreatePlayer().
+            </summary>
+            <param name="nickName">NickName of the player (a "well known property").</param>
+            <param name="actorID">ID or ActorNumber of this player in the current room (a shortcut to identify each player in room)</param>
+            <param name="isLocal">If this is the local peer's player (or a remote one).</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.#ctor(System.String,System.Int32,System.Boolean,System.Collections.Hashtable)">
+            <summary>
+            Creates a player instance.
+            To extend and replace this Player, override LoadBalancingPeer.CreatePlayer().
+            </summary>
+            <param name="nickName">NickName of the player (a "well known property").</param>
+            <param name="actorID">ID or ActorNumber of this player in the current room (a shortcut to identify each player in room)</param>
+            <param name="isLocal">If this is the local peer's player (or a remote one).</param>
+            <param name="playerProperties">A Hashtable of custom properties to be synced. Must use String-typed keys and serializable datatypes as values.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.CacheProperties(System.Collections.Hashtable)">
+            <summary>Caches properties for new Players or when updates of remote players are received. Use SetCustomProperties() for a synced update.</summary>
+            <remarks>
+            This only updates the CustomProperties and doesn't send them to the server.
+            Mostly used when creating new remote players, where the server sends their properties.
+            </remarks>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.ToString">
+            <summary>
+            This Player's NickName and custom properties as string.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.Equals(System.Object)">
+            <summary>
+            If players are equal (by GetHasCode, which returns this.ID).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.GetHashCode">
+            <summary>
+            Accompanies Equals, using the ID (actorNumber) as HashCode to return.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.ChangeLocalID(System.Int32)">
+            <summary>
+            Used internally, to update this client's playerID when assigned (doesn't change after assignment).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.SetCustomProperties(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+             <summary>
+             Updates and synchronizes this Player's Custom Properties. Optionally, expectedProperties can be provided as condition.
+             </summary>
+             <remarks>
+             Custom Properties are a set of string keys and arbitrary values which is synchronized
+             for the players in a Room. They are available when the client enters the room, as
+             they are in the response of OpJoin and OpCreate.
+            
+             Custom Properties either relate to the (current) Room or a Player (in that Room).
+            
+             Both classes locally cache the current key/values and make them available as
+             property: CustomProperties. This is provided only to read them.
+             You must use the method SetCustomProperties to set/modify them.
+            
+             Any client can set any Custom Properties anytime. It's up to the game logic to organize
+             how they are best used.
+            
+             You should call SetCustomProperties only with key/values that are new or changed. This reduces
+             traffic and performance.
+            
+             Unless you define some expectedProperties, setting key/values is always permitted.
+             In this case, the property-setting client will not receive the new values from the server but
+             instead update its local cache in SetCustomProperties.
+            
+             If you define expectedProperties, the server will skip updates if the server property-cache
+             does not contain all expectedProperties with the same values.
+             In this case, the property-setting client will get an update from the server and update it's
+             cached key/values at about the same time as everyone else.
+            
+             The benefit of using expectedProperties can be only one client successfully sets a key from
+             one known value to another.
+             As example: Store who owns an item in a Custom Property "ownedBy". It's 0 initally.
+             When multiple players reach the item, they all attempt to change "ownedBy" from 0 to their
+             actorNumber. If you use expectedProperties {"ownedBy", 0} as condition, the first player to
+             take the item will have it (and the others fail to set the ownership).
+            
+             Properties get saved with the game state for Turnbased games (which use IsPersistent = true).
+             </remarks>
+             <param name="propertiesToSet">Hashtable of Custom Properties that changes.</param>
+             <param name="expectedProperties">Provide some keys/values to use as condition for setting the new values.</param>
+             <param name="webForward">If true, this SetCustomProperties operation gets forwarded to your WebHooks.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Player.SetPlayerNameProperty">
+            <summary>Uses OpSetPropertiesOfActor to sync this player's NickName (server is being updated with this.NickName).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.LoadBalancingClient">
+            <summary>
+            A reference to the LoadbalancingClient which is currently keeping the connection and state.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.RoomReference">
+            <summary>
+            Used internally to identify the masterclient of a room.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.ID">
+            <summary>Identifier of this player in current room. Also known as: actorNumber or actorID. It's -1 outside of rooms.</summary>
+            <remarks>The ID is assigned per room and only valid in that context. It will change even on leave and re-join. IDs are never re-used per room.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.NickName">
+            <summary>Non-unique nickname of this player. Synced automatically in a room and used as fallback-UserId, if that wasn't set.</summary>
+            <remarks>
+            A player might change his own playername in a room (it's only a property).
+            Setting this value updates the server and other players (using an operation).
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.IsMasterClient">
+            <summary>
+            The player with the lowest actorID is the master and could be used for special tasks.
+            The LoadBalancingClient.LocalPlayer is not master unless in a room (this is the only player which exists outside of rooms, to store a nickname).
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.CustomProperties">
+            <summary>Read-only cache for custom properties of player. Set via Player.SetCustomProperties.</summary>
+            <remarks>
+            Don't modify the content of this Hashtable. Use SetCustomProperties and the
+            properties of this class to modify values. When you use those, the client will
+            sync values with the server.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.AllProperties">
+            <summary>Creates a Hashtable with all properties (custom and "well known" ones).</summary>
+            <remarks>Creates new Hashtables each time used, so if used more often, cache this.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Player.IsInactive">
+            <summary>In turnbased games, other players might be inactive in a room. True when another player is not in the current room.</summary>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.Room">
+            <summary>
+            This class represents a room a client joins/joined.
+            Mostly used through LoadBalancingClient.CurrentRoom, after joining any room.
+            Contains a list of current players, their properties and those of this room, too.
+            A room instance has a number of "well known" properties like IsOpen, MaxPlayers which can be changed.
+            Your own, custom properties can be set via SetCustomProperties() while being in the room.
+            </summary>
+            <remarks>
+            Typically, this class should be extended by a game-specific implementation with logic and extra features.
+            </remarks>
+        </member>
+        <member name="T:ExitGames.Client.Photon.LoadBalancing.RoomInfo">
+            <summary>
+            Used for Room listings of the lobby (not yet joining). Offers the basic info about a
+            room: name, player counts, properties, etc.
+            </summary>
+            <remarks>
+            This class resembles info about available rooms, as sent by the Master server's lobby.
+            Consider all values as readonly. None are synced (only updated by events by server).
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.removedFromList">
+            <summary>Used internally in lobby, to mark rooms that are no longer listed (for being full, closed or hidden).</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.customProperties">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.maxPlayers">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.isOpen">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.isVisible">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.name">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.RoomInfo.propsListedInLobby">
+            <summary>Backing field for property.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.#ctor(System.String,System.Collections.Hashtable)">
+            <summary>
+            Constructs a RoomInfo to be used in room listings in lobby.
+            </summary>
+            <param name="roomName">Name of the room and unique ID at the same time.</param>
+            <param name="roomProperties">Properties for this room.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.Equals(System.Object)">
+            <summary>
+            Makes RoomInfo comparable (by name).
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.GetHashCode">
+            <summary>
+            Accompanies Equals, using the name's HashCode as return.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.ToString">
+            <summary>Returns most interesting room values as string.</summary>
+            <returns>Summary of this RoomInfo instance.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.ToStringFull">
+            <summary>Returns most interesting room values as string, including custom properties.</summary>
+            <returns>Summary of this RoomInfo instance.</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.RoomInfo.CacheProperties(System.Collections.Hashtable)">
+            <summary>Copies "well known" properties to fields (isVisible, etc) and caches the custom properties (string-keys only) in a local hashtable.</summary>
+            <param name="propertiesToCache">New or updated properties to store in this RoomInfo.</param>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.CustomProperties">
+            <summary>Read-only "cache" of custom properties of a room. Set via Room.SetCustomProperties.</summary>
+            <remarks>All keys are string-typed and the values depend on the game/application.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.Name">
+            <summary>The name of a room. Unique identifier for a room/match (per AppId + game-Version).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.PlayerCount">
+            <summary>
+            Count of players currently in room. This property is overwritten by the Room class (used when you're in a Room).
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.IsLocalClientInside">
+            <summary>
+            State if the local client is already in the game or still going to join it on gameserver (in lobby: false).
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.MaxPlayers">
+            <summary>
+            The limit of players for this room. This property is shown in lobby, too.
+            If the room is full (players count == maxplayers), joining this room will fail.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.IsOpen">
+            <summary>
+            Defines if the room can be joined.
+            This does not affect listing in a lobby but joining the room will fail if not open.
+            If not open, the room is excluded from random matchmaking.
+            Due to racing conditions, found matches might become closed even while you join them.
+            Simply re-connect to master and find another.
+            Use property "IsVisible" to not list the room.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.RoomInfo.IsVisible">
+            <summary>
+            Defines if the room is listed in its lobby.
+            Rooms can be created invisible, or changed to invisible.
+            To change if a room can be joined, use property: open.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="F:ExitGames.Client.Photon.LoadBalancing.Room.players">
+            <summary>While inside a Room, this is the list of players who are also in that room.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.#ctor">
+            <summary>Creates a Room with null for name and no properties.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.#ctor(System.String)">
+            <summary>Creates a Room with given name and properties.</summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.#ctor(System.String,System.Collections.Hashtable,System.Boolean,System.Boolean,System.Byte,System.String[])">
+            <summary>Creates a Room (representation) with given name and properties and the "listing options" as provided by parameters.</summary>
+            <param name="roomName">Name of the room (can be null until it's actually created on server).</param>
+            <param name="roomProperties">Custom room propertes (Hashtable with string-typed keys) of this room.</param>
+            <param name="isVisible">Visible rooms show up in the lobby and can be joined randomly (a well-known room-property).</param>
+            <param name="isOpen">Closed rooms can't be joined (a well-known room-property).</param>
+            <param name="maxPlayers">The count of players that might join this room (a well-known room-property).</param>
+            <param name="propsListedInLobby">List of custom properties that are used in the lobby (less is better).</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.#ctor(System.String,ExitGames.Client.Photon.LoadBalancing.RoomOptions)">
+            <summary>Creates a Room (representation) with given name and properties and the "listing options" as provided by parameters.</summary>
+            <param name="roomName">Name of the room (can be null until it's actually created on server).</param>
+            <param name="options">Room options.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.SetCustomProperties(System.Collections.Hashtable,System.Collections.Hashtable,System.Boolean)">
+             <summary>
+             Updates and synchronizes this Room's Custom Properties. Optionally, expectedProperties can be provided as condition.
+             </summary>
+             <remarks>
+             Custom Properties are a set of string keys and arbitrary values which is synchronized
+             for the players in a Room. They are available when the client enters the room, as
+             they are in the response of OpJoin and OpCreate.
+            
+             Custom Properties either relate to the (current) Room or a Player (in that Room).
+            
+             Both classes locally cache the current key/values and make them available as
+             property: CustomProperties. This is provided only to read them.
+             You must use the method SetCustomProperties to set/modify them.
+            
+             Any client can set any Custom Properties anytime. It's up to the game logic to organize
+             how they are best used.
+            
+             You should call SetCustomProperties only with key/values that are new or changed. This reduces
+             traffic and performance.
+            
+             Unless you define some expectedProperties, setting key/values is always permitted.
+             In this case, the property-setting client will not receive the new values from the server but
+             instead update its local cache in SetCustomProperties.
+            
+             If you define expectedProperties, the server will skip updates if the server property-cache
+             does not contain all expectedProperties with the same values.
+             In this case, the property-setting client will get an update from the server and update it's
+             cached key/values at about the same time as everyone else.
+            
+             The benefit of using expectedProperties can be only one client successfully sets a key from
+             one known value to another.
+             As example: Store who owns an item in a Custom Property "ownedBy". It's 0 initally.
+             When multiple players reach the item, they all attempt to change "ownedBy" from 0 to their
+             actorNumber. If you use expectedProperties {"ownedBy", 0} as condition, the first player to
+             take the item will have it (and the others fail to set the ownership).
+            
+             Properties get saved with the game state for Turnbased games (which use IsPersistent = true).
+             </remarks>
+             <param name="propertiesToSet">Hashtable of Custom Properties that changes.</param>
+             <param name="expectedProperties">Provide some keys/values to use as condition for setting the new values.</param>
+             <param name="webForward">If true, this SetCustomProperties operation gets forwarded to your WebHooks.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.SetPropertiesListedInLobby(System.String[])">
+            <summary>
+            Enables you to define the properties available in the lobby if not all properties are needed to pick a room.
+            </summary>
+            <remarks>
+            Limit the amount of properties sent to users in the lobby as this improves speed and stability.
+            </remarks>
+            <param name="propsToListInLobby">An array of custom room property names to forward to the lobby.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.RemovePlayer(ExitGames.Client.Photon.LoadBalancing.Player)">
+            <summary>
+            Removes a player from this room's Players Dictionary.
+            This is internally used by the LoadBalancing API. There is usually no need to remove players yourself.
+            This is not a way to "kick" players.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.RemovePlayer(System.Int32)">
+            <summary>
+            Removes a player from this room's Players Dictionary.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.MarkAsInactive(System.Int32)">
+            <summary>
+            Internally used to mark a player as "offline" for async/turnbased games.
+            </summary>
+            <param name="id">The actorNumber (player.ID) of a player in this room.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.UpdateMasterClientId">
+            <summary>
+            Picks a new master client and sets property MasterClientId accordingly.
+            </summary>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.AddPlayer(ExitGames.Client.Photon.LoadBalancing.Player)">
+            <summary>
+            Checks if the player is in the room's list already and calls StorePlayer() if not.
+            </summary>
+            <param name="player">The new player - identified by ID.</param>
+            <returns>False if the player could not be added (cause it was in the list already).</returns>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.StorePlayer(ExitGames.Client.Photon.LoadBalancing.Player)">
+            <summary>
+            Updates a player reference in the Players dictionary (no matter if it existed before or not).
+            </summary>
+            <param name="player">The Player instance to insert into the room.</param>
+        </member>
+        <member name="M:ExitGames.Client.Photon.LoadBalancing.Room.GetPlayer(System.Int32)">
+            <summary>
+            Tries to find the player with given actorNumber (a.k.a. ID).
+            Only useful when in a Room, as IDs are only valid per Room.
+            </summary>
+            <param name="id">ID to look for.</param>
+            <returns>The player with the ID or null.</returns>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.LoadBalancingClient">
+            <summary>
+            A reference to the LoadbalancingClient which is currently keeping the connection and state.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.Name">
+            <summary>The name of a room. Unique identifier (per Loadbalancing group) for a room/match.</summary>
+            <remarks>The name can't be changed once it's set. The setter is used to apply the name, if created by the server.</remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.IsOpen">
+            <summary>
+            Defines if the room can be joined.
+            This does not affect listing in a lobby but joining the room will fail if not open.
+            If not open, the room is excluded from random matchmaking.
+            Due to racing conditions, found matches might become closed while users are trying to join.
+            Simply re-connect to master and find another.
+            Use property "IsVisible" to not list the room.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.IsVisible">
+            <summary>
+            Defines if the room is listed in its lobby.
+            Rooms can be created invisible, or changed to invisible.
+            To change if a room can be joined, use property: open.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.MaxPlayers">
+            <summary>
+            Sets a limit of players to this room. This property is synced and shown in lobby, too.
+            If the room is full (players count == maxplayers), joining this room will fail.
+            </summary>
+            <remarks>
+            As part of RoomInfo this can't be set.
+            As part of a Room (which the player joined), the setter will update the server and all clients.
+            </remarks>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.PlayerCount">
+            <summary>Gets the count of players in this Room (using this.Players.Count).</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.Players">
+            <summary>While inside a Room, this is the list of players who are also in that room.</summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.MasterClientId">
+            <summary>
+            The ID (actorID, actorNumber) of the player who's the master of this Room.
+            Note: This changes when the current master leaves the room.
+            </summary>
+        </member>
+        <member name="P:ExitGames.Client.Photon.LoadBalancing.Room.PropsListedInLobby">
+            <summary>
+            Gets a list of custom properties that are in the RoomInfo of the Lobby.
+            This list is defined when creating the room and can't be changed afterwards. Compare: LoadBalancingClient.OpCreateRoom()
+            </summary>
+            <remarks>You could name properties that are not set from the beginning. Those will be synced with the lobby when added later on.</remarks>
+        </member>
+    </members>
+</doc>

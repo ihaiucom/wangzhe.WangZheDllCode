@@ -1,0 +1,10 @@
+using System;
+
+namespace ResData
+{
+	public enum RES_USUALTASK_SUBTYPE
+	{
+		RES_USUALTASK_SUBTYPE_DEFAULT,
+		RES_USUALTASK_SUBTYPE_RANDOM
+	}
+}

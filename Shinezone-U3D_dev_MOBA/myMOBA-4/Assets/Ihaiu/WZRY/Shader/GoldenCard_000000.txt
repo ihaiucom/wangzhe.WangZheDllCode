@@ -1,0 +1,623 @@
+Shader "SGame/GoldenCard_000000" {
+Properties {
+[HideInInspector]  _StencilComp ("Stencil Comparison", Float) = 8
+[HideInInspector]  _Stencil ("Stencil ID", Float) = 0
+[HideInInspector]  _StencilOp ("Stencil Operation", Float) = 0
+[HideInInspector]  _StencilWriteMask ("Stencil Write Mask", Float) = 255
+[HideInInspector]  _StencilReadMask ("Stencil Read Mask", Float) = 255
+[HideInInspector]  _ColorMask ("Color Mask", Float) = 15
+ _MainTex ("Base (RGB)", 2D) = "white" {}
+ _MaskTex ("Mask", 2D) = "white" {}
+ _Fx1_Tex ("Layer1", 2D) = "black" {}
+ _Fx2_Tex ("Layer2", 2D) = "black" {}
+ _Fx3_Tex ("Layer3", 2D) = "black" {}
+ _Fx4_Tex ("Layer4", 2D) = "black" {}
+ _Fx1_FlowTex ("Layer1 Flow", 2D) = "black" {}
+ _Fx3_FlowTex ("Layer3 Flow", 2D) = "black" {}
+ _Seed ("Seed", Float) = 0
+ _Fx1_Color ("Layer1 Color", Color) = (1,1,1,1)
+ _Fx1_Intensity ("Layer1 Intensity", Float) = 1
+ _Fx1_Invert ("Layer1 Invert", Float) = 0
+ _Fx1_Distortion ("Layer1 Distortion", Float) = 0
+ _Fx1_PusleClip ("Layer1 Pusle Clip", Float) = 0
+ _Fx1_PusleRate ("Layer1 Pusle Rate", Float) = 20
+ _Fx1_PusleIntensity ("Layer1 Pusle Intensity", Float) = 1
+ _Fx1_PusleAmount ("Layer1 Pusle Amount", Float) = 0
+ _Fx1_RotSpeed ("Layer1 Rotate Speed", Float) = 0
+ _Fx1_RotationX ("Layer1 Rotation X", Float) = 0
+ _Fx1_RotationY ("Layer1 Rotation Y", Float) = 0
+ _Fx1_ScaleX ("Layer1 Scale X", Float) = 1
+ _Fx1_ScaleY ("Layer1 Scale Y", Float) = 1
+ _Fx1_ScrollAngle ("Layer1 Scroll Angle", Float) = 0
+ _Fx1_ScrollX ("Layer1 Scroll X", Float) = 0
+ _Fx1_ScrollY ("Layer1 Scroll Y", Float) = 0
+ _Fx1_FlowAngle ("Layer1 Flow Angle", Float) = 0
+ _Fx1_FlowOffsetX ("Layer1 Flow Offset X", Float) = 0
+ _Fx1_FlowOffsetY ("Layer1 Flow Offset Y", Float) = 0
+ _Fx1_FlowScaleX ("Layer1 Flow Scale X", Float) = 1
+ _Fx1_FlowScaleY ("Layer1 Flow Scale Y", Float) = 1
+ _Fx1_FlowScrollX ("Layer1 Flow Scroll X", Float) = 0
+ _Fx1_FlowScrollY ("Layer1 Flow Scroll Y", Float) = 0
+ _Fx2_Color ("Layer2 Color", Color) = (1,1,1,1)
+ _Fx2_Intensity ("Layer2 Intensity", Float) = 1
+ _Fx2_Invert ("Layer2 Invert", Float) = 0
+ _Fx2_Blend ("Layer2 Blend", Float) = 0
+ _Fx2_Distortion ("Layer2 Distortion", Float) = 0
+ _Fx2_PusleClip ("Layer2 Pusle Clip", Float) = 0
+ _Fx2_PusleRate ("Layer2 Pusle Rate", Float) = 20
+ _Fx2_PusleIntensity ("Layer2 Pusle Intensity", Float) = 1
+ _Fx2_PusleAmount ("Layer2 Pusle Amount", Float) = 0
+ _Fx2_RotSpeed ("Layer2 Rotate Speed", Float) = 0
+ _Fx2_RotationX ("Layer2 Rotation X", Float) = 0
+ _Fx2_RotationY ("Layer2 Rotation Y", Float) = 0
+ _Fx2_ScaleX ("Layer2 Scale X", Float) = 1
+ _Fx2_ScaleY ("Layer2 Scale Y", Float) = 1
+ _Fx2_ScrollAngle ("Layer2 Scroll Angle", Float) = 0
+ _Fx2_ScrollX ("Layer2 Scroll X", Float) = 0
+ _Fx2_ScrollY ("Layer2 Scroll Y", Float) = 0
+ _Fx3_Color ("Layer3 Color", Color) = (1,1,1,1)
+ _Fx3_Intensity ("Layer3 Intensity", Float) = 1
+ _Fx3_Invert ("Layer3 Invert", Float) = 0
+ _Fx3_Distortion ("Layer3 Distortion", Float) = 0
+ _Fx3_Blend ("Layer3 Blend", Float) = 0
+ _Fx3_ColorIntensity ("Layer3 Color Intensity", Float) = 1
+ _Fx3_PusleClip ("Layer3 Pusle Clip", Float) = 0
+ _Fx3_PusleRate ("Layer3 Pusle Rate", Float) = 20
+ _Fx3_PusleIntensity ("Layer3 Pusle Intensity", Float) = 1
+ _Fx3_PusleAmount ("Layer3 Pusle Amount", Float) = 0
+ _Fx3_RotSpeed ("Layer3 Rotate Speed", Float) = 0
+ _Fx3_RotationX ("Layer3 Rotation X", Float) = 0
+ _Fx3_RotationY ("Layer3 Rotation Y", Float) = 0
+ _Fx3_ScaleX ("Layer3 Scale X", Float) = 1
+ _Fx3_ScaleY ("Layer3 Scale Y", Float) = 1
+ _Fx3_ScrollAngle ("Layer3 Scroll Angle", Float) = 0
+ _Fx3_ScrollX ("Layer3 Scroll X", Float) = 0
+ _Fx3_ScrollY ("Layer3 Scroll Y", Float) = 0
+ _Fx3_FlowOffsetX ("Layer3 Flow Offset X", Float) = 0
+ _Fx3_FlowOffsetY ("Layer3 Flow Offset Y", Float) = 0
+ _Fx3_FlowScrollX ("Layer3 Flow Scroll X", Float) = 0
+ _Fx3_FlowScrollY ("Layer3 Flow Scroll Y", Float) = 0
+ _Fx3_FlowScaleX ("Layer3 Flow Scale X", Float) = 0
+ _Fx3_FlowScaleY ("Layer3 Flow Scale Y", Float) = 0
+ _Fx4_Color ("Layer4 Color", Color) = (1,1,1,1)
+ _Fx4_Intensity ("Layer4 Intensity", Float) = 0
+ _Fx4_ColorIntensity ("Layer4 Color Intensity", Float) = 1
+ _Fx4_ScaleX ("Layer4 Scale X", Float) = 1
+ _Fx4_ScaleY ("Layer4 Scale Y", Float) = 0
+ _Fx4_ScrollAngle ("Layer4 Scroll Angle", Float) = 0
+ _Fx4_ScrollX ("Layer4 Scroll X", Float) = 0
+ _Fx4_ScrollY ("Layer4 Scroll Y", Float) = 0
+ _Fx4_PusleClip ("Layer4 Pusle Clip", Float) = 0
+ _Fx4_PusleRate ("Layer4 Pusle Rate", Float) = 20
+ _Fx4_PusleIntensity ("Layer4 Pusle Intensity", Float) = 1
+ _Fx4_PusleAmount ("Layer4 Pusle Amount", Float) = 0
+ _FxBrightness ("Brightness", Float) = 0
+ _FxIntensity ("Intensity", Float) = 1
+ _DistortionVector ("Distortion Vector", Vector) = (1,1,1,1)
+}
+SubShader { 
+ LOD 100
+ Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="False" }
+ Pass {
+  Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" "PreviewType"="Plane" "CanUseSpriteAtlas"="False" }
+  ZTest [unity_GUIZTestMode]
+  ZWrite Off
+  Cull Off
+  Fog { Mode Off }
+  Stencil {
+   Ref [_Stencil]
+   ReadMask [_StencilReadMask]
+   WriteMask [_StencilWriteMask]
+   Comp [_StencilComp]
+   Pass [_StencilOp]
+  }
+  Blend SrcAlpha OneMinusSrcAlpha
+  ColorMask [_ColorMask]
+Program "vp" {
+SubProgram "gles " {
+"!!GLES
+
+
+#ifdef VERTEX
+
+attribute vec4 _glesVertex;
+attribute vec4 _glesMultiTexCoord0;
+uniform highp vec4 _Time;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp float _Seed;
+uniform highp float _Fx1_PusleClip;
+uniform highp float _Fx1_PusleRate;
+uniform highp float _Fx1_PusleIntensity;
+uniform highp float _Fx1_PusleAmount;
+uniform highp float _Fx1_ScaleX;
+uniform highp float _Fx1_ScaleY;
+uniform highp float _Fx1_ScrollAngle;
+uniform highp float _Fx1_ScrollX;
+uniform highp float _Fx1_ScrollY;
+uniform highp float _Fx2_PusleClip;
+uniform highp float _Fx2_PusleRate;
+uniform highp float _Fx2_PusleIntensity;
+uniform highp float _Fx2_PusleAmount;
+uniform highp float _Fx2_ScaleX;
+uniform highp float _Fx2_ScaleY;
+uniform highp float _Fx2_ScrollAngle;
+uniform highp float _Fx2_ScrollX;
+uniform highp float _Fx2_ScrollY;
+uniform highp float _Fx3_PusleClip;
+uniform highp float _Fx3_PusleRate;
+uniform highp float _Fx3_PusleIntensity;
+uniform highp float _Fx3_PusleAmount;
+uniform highp float _Fx3_ScaleX;
+uniform highp float _Fx3_ScaleY;
+uniform highp float _Fx3_ScrollAngle;
+uniform highp float _Fx3_ScrollX;
+uniform highp float _Fx3_ScrollY;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec4 xlv_TEXCOORD1;
+varying highp vec4 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+varying highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp float tmpvar_1;
+  tmpvar_1 = (_Seed + (_Time.y * 0.08));
+  highp float tmpvar_2;
+  tmpvar_2 = (((
+    fract(((_Fx1_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp vec2 cse_3;
+  cse_3 = (_glesMultiTexCoord0.xy - vec2(0.5, 0.5));
+  highp float tmpvar_4;
+  tmpvar_4 = cos(tmpvar_2);
+  highp float tmpvar_5;
+  tmpvar_5 = sin(tmpvar_2);
+  highp vec2 tmpvar_6;
+  tmpvar_6.x = ((cse_3.x * tmpvar_4) + (cse_3.y * tmpvar_5));
+  tmpvar_6.y = ((cse_3.y * tmpvar_4) - (cse_3.x * tmpvar_5));
+  highp vec2 tmpvar_7;
+  tmpvar_7.x = _Fx1_ScrollX;
+  tmpvar_7.y = _Fx1_ScrollY;
+  highp vec2 tmpvar_8;
+  tmpvar_8.x = _Fx1_ScaleX;
+  tmpvar_8.y = _Fx1_ScaleY;
+  highp float tmpvar_9;
+  tmpvar_9 = (((
+    fract(((_Fx2_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp float tmpvar_10;
+  tmpvar_10 = cos(tmpvar_9);
+  highp float tmpvar_11;
+  tmpvar_11 = sin(tmpvar_9);
+  highp vec2 tmpvar_12;
+  tmpvar_12.x = ((cse_3.x * tmpvar_10) + (cse_3.y * tmpvar_11));
+  tmpvar_12.y = ((cse_3.y * tmpvar_10) - (cse_3.x * tmpvar_11));
+  highp vec2 tmpvar_13;
+  tmpvar_13.x = _Fx2_ScrollX;
+  tmpvar_13.y = _Fx2_ScrollY;
+  highp vec2 tmpvar_14;
+  tmpvar_14.x = _Fx2_ScaleX;
+  tmpvar_14.y = _Fx2_ScaleY;
+  highp vec2 tmpvar_15;
+  tmpvar_15 = (((tmpvar_12 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_13)) * tmpvar_14);
+  highp float tmpvar_16;
+  tmpvar_16 = (((
+    fract(((_Fx3_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp float tmpvar_17;
+  tmpvar_17 = cos(tmpvar_16);
+  highp float tmpvar_18;
+  tmpvar_18 = sin(tmpvar_16);
+  highp vec2 tmpvar_19;
+  tmpvar_19.x = ((cse_3.x * tmpvar_17) + (cse_3.y * tmpvar_18));
+  tmpvar_19.y = ((cse_3.y * tmpvar_17) - (cse_3.x * tmpvar_18));
+  highp vec2 tmpvar_20;
+  tmpvar_20.x = _Fx3_ScrollX;
+  tmpvar_20.y = _Fx3_ScrollY;
+  highp vec2 tmpvar_21;
+  tmpvar_21.x = _Fx3_ScaleX;
+  tmpvar_21.y = _Fx3_ScaleY;
+  highp vec4 tmpvar_22;
+  tmpvar_22.xy = (((tmpvar_6 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_7)) * tmpvar_8);
+  tmpvar_22.z = tmpvar_15.x;
+  tmpvar_22.w = tmpvar_15.y;
+  highp vec4 tmpvar_23;
+  tmpvar_23.xy = (((tmpvar_19 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_20)) * tmpvar_21);
+  tmpvar_23.z = 0.0;
+  tmpvar_23.w = 0.0;
+  highp vec4 tmpvar_24;
+  tmpvar_24.x = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx1_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx1_PusleClip) * _Fx1_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx1_PusleAmount) + 1.0);
+  tmpvar_24.y = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx2_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx2_PusleClip) * _Fx2_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx2_PusleAmount) + 1.0);
+  tmpvar_24.z = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx3_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx3_PusleClip) * _Fx3_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx3_PusleAmount) + 1.0);
+  tmpvar_24.w = 0.0;
+  highp vec4 tmpvar_25;
+  tmpvar_25.x = 0.0;
+  tmpvar_25.y = 0.0;
+  tmpvar_25.z = 0.0;
+  tmpvar_25.w = 0.0;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = _glesMultiTexCoord0.xy;
+  xlv_TEXCOORD1 = tmpvar_22;
+  xlv_TEXCOORD2 = tmpvar_23;
+  xlv_TEXCOORD3 = tmpvar_24;
+  xlv_TEXCOORD4 = tmpvar_25;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D _MainTex;
+uniform sampler2D _MaskTex;
+uniform sampler2D _Fx1_Tex;
+uniform sampler2D _Fx2_Tex;
+uniform sampler2D _Fx3_Tex;
+uniform highp vec4 _Fx1_Color;
+uniform highp float _Fx1_Intensity;
+uniform highp float _Fx1_Invert;
+uniform highp float _Fx1_Distortion;
+uniform highp vec4 _Fx2_Color;
+uniform highp float _Fx2_Intensity;
+uniform highp float _Fx2_Invert;
+uniform highp float _Fx2_Blend;
+uniform highp float _Fx2_Distortion;
+uniform highp vec4 _Fx3_Color;
+uniform highp float _Fx3_Intensity;
+uniform highp float _Fx3_Invert;
+uniform highp float _Fx3_Distortion;
+uniform highp float _Fx3_Blend;
+uniform highp float _FxBrightness;
+uniform highp float _FxIntensity;
+uniform highp vec2 _DistortionVector;
+varying highp vec2 xlv_TEXCOORD0;
+varying highp vec4 xlv_TEXCOORD1;
+varying highp vec4 xlv_TEXCOORD2;
+varying highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp vec4 mainColor_2;
+  highp vec3 color_layer3_3;
+  highp vec3 color_layer2_4;
+  highp vec3 color_layer1_5;
+  highp vec4 mask_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture2D (_MaskTex, xlv_TEXCOORD0);
+  mask_6 = tmpvar_7;
+  lowp vec3 tmpvar_8;
+  tmpvar_8 = texture2D (_Fx1_Tex, xlv_TEXCOORD1.xy).xyz;
+  color_layer1_5 = tmpvar_8;
+  highp vec3 tmpvar_9;
+  tmpvar_9 = abs((vec3(_Fx1_Invert) - color_layer1_5));
+  highp vec3 tmpvar_10;
+  tmpvar_10 = (tmpvar_9 * (_Fx1_Color.xyz * (
+    ((_Fx1_Color.w * _Fx1_Intensity) * mask_6.x)
+   * xlv_TEXCOORD3.x)));
+  color_layer1_5 = tmpvar_10;
+  lowp vec3 tmpvar_11;
+  tmpvar_11 = texture2D (_Fx2_Tex, xlv_TEXCOORD1.zw).xyz;
+  color_layer2_4 = tmpvar_11;
+  highp vec3 tmpvar_12;
+  tmpvar_12 = abs((vec3(_Fx2_Invert) - color_layer2_4));
+  highp vec3 tmpvar_13;
+  tmpvar_13 = (tmpvar_12 * (_Fx2_Color.xyz * (
+    ((_Fx2_Color.w * _Fx2_Intensity) * mask_6.y)
+   * xlv_TEXCOORD3.y)));
+  color_layer2_4 = tmpvar_13;
+  lowp vec3 tmpvar_14;
+  tmpvar_14 = texture2D (_Fx3_Tex, xlv_TEXCOORD2.xy).xyz;
+  color_layer3_3 = tmpvar_14;
+  highp vec3 tmpvar_15;
+  tmpvar_15 = abs((vec3(_Fx3_Invert) - color_layer3_3));
+  highp vec3 tmpvar_16;
+  tmpvar_16 = (tmpvar_15 * (_Fx3_Color.xyz * (
+    ((_Fx3_Color.w * _Fx3_Intensity) * mask_6.z)
+   * xlv_TEXCOORD3.z)));
+  color_layer3_3 = tmpvar_16;
+  highp vec2 tmpvar_17;
+  tmpvar_17 = (xlv_TEXCOORD0 + ((
+    ((((tmpvar_9.x - 0.5) * mask_6.x) * _Fx1_Distortion) + (((tmpvar_12.x - 0.5) * mask_6.y) * _Fx2_Distortion))
+   + 
+    (((tmpvar_15.x - 0.5) * mask_6.z) * _Fx3_Distortion)
+  ) * _DistortionVector));
+  lowp vec4 tmpvar_18;
+  tmpvar_18 = texture2D (_MainTex, tmpvar_17);
+  mainColor_2 = tmpvar_18;
+  highp vec3 tmpvar_19;
+  tmpvar_19 = ((tmpvar_10 + tmpvar_13) * 0.5);
+  highp vec3 tmpvar_20;
+  tmpvar_20 = mix (tmpvar_19, ((tmpvar_10 * tmpvar_13) - tmpvar_19), vec3(_Fx2_Blend));
+  highp vec4 tmpvar_21;
+  tmpvar_21.xyz = clamp (((
+    clamp (((mask_6.x + mask_6.y) + mask_6.z), 0.0, 1.0)
+   * 
+    (mix (((tmpvar_20 + tmpvar_16) * 0.5), (tmpvar_20 * tmpvar_16), vec3(_Fx3_Blend)) + (_FxIntensity * _FxBrightness))
+  ) + mainColor_2.xyz), 0.0, 1.0);
+  tmpvar_21.w = mainColor_2.w;
+  tmpvar_1 = tmpvar_21;
+  gl_FragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+SubProgram "gles3 " {
+"!!GLES3#version 300 es
+
+
+#ifdef VERTEX
+
+
+in vec4 _glesVertex;
+in vec4 _glesMultiTexCoord0;
+uniform highp vec4 _Time;
+uniform highp mat4 glstate_matrix_mvp;
+uniform highp float _Seed;
+uniform highp float _Fx1_PusleClip;
+uniform highp float _Fx1_PusleRate;
+uniform highp float _Fx1_PusleIntensity;
+uniform highp float _Fx1_PusleAmount;
+uniform highp float _Fx1_ScaleX;
+uniform highp float _Fx1_ScaleY;
+uniform highp float _Fx1_ScrollAngle;
+uniform highp float _Fx1_ScrollX;
+uniform highp float _Fx1_ScrollY;
+uniform highp float _Fx2_PusleClip;
+uniform highp float _Fx2_PusleRate;
+uniform highp float _Fx2_PusleIntensity;
+uniform highp float _Fx2_PusleAmount;
+uniform highp float _Fx2_ScaleX;
+uniform highp float _Fx2_ScaleY;
+uniform highp float _Fx2_ScrollAngle;
+uniform highp float _Fx2_ScrollX;
+uniform highp float _Fx2_ScrollY;
+uniform highp float _Fx3_PusleClip;
+uniform highp float _Fx3_PusleRate;
+uniform highp float _Fx3_PusleIntensity;
+uniform highp float _Fx3_PusleAmount;
+uniform highp float _Fx3_ScaleX;
+uniform highp float _Fx3_ScaleY;
+uniform highp float _Fx3_ScrollAngle;
+uniform highp float _Fx3_ScrollX;
+uniform highp float _Fx3_ScrollY;
+out highp vec2 xlv_TEXCOORD0;
+out highp vec4 xlv_TEXCOORD1;
+out highp vec4 xlv_TEXCOORD2;
+out highp vec4 xlv_TEXCOORD3;
+out highp vec4 xlv_TEXCOORD4;
+void main ()
+{
+  highp float tmpvar_1;
+  tmpvar_1 = (_Seed + (_Time.y * 0.08));
+  highp float tmpvar_2;
+  tmpvar_2 = (((
+    fract(((_Fx1_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp vec2 cse_3;
+  cse_3 = (_glesMultiTexCoord0.xy - vec2(0.5, 0.5));
+  highp float tmpvar_4;
+  tmpvar_4 = cos(tmpvar_2);
+  highp float tmpvar_5;
+  tmpvar_5 = sin(tmpvar_2);
+  highp vec2 tmpvar_6;
+  tmpvar_6.x = ((cse_3.x * tmpvar_4) + (cse_3.y * tmpvar_5));
+  tmpvar_6.y = ((cse_3.y * tmpvar_4) - (cse_3.x * tmpvar_5));
+  highp vec2 tmpvar_7;
+  tmpvar_7.x = _Fx1_ScrollX;
+  tmpvar_7.y = _Fx1_ScrollY;
+  highp vec2 tmpvar_8;
+  tmpvar_8.x = _Fx1_ScaleX;
+  tmpvar_8.y = _Fx1_ScaleY;
+  highp float tmpvar_9;
+  tmpvar_9 = (((
+    fract(((_Fx2_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp float tmpvar_10;
+  tmpvar_10 = cos(tmpvar_9);
+  highp float tmpvar_11;
+  tmpvar_11 = sin(tmpvar_9);
+  highp vec2 tmpvar_12;
+  tmpvar_12.x = ((cse_3.x * tmpvar_10) + (cse_3.y * tmpvar_11));
+  tmpvar_12.y = ((cse_3.y * tmpvar_10) - (cse_3.x * tmpvar_11));
+  highp vec2 tmpvar_13;
+  tmpvar_13.x = _Fx2_ScrollX;
+  tmpvar_13.y = _Fx2_ScrollY;
+  highp vec2 tmpvar_14;
+  tmpvar_14.x = _Fx2_ScaleX;
+  tmpvar_14.y = _Fx2_ScaleY;
+  highp vec2 tmpvar_15;
+  tmpvar_15 = (((tmpvar_12 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_13)) * tmpvar_14);
+  highp float tmpvar_16;
+  tmpvar_16 = (((
+    fract(((_Fx3_ScrollAngle * 0.159155) + 0.5))
+   * 2.0) - 1.0) * 3.14159);
+  highp float tmpvar_17;
+  tmpvar_17 = cos(tmpvar_16);
+  highp float tmpvar_18;
+  tmpvar_18 = sin(tmpvar_16);
+  highp vec2 tmpvar_19;
+  tmpvar_19.x = ((cse_3.x * tmpvar_17) + (cse_3.y * tmpvar_18));
+  tmpvar_19.y = ((cse_3.y * tmpvar_17) - (cse_3.x * tmpvar_18));
+  highp vec2 tmpvar_20;
+  tmpvar_20.x = _Fx3_ScrollX;
+  tmpvar_20.y = _Fx3_ScrollY;
+  highp vec2 tmpvar_21;
+  tmpvar_21.x = _Fx3_ScaleX;
+  tmpvar_21.y = _Fx3_ScaleY;
+  highp vec4 tmpvar_22;
+  tmpvar_22.xy = (((tmpvar_6 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_7)) * tmpvar_8);
+  tmpvar_22.z = tmpvar_15.x;
+  tmpvar_22.w = tmpvar_15.y;
+  highp vec4 tmpvar_23;
+  tmpvar_23.xy = (((tmpvar_19 + vec2(0.5, 0.5)) + (tmpvar_1 * tmpvar_20)) * tmpvar_21);
+  tmpvar_23.z = 0.0;
+  tmpvar_23.w = 0.0;
+  highp vec4 tmpvar_24;
+  tmpvar_24.x = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx1_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx1_PusleClip) * _Fx1_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx1_PusleAmount) + 1.0);
+  tmpvar_24.y = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx2_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx2_PusleClip) * _Fx2_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx2_PusleAmount) + 1.0);
+  tmpvar_24.z = (((
+    clamp (((sin(
+      (((fract(
+        (((tmpvar_1 * _Fx3_PusleRate) * 0.159155) + 0.5)
+      ) * 2.0) - 1.0) * 3.14159)
+    ) + _Fx3_PusleClip) * _Fx3_PusleIntensity), 0.0, 1.0)
+   + -1.0) * _Fx3_PusleAmount) + 1.0);
+  tmpvar_24.w = 0.0;
+  highp vec4 tmpvar_25;
+  tmpvar_25.x = 0.0;
+  tmpvar_25.y = 0.0;
+  tmpvar_25.z = 0.0;
+  tmpvar_25.w = 0.0;
+  gl_Position = (glstate_matrix_mvp * _glesVertex);
+  xlv_TEXCOORD0 = _glesMultiTexCoord0.xy;
+  xlv_TEXCOORD1 = tmpvar_22;
+  xlv_TEXCOORD2 = tmpvar_23;
+  xlv_TEXCOORD3 = tmpvar_24;
+  xlv_TEXCOORD4 = tmpvar_25;
+}
+
+
+
+#endif
+#ifdef FRAGMENT
+
+
+layout(location=0) out mediump vec4 _glesFragData[4];
+uniform sampler2D _MainTex;
+uniform sampler2D _MaskTex;
+uniform sampler2D _Fx1_Tex;
+uniform sampler2D _Fx2_Tex;
+uniform sampler2D _Fx3_Tex;
+uniform highp vec4 _Fx1_Color;
+uniform highp float _Fx1_Intensity;
+uniform highp float _Fx1_Invert;
+uniform highp float _Fx1_Distortion;
+uniform highp vec4 _Fx2_Color;
+uniform highp float _Fx2_Intensity;
+uniform highp float _Fx2_Invert;
+uniform highp float _Fx2_Blend;
+uniform highp float _Fx2_Distortion;
+uniform highp vec4 _Fx3_Color;
+uniform highp float _Fx3_Intensity;
+uniform highp float _Fx3_Invert;
+uniform highp float _Fx3_Distortion;
+uniform highp float _Fx3_Blend;
+uniform highp float _FxBrightness;
+uniform highp float _FxIntensity;
+uniform highp vec2 _DistortionVector;
+in highp vec2 xlv_TEXCOORD0;
+in highp vec4 xlv_TEXCOORD1;
+in highp vec4 xlv_TEXCOORD2;
+in highp vec4 xlv_TEXCOORD3;
+void main ()
+{
+  lowp vec4 tmpvar_1;
+  highp vec4 mainColor_2;
+  highp vec3 color_layer3_3;
+  highp vec3 color_layer2_4;
+  highp vec3 color_layer1_5;
+  highp vec4 mask_6;
+  lowp vec4 tmpvar_7;
+  tmpvar_7 = texture (_MaskTex, xlv_TEXCOORD0);
+  mask_6 = tmpvar_7;
+  lowp vec3 tmpvar_8;
+  tmpvar_8 = texture (_Fx1_Tex, xlv_TEXCOORD1.xy).xyz;
+  color_layer1_5 = tmpvar_8;
+  highp vec3 tmpvar_9;
+  tmpvar_9 = abs((vec3(_Fx1_Invert) - color_layer1_5));
+  highp vec3 tmpvar_10;
+  tmpvar_10 = (tmpvar_9 * (_Fx1_Color.xyz * (
+    ((_Fx1_Color.w * _Fx1_Intensity) * mask_6.x)
+   * xlv_TEXCOORD3.x)));
+  color_layer1_5 = tmpvar_10;
+  lowp vec3 tmpvar_11;
+  tmpvar_11 = texture (_Fx2_Tex, xlv_TEXCOORD1.zw).xyz;
+  color_layer2_4 = tmpvar_11;
+  highp vec3 tmpvar_12;
+  tmpvar_12 = abs((vec3(_Fx2_Invert) - color_layer2_4));
+  highp vec3 tmpvar_13;
+  tmpvar_13 = (tmpvar_12 * (_Fx2_Color.xyz * (
+    ((_Fx2_Color.w * _Fx2_Intensity) * mask_6.y)
+   * xlv_TEXCOORD3.y)));
+  color_layer2_4 = tmpvar_13;
+  lowp vec3 tmpvar_14;
+  tmpvar_14 = texture (_Fx3_Tex, xlv_TEXCOORD2.xy).xyz;
+  color_layer3_3 = tmpvar_14;
+  highp vec3 tmpvar_15;
+  tmpvar_15 = abs((vec3(_Fx3_Invert) - color_layer3_3));
+  highp vec3 tmpvar_16;
+  tmpvar_16 = (tmpvar_15 * (_Fx3_Color.xyz * (
+    ((_Fx3_Color.w * _Fx3_Intensity) * mask_6.z)
+   * xlv_TEXCOORD3.z)));
+  color_layer3_3 = tmpvar_16;
+  highp vec2 tmpvar_17;
+  tmpvar_17 = (xlv_TEXCOORD0 + ((
+    ((((tmpvar_9.x - 0.5) * mask_6.x) * _Fx1_Distortion) + (((tmpvar_12.x - 0.5) * mask_6.y) * _Fx2_Distortion))
+   + 
+    (((tmpvar_15.x - 0.5) * mask_6.z) * _Fx3_Distortion)
+  ) * _DistortionVector));
+  lowp vec4 tmpvar_18;
+  tmpvar_18 = texture (_MainTex, tmpvar_17);
+  mainColor_2 = tmpvar_18;
+  highp vec3 tmpvar_19;
+  tmpvar_19 = ((tmpvar_10 + tmpvar_13) * 0.5);
+  highp vec3 tmpvar_20;
+  tmpvar_20 = mix (tmpvar_19, ((tmpvar_10 * tmpvar_13) - tmpvar_19), vec3(_Fx2_Blend));
+  highp vec4 tmpvar_21;
+  tmpvar_21.xyz = clamp (((
+    clamp (((mask_6.x + mask_6.y) + mask_6.z), 0.0, 1.0)
+   * 
+    (mix (((tmpvar_20 + tmpvar_16) * 0.5), (tmpvar_20 * tmpvar_16), vec3(_Fx3_Blend)) + (_FxIntensity * _FxBrightness))
+  ) + mainColor_2.xyz), 0.0, 1.0);
+  tmpvar_21.w = mainColor_2.w;
+  tmpvar_1 = tmpvar_21;
+  _glesFragData[0] = tmpvar_1;
+}
+
+
+
+#endif"
+}
+}
+Program "fp" {
+SubProgram "gles " {
+"!!GLES"
+}
+SubProgram "gles3 " {
+"!!GLES3"
+}
+}
+ }
+}
+}

@@ -1,0 +1,2 @@
+place your assets here. 
+the deploy script will copy them to the deploy-folder as well as the bin-folder.

@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7D3D1AB8-7C3F-4BE3-B63B-55ABFD465A56}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Photon.LoadBalancing.UnitTests</RootNamespace>
+    <AssemblyName>Photon.LoadBalancing.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExitGames.Logging.Log4Net, Version=0.9.9.3, Culture=neutral, PublicKeyToken=eac0edd9746a4aa0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ExitGames.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ExitGamesLibs, Version=0.9.9.3, Culture=neutral, PublicKeyToken=eac0edd9746a4aa0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\ExitGamesLibs.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.1, Culture=neutral, PublicKeyToken=2bb32138a3ceff71, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Newtonsoft\Newtonsoft.Json.6.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\nunit\2.6.3\bin\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon.SocketServer, Version=3.3.14.4416, Culture=neutral, PublicKeyToken=48c2fa3b6988090e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Photon.SocketServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon3DotNet, Version=3.0.1.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\Photon3DotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonHostRuntimeInterfaces">
+      <HintPath>..\..\..\lib\PhotonHostRuntimeInterfaces.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PhotonLoadbalancingApi, Version=3.0.1.13, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\PhotonLoadbalancingApi.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TestsImpl\LBAsyncJoinTestImpl.cs" />
+    <Compile Include="TestsImpl\SecureTestsImpl.cs" />
+    <Compile Include="Tests\Offline\AsyncJoinOfflineTests.cs" />
+    <Compile Include="Tests\Offline\OfflineSecureTests.cs" />
+    <Compile Include="Tests\Offline\PluginOfflineTests.cs" />
+    <Compile Include="Tests\Online\LoadbalancingOnlineTests.cs" />
+    <Compile Include="Tests\Online\OnlineSecureTests.cs" />
+    <Compile Include="UnifiedClient\AuthenticationSchemes\TokenLessAuthenticationScheme.cs" />
+    <Compile Include="UnifiedClient\AuthenticationSchemes\TokenAuthenticationScheme.cs" />
+    <Compile Include="UnifiedClient\UnifiedTestClient.cs" />
+    <Compile Include="Tests\LoadBalancerTests.cs" />
+    <Compile Include="Tests\Online\PluginOnlineTests.cs" />
+    <Compile Include="TestsImpl\PluginTestsImpl.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup.cs" />
+    <Compile Include="Tests\Offline\LoadBalancingOfflineTests.cs" />
+    <Compile Include="UnifiedServer\LoadBalancingUnifiedTestsBase.cs" />
+    <Compile Include="UnifiedServer\Policy\OfflineConnectPolicy.cs" />
+    <Compile Include="UnifiedServer\OfflineExtra\TestApplication.cs" />
+    <Compile Include="UnifiedServer\OfflineExtra\TestGame.cs" />
+    <Compile Include="UnifiedServer\OfflineExtra\TestGameCache.cs" />
+    <Compile Include="UnifiedServer\OfflineExtra\TestPluginManager.cs" />
+    <Compile Include="UnifiedServer\Policy\OnlineConnectPolicy.cs" />
+    <Compile Include="TestsImpl\LBApiTestsImpl.cs" />
+    <Compile Include="UnifiedServer\Policy\LBConnectPolicyBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HivePlugin\PhotonHivePlugin.csproj">
+      <Project>{223D6705-337D-409F-8524-553ABC5EAABD}</Project>
+      <Name>PhotonHivePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hive\PhotonHive\PhotonHive.csproj">
+      <Project>{E1F918F4-F581-4280-9D91-3CF77B24C290}</Project>
+      <Name>PhotonHive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\LoadBalancing\LoadBalancing\LoadBalancing.csproj">
+      <Project>{918525F6-635E-4D56-A85C-7F4C5E95E822}</Project>
+      <Name>LoadBalancing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Photon.Common\Photon.Common.csproj">
+      <Project>{1ddb6b23-41f0-4c63-b945-0c7d3f902d1c}</Project>
+      <Name>Photon.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Photon.UnitTest.Utils\Photon.UnitTest.Utils.csproj">
+      <Project>{54e6df24-7f6f-4dad-af13-2045946afdcc}</Project>
+      <Name>Photon.UnitTest.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\TestPlugins\TestPlugins.csproj">
+      <Project>{6d2f474e-6f09-49a4-954b-31279fae7e62}</Project>
+      <Name>TestPlugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LoadBalancing\app.config">
+      <Link>app.config</Link>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="..\LoadBalancing\log4net.config">
+      <Link>log4net.config</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="AsyncJoinConfig.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadBalancer.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="properties.proj" />
+    <None Include="tests_log4net.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <!-- execute only on local VS Builds. -->
+  <Target Name="AfterBuild" Condition="'$(transformConfig)'!='false'">
+    <PropertyGroup>
+      <PropertyFile Condition=" '$(PropertyFile)' == '' ">$(ProjectDir)\properties.proj</PropertyFile>
+    </PropertyGroup>
+    <MSBuild Projects="..\..\..\build\transformConfig.proj" Targets="TransformConfig" Properties="PropertyFile=$(PropertyFile);RootDir=$(TargetDir)" />
+  </Target>
+</Project>

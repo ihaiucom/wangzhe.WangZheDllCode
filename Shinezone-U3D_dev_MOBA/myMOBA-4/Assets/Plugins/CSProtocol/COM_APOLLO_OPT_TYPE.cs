@@ -1,0 +1,13 @@
+using System;
+
+namespace CSProtocol
+{
+	public enum COM_APOLLO_OPT_TYPE
+	{
+		COM_APOLLO_OPT_QUERY = 1,
+		COM_APOLLO_OPT_CANCEL,
+		COM_APOLLO_OPT_PRESENT,
+		COM_APOLLO_OPT_PAY,
+		COM_APOLLO_OPT_MAX
+	}
+}

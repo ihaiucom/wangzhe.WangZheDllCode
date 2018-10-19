@@ -1,0 +1,850 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Behavior Version="5" NoError="true">
+  <Node Class="Behaviac.Design.Nodes.Behavior" AgentType="WrapperAgent" Domains="" Enable="True" HasOwnPrefabData="false" Id="-1" PrefabName="" PrefabNodeId="-1">
+    <Comment Background="NoColor" Text="" />
+    <DescriptorRefs value="0:" />
+    <Connector Identifier="GenericChildren">
+      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="0" PrefabName="" PrefabNodeId="-1">
+        <Comment Background="NoColor" Text="" />
+        <Connector Identifier="GenericChildren">
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="98" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_orignalPos" Opr="const string &quot;((ObjAgent)pAgent).GetMyCurPos();&quot;">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="20" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_orignalDirection" Opr="const string &quot;((ObjAgent)pAgent).GetMyForward();&quot;">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="31" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_pursuitRange" Opr="Self.WrapperAgent::GetPursuitRange()">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="48" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_srchRange" Opr="Self.WrapperAgent::GetSightArea()">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="11" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_selfID" Opr="Self.WrapperAgent::GetMyObjID()">
+            <Comment Background="NoColor" Text="" />
+          </Node>
+          <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="14" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+            <Comment Background="NoColor" Text="" />
+            <Connector Identifier="GenericChildren">
+              <Node Class="PluginBehaviac.Nodes.SelectorLoop" Enable="true" HasOwnPrefabData="false" Id="1" PrefabName="" PrefabNodeId="-1">
+                <Comment Background="NoColor" Text="" />
+                <Connector Identifier="GenericChildren">
+                  <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="60" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="Precondition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="61" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_Idle&quot;">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="Action">
+                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="46" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="47" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::ClearHelpOther()">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="245" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="_condition">
+                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="246" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToPosLessThanRange(string Self.WrapperAgent::p_orignalPos,600)" Opr="const bool true">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                            <Connector Identifier="_if">
+                              <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="27" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="_condition">
+                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="28" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsCurMoveCompleted()" Opr="const bool true">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_if">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="247" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="248" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,true)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="21" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::LookAtDirection(string Self.WrapperAgent::p_orignalDirection)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="66" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="7" PrefabName="" PrefabNodeId="-1">
+                                            <Comment Background="NoColor" Text="" />
+                                            <Connector Identifier="GenericChildren">
+                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="67" PrefabName="" PrefabNodeId="-1">
+                                                <Comment Background="NoColor" Text="" />
+                                                <Connector Identifier="GenericChildren">
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="68" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="69" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsAttackByEnemy()" Opr="const bool true">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="231" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetCurBehavior(ObjBehaviMode.State_AutoAI)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="232" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::ChangeTargetToAtker()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="233" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::NotifySelfCampSelfBeAttacked(5000)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="234" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_targetID" Opr="Self.WrapperAgent::GetMyTargetID()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="32" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetIsAttackByEnemy(false)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="13" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::ShowHeadExclamationMark()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="235" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="236" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsNeedToHelpOther()" Opr="const bool true">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="237" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::HelpToAttack()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="238" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetCurBehavior(ObjBehaviMode.State_AutoAI)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="239" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_targetID" Opr="Self.WrapperAgent::GetMyTargetID()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="15" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::ShowHeadExclamationMark()">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                </Connector>
+                                              </Node>
+                                              <Node Class="PluginBehaviac.Nodes.WaitFrames" Enable="true" HasOwnPrefabData="false" Id="8" PrefabName="" PrefabNodeId="-1" Frames="const int 1">
+                                                <Comment Background="NoColor" Text="" />
+                                              </Node>
+                                            </Connector>
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_else">
+                                  <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="29" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                            </Connector>
+                            <Connector Identifier="_else">
+                              <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="255" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="GenericChildren">
+                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="19" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanMove()">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="256" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Run&quot;,0.15,0,true)">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="257" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealMovePosition(string Self.WrapperAgent::p_orignalPos)">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                  <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="70" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="Precondition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="71" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_AutoAI&quot;">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="Action">
+                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="18" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="24" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="130" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToPosLessThanRange(string Self.WrapperAgent::p_orignalPos,int Self.WrapperAgent::p_pursuitRange)" Opr="const bool false">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="72" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetCurBehavior(ObjBehaviMode.State_Idle)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="75" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="77" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="_condition">
+                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="100" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsTargetCanBeAttacked(uint Self.WrapperAgent::p_targetID)" Opr="const bool true">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_if">
+                                  <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="131" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_else">
+                                  <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="133" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_targetID" Opr="Self.WrapperAgent::GetNearestEnemy(int Self.WrapperAgent::p_srchRange)">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="134" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="_condition">
+                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="5" PrefabName="" PrefabNodeId="-1" Operator="Greater" Opl="uint Self.WrapperAgent::p_targetID" Opr="const uint 0">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_if">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="137" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.SelectorProbability" Enable="true" HasOwnPrefabData="false" Id="12" PrefabName="" PrefabNodeId="-1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.DecoratorWeight" Enable="true" HasOwnPrefabData="false" Id="9" PrefabName="" PrefabNodeId="-1" DecorateWhenChildEnds="false" Weight="const int 4">
+                                            <Comment Background="NoColor" Text="" />
+                                            <Connector Identifier="GenericChildren">
+                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="138" PrefabName="" PrefabNodeId="-1">
+                                                <Comment Background="NoColor" Text="" />
+                                                <Connector Identifier="GenericChildren">
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="125" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="126" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_4)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="127" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_skillAttackRange" Opr="Self.WrapperAgent::GetSkillAttackRange(SkillSlotType.SLOT_SKILL_4)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="128" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_curSlotType" Opr="const string &quot;SkillSlotType.SLOT_SKILL_4;&quot;">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="129" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="10" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="712" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CheckSkillFilter(string Self.WrapperAgent::p_curSlotType,uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="144" PrefabName="" PrefabNodeId="-1">
+                                                                <Comment Background="NoColor" Text="" />
+                                                                <Connector Identifier="GenericChildren">
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="145" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.NearestEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="146" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="16" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.MyDirection&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                </Connector>
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="147" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="148" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="149" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="150" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpFriendly&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="152" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_teamTarget" Opr="Self.WrapperAgent::GetLowHpTeamMember(int Self.WrapperAgent::p_skillAttackRange,3000,string Self.WrapperAgent::p_curSlotType)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="26" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_teamTarget,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="153" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_teamTarget)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="154" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="157" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.Myself&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="158" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="36" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_selfID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="139" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="156" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_3)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="159" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_skillAttackRange" Opr="Self.WrapperAgent::GetSkillAttackRange(SkillSlotType.SLOT_SKILL_3)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="160" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_curSlotType" Opr="const string &quot;SkillSlotType.SLOT_SKILL_3;&quot;">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="37" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="38" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="39" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CheckSkillFilter(string Self.WrapperAgent::p_curSlotType,uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="40" PrefabName="" PrefabNodeId="-1">
+                                                                <Comment Background="NoColor" Text="" />
+                                                                <Connector Identifier="GenericChildren">
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="41" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.NearestEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="42" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="43" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.MyDirection&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                </Connector>
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="44" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="45" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="49" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="161" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpFriendly&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="51" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_teamTarget" Opr="Self.WrapperAgent::GetLowHpTeamMember(int Self.WrapperAgent::p_skillAttackRange,3000,string Self.WrapperAgent::p_curSlotType)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="52" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_teamTarget,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="53" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_teamTarget)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="54" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="55" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.Myself&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="56" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="162" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_selfID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="151" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="25" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_2)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="155" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_skillAttackRange" Opr="Self.WrapperAgent::GetSkillAttackRange(SkillSlotType.SLOT_SKILL_2)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="182" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_curSlotType" Opr="const string &quot;SkillSlotType.SLOT_SKILL_2;&quot;">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="33" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="58" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="59" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CheckSkillFilter(string Self.WrapperAgent::p_curSlotType,uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="62" PrefabName="" PrefabNodeId="-1">
+                                                                <Comment Background="NoColor" Text="" />
+                                                                <Connector Identifier="GenericChildren">
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="163" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.NearestEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="64" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="65" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.MyDirection&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                </Connector>
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="73" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="74" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="76" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="78" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpFriendly&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="79" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_teamTarget" Opr="Self.WrapperAgent::GetLowHpTeamMember(int Self.WrapperAgent::p_skillAttackRange,3000,string Self.WrapperAgent::p_curSlotType)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="80" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_teamTarget,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="81" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_teamTarget)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="82" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="83" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.Myself&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="84" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="164" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_selfID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="183" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="30" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_1)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="184" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_skillAttackRange" Opr="Self.WrapperAgent::GetSkillAttackRange(SkillSlotType.SLOT_SKILL_1)">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="193" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_curSlotType" Opr="const string &quot;SkillSlotType.SLOT_SKILL_1;&quot;">
+                                                        <Comment Background="NoColor" Text="" />
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="34" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="165" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="166" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CheckSkillFilter(string Self.WrapperAgent::p_curSlotType,uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="167" PrefabName="" PrefabNodeId="-1">
+                                                                <Comment Background="NoColor" Text="" />
+                                                                <Connector Identifier="GenericChildren">
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="89" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.NearestEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="90" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpEnermy&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="91" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.MyDirection&quot;">
+                                                                    <Comment Background="NoColor" Text="" />
+                                                                  </Node>
+                                                                </Connector>
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="92" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="93" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_targetID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="94" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="95" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpFriendly&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="96" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_teamTarget" Opr="Self.WrapperAgent::GetLowHpTeamMember(int Self.WrapperAgent::p_skillAttackRange,3000,string Self.WrapperAgent::p_curSlotType)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="97" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_teamTarget,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="99" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_teamTarget)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="101" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="102" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.Myself&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="103" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="104" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_selfID)">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                </Connector>
+                                              </Node>
+                                            </Connector>
+                                          </Node>
+                                        </Connector>
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.DecoratorWeight" Enable="true" HasOwnPrefabData="false" Id="57" PrefabName="" PrefabNodeId="-1" DecorateWhenChildEnds="false" Weight="const int 1">
+                                            <Comment Background="NoColor" Text="" />
+                                            <Connector Identifier="GenericChildren">
+                                              <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="194" PrefabName="" PrefabNodeId="-1">
+                                                <Comment Background="NoColor" Text="" />
+                                                <Connector Identifier="GenericChildren">
+                                                  <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="50" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_1)">
+                                                    <Comment Background="NoColor" Text="" />
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="195" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="int Self.WrapperAgent::p_skillAttackRange" Opr="Self.WrapperAgent::GetSkillAttackRange(SkillSlotType.SLOT_SKILL_0)">
+                                                    <Comment Background="NoColor" Text="" />
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="200" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="string Self.WrapperAgent::p_curSlotType" Opr="const string &quot;SkillSlotType.SLOT_SKILL_0;&quot;">
+                                                    <Comment Background="NoColor" Text="" />
+                                                  </Node>
+                                                  <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="35" PrefabName="" PrefabNodeId="-1">
+                                                    <Comment Background="NoColor" Text="" />
+                                                    <Connector Identifier="GenericChildren">
+                                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="105" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="106" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CheckSkillFilter(string Self.WrapperAgent::p_curSlotType,uint Self.WrapperAgent::p_targetID)">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="107" PrefabName="" PrefabNodeId="-1">
+                                                            <Comment Background="NoColor" Text="" />
+                                                            <Connector Identifier="GenericChildren">
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="108" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.NearestEnermy&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="109" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpEnermy&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="110" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.MyDirection&quot;">
+                                                                <Comment Background="NoColor" Text="" />
+                                                              </Node>
+                                                            </Connector>
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="111" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="112" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_targetID)">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="113" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="114" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.LowerHpFriendly&quot;">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="115" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_teamTarget" Opr="Self.WrapperAgent::GetLowHpTeamMember(int Self.WrapperAgent::p_skillAttackRange,3000,string Self.WrapperAgent::p_curSlotType)">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="116" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_teamTarget,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="117" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_teamTarget)">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="118" PrefabName="" PrefabNodeId="-1">
+                                                        <Comment Background="NoColor" Text="" />
+                                                        <Connector Identifier="GenericChildren">
+                                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="119" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetSkillTargetRule(string Self.WrapperAgent::p_curSlotType)" Opr="const string &quot;SkillTargetRule.Myself&quot;">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="120" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsDistanceToActorLessThanRange(uint Self.WrapperAgent::p_targetID,int Self.WrapperAgent::p_skillAttackRange)" Opr="const bool true">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="121" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SelectTarget(uint Self.WrapperAgent::p_selfID)">
+                                                            <Comment Background="NoColor" Text="" />
+                                                          </Node>
+                                                        </Connector>
+                                                      </Node>
+                                                    </Connector>
+                                                  </Node>
+                                                </Connector>
+                                              </Node>
+                                            </Connector>
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="202" PrefabName="" PrefabNodeId="-1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="85" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetSkill(string Self.WrapperAgent::p_curSlotType)">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="86" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealUseSkill(string Self.WrapperAgent::p_curSlotType)">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                          <Node Class="PluginBehaviac.Nodes.DecoratorLoopUntil" Enable="true" HasOwnPrefabData="false" Id="87" PrefabName="" PrefabNodeId="-1" Until="true" DoneWithinFrame="true" Count="const int -1">
+                                            <Comment Background="NoColor" Text="" />
+                                            <Connector Identifier="GenericChildren">
+                                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="88" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsUseSkillCompletedOrCanAbort()" Opr="const bool true">
+                                                <Comment Background="NoColor" Text="" />
+                                              </Node>
+                                            </Connector>
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_else">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="208" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="229" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_targetID" Opr="const uint 0">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="224" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetCurBehavior(ObjBehaviMode.State_Idle)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.WaitFrames" Enable="true" HasOwnPrefabData="false" Id="6" PrefabName="" PrefabNodeId="-1" Frames="const int 1">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="63" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,true)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.WaitFrames" Enable="true" HasOwnPrefabData="false" Id="17" PrefabName="" PrefabNodeId="-1" Frames="const int 1">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                  <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="515" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="Precondition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="516" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_OutOfControl&quot;">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="Action">
+                      <Node Class="PluginBehaviac.Nodes.Selector" Enable="true" HasOwnPrefabData="false" Id="122" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="123" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="124" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetOutOfControlType()" Opr="const string &quot;OutOfControlType.Terror&quot;">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Assignment" Enable="true" HasOwnPrefabData="false" Id="132" PrefabName="" PrefabNodeId="-1" CastRight="false" Opl="uint Self.WrapperAgent::p_terrorMeActor" Opr="Self.WrapperAgent::GetTerrorMeActor()">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="135" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::LeaveActor(uint Self.WrapperAgent::p_terrorMeActor)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="136" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Run&quot;,0.15,0,true)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="517" PrefabName="" PrefabNodeId="-1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="140" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetOutOfControlType()" Opr="const string &quot;OutOfControlType.Taunt&quot;">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="518" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetTauntMeActorAsMyTarget()">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="519" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::SetSkill(SkillSlotType.SLOT_SKILL_0)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.IfElse" Enable="true" HasOwnPrefabData="false" Id="520" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                                <Connector Identifier="_condition">
+                                  <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="521" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsSkillMoveToTarget()" Opr="const bool true">
+                                    <Comment Background="NoColor" Text="" />
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_if">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="522" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="523" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanMove()">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="524" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Run&quot;,0.15,0,true)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="526" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::MoveToSkillTarget()">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="141" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_0)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="530" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealUseSkill(SkillSlotType.SLOT_SKILL_0)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.DecoratorLoopUntil" Enable="true" HasOwnPrefabData="false" Id="531" PrefabName="" PrefabNodeId="-1" Until="true" DoneWithinFrame="true" Count="const int -1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="532" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsUseSkillCompleted()" Opr="const bool true">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                                <Connector Identifier="_else">
+                                  <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="533" PrefabName="" PrefabNodeId="-1">
+                                    <Comment Background="NoColor" Text="" />
+                                    <Connector Identifier="GenericChildren">
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="142" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::CanUseSkill(SkillSlotType.SLOT_SKILL_0)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="535" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::RealUseSkill(SkillSlotType.SLOT_SKILL_0)">
+                                        <Comment Background="NoColor" Text="" />
+                                      </Node>
+                                      <Node Class="PluginBehaviac.Nodes.DecoratorLoopUntil" Enable="true" HasOwnPrefabData="false" Id="536" PrefabName="" PrefabNodeId="-1" Until="true" DoneWithinFrame="true" Count="const int -1">
+                                        <Comment Background="NoColor" Text="" />
+                                        <Connector Identifier="GenericChildren">
+                                          <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="537" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::IsUseSkillCompleted()" Opr="const bool true">
+                                            <Comment Background="NoColor" Text="" />
+                                          </Node>
+                                        </Connector>
+                                      </Node>
+                                    </Connector>
+                                  </Node>
+                                </Connector>
+                              </Node>
+                              <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="538" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,true)">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                  <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="2" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="Precondition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="3" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_Dead&quot;">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="Action">
+                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="22" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="4" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayHelperAgeAction(&quot;zhouwang_die&quot;)">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="23" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="458" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                  <Node Class="PluginBehaviac.Nodes.WithPrecondition" Enable="true" HasOwnPrefabData="false" Id="450" PrefabName="" PrefabNodeId="-1">
+                    <Comment Background="NoColor" Text="" />
+                    <Connector Identifier="Precondition">
+                      <Node Class="PluginBehaviac.Nodes.Condition" Enable="true" HasOwnPrefabData="false" Id="454" PrefabName="" PrefabNodeId="-1" Operator="Equal" Opl="Self.WrapperAgent::GetCurBehavior()" Opr="const string &quot;ObjBehaviMode.State_GameOver&quot;">
+                        <Comment Background="NoColor" Text="" />
+                      </Node>
+                    </Connector>
+                    <Connector Identifier="Action">
+                      <Node Class="PluginBehaviac.Nodes.Sequence" Enable="true" HasOwnPrefabData="false" Id="455" PrefabName="" PrefabNodeId="-1">
+                        <Comment Background="NoColor" Text="" />
+                        <Connector Identifier="GenericChildren">
+                          <Node Class="PluginBehaviac.Nodes.Action" Enable="true" HasOwnPrefabData="false" Id="456" PrefabName="" PrefabNodeId="-1" ResultFunctor="&quot;&quot;" ResultOption="BT_SUCCESS" Method="Self.WrapperAgent::PlayAnimation(&quot;Idle&quot;,0.15,0,false)">
+                            <Comment Background="NoColor" Text="" />
+                          </Node>
+                          <Node Class="PluginBehaviac.Nodes.DecoratorLoop" Enable="true" HasOwnPrefabData="false" Id="457" PrefabName="" PrefabNodeId="-1" DoneWithinFrame="false" Count="const int -1">
+                            <Comment Background="NoColor" Text="" />
+                            <Connector Identifier="GenericChildren">
+                              <Node Class="PluginBehaviac.Nodes.Noop" Enable="true" HasOwnPrefabData="false" Id="143" PrefabName="" PrefabNodeId="-1">
+                                <Comment Background="NoColor" Text="" />
+                              </Node>
+                            </Connector>
+                          </Node>
+                        </Connector>
+                      </Node>
+                    </Connector>
+                  </Node>
+                </Connector>
+              </Node>
+            </Connector>
+          </Node>
+        </Connector>
+      </Node>
+    </Connector>
+  </Node>
+</Behavior>

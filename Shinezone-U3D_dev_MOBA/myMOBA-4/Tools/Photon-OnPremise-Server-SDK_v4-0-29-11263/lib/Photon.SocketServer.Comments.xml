@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<doc>
+  <assembly>
+    <name>Photon.SocketServer</name>
+  </assembly>
+  <members>
+    <!-- member name="R:Project">
+      <summary>
+        Shared project summary comments go in here.
+      </summary>
+    </member -->
+    <member name="N:SmartAssembly.Attributes">
+      <exclude />
+      <summary>
+        Exclude SmartAssembly from all projects.
+      </summary>
+    </member>
+    <member name="N:">
+      <exclude />
+      <summary>
+        Exclude the global namespace from all projects.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer">
+      <summary>
+        This is the root namespace of the Photon.SocketServer assembly.
+        It contains common classes to build Applications on top of Exit Games Photon Socket Server.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Concurrency">
+      <summary>
+        This namespace is a conceptual extension of the ExitGames.Concurrency and ExitGames.Threading namespace.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Rpc">
+      <summary>
+        This namespace supports the developer with an advanced remote procedure call framework.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Mmo">
+      <summary>
+        This namespace contains a region-based interest management framework for open worlds.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Mmo.Messages">
+      <summary>
+        This namespace is part of the provided region-based interest management framework for open worlds.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Rpc.Protocols">
+      <summary>
+        The namespace contains protocol related classes.
+        Just a few members are public for testing.
+      </summary>
+    </member>
+    <member name="N:Photon.SocketServer.Rpc.Reflection">
+      <summary>
+        This namespace contains classes that make direct use of reflection.
+      </summary>
+    </member>
+  </members>
+</doc>

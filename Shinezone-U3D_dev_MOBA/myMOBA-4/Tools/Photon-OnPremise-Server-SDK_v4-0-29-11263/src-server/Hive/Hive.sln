@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12D1AF8B-A32C-4136-9E01-A0A806C27C2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonHive", "PhotonHive\PhotonHive.csproj", "{E1F918F4-F581-4280-9D91-3CF77B24C290}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonHive.Tests", "PhotonHive.NUnit\PhotonHive.Tests.csproj", "{17DE1826-DF75-4DC7-AEE1-70207103A867}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonHive.TestConsole", "PhotonHive.TestConsole\PhotonHive.TestConsole.csproj", "{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonHivePlugin", "..\HivePlugin\PhotonHivePlugin.csproj", "{223D6705-337D-409F-8524-553ABC5EAABD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugLogging|Any CPU = DebugLogging|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.DebugLogging|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.DebugLogging|Any CPU.Build.0 = Debug|Any CPU
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1F918F4-F581-4280-9D91-3CF77B24C290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.DebugLogging|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.DebugLogging|Any CPU.Build.0 = Debug|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DE1826-DF75-4DC7-AEE1-70207103A867}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.DebugLogging|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.DebugLogging|Any CPU.Build.0 = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFB295EE-62BE-45B3-81DB-B11A0A540DC5}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.DebugLogging|Any CPU.ActiveCfg = Debug|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.DebugLogging|Any CPU.Build.0 = Debug|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{223D6705-337D-409F-8524-553ABC5EAABD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

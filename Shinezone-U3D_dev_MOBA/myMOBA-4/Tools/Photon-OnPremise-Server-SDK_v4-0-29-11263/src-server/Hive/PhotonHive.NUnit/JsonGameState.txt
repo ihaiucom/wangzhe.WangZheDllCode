@@ -1,0 +1,128 @@
+﻿{
+  "ActorCounter": 1,
+  "ActorList": [
+    {
+      "ActorNr": 1,
+      "UserId": "User1",
+      "Username": "",
+      "Binary": "RGIAAAEBRAAAAANiAXMAB1NUUklORzFpAAAAe2RAXtmZmZmZmnMABGtleTNrAHs=",
+      "DEBUG_BINARY": {
+        "1": {
+          "1": "STRING1",
+          "123": 123.4,
+          "key3": 123
+        }
+      }
+    },
+    {
+      "ActorNr": 11,
+      "UserId": "dummyActor11",
+      "Username": ""
+    },
+    {
+      "ActorNr": 12,
+      "UserId": "dummyActor12",
+      "Username": ""
+    },
+    {
+      "ActorNr": 13,
+      "UserId": "dummyActor13",
+      "Username": ""
+    },
+    {
+      "ActorNr": 21,
+      "UserId": "dummyActor21",
+      "Username": ""
+    },
+    {
+      "ActorNr": 22,
+      "UserId": "dummyActor22",
+      "Username": ""
+    },
+    {
+      "ActorNr": 23,
+      "UserId": "dummyActor23",
+      "Username": ""
+    }
+  ],
+  "CheckUserOnJoin": false,
+  "CustomProperties": {
+    "key5": true,
+    "key3": 123,
+    "key4": "val4"
+  },
+  "DeleteCacheOnLeave": true,
+  "EmptyRoomTTL": 1000,
+  "IsOpen": false,
+  "IsVisible": false,
+  "LobbyId": "MyLobby",
+  "LobbyType": 2,
+  "LobbyProperties": [
+    "key3",
+    "key4",
+    "key5"
+  ],
+  "MaxPlayers": 4,
+  "PlayerTTL": -1,
+  "SuppressRoomEvents": true,
+  "Slice": 101,
+  "Binary": {
+    "20": "RGJ6AAIBAANpAAAAC2kAAAAMaQAAAA0CAANpAAAAFWkAAAAWaQAAABc=",
+    "19": "RGl6AAEAAAAAAAR6AANpAAAAAWIBaQAAAAF6AANpAAAAAWICcwABMnoAA2kAAAABYgNvAXoAA2kAAAABYgR5AAFzAAE0",
+    "18": "RAAAAApi+nkAA3MABGtleTMABGtleTQABGtleTVzAARrZXk1bwFi/m8AcwAEa2V5M2sAe2kAAAB7ZEBe2ZmZmZmacwAEa2V5NHMABHZhbDRzAARrZXk2bwFi/2IEYgFzAAdTVFJJTkcxYv1vAA=="
+  },
+  "DEBUG_PROPERTIES_18": {
+    "250": [
+      "key3",
+      "key4",
+      "key5"
+    ],
+    "key5": true,
+    "254": false,
+    "key3": 123,
+    "123": 123.4,
+    "key4": "val4",
+    "key6": true,
+    "255": 4,
+    "1": "STRING1",
+    "253": false
+  },
+  "DEBUG_EVENTS_19": {
+    "0": [
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        2,
+        "2"
+      ],
+      [
+        1,
+        3,
+        true
+      ],
+      [
+        1,
+        4,
+        [
+          "4"
+        ]
+      ]
+    ]
+  },
+  "DEBUG_GROUPS_20": {
+    "1": [
+      11,
+      12,
+      13
+    ],
+    "2": [
+      21,
+      22,
+      23
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Error" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+
+	<PropertyGroup>
+		<PluginName>TestPlugins</PluginName>
+		<PluginAssemblyName>TestPlugins.dll</PluginAssemblyName>
+		<PluginType>TestPlugins.PluginFactory</PluginType>
+		
+		<PluginBaseUrl>http://photon-forward.webscript.io</PluginBaseUrl>
+    
+	</PropertyGroup>
+  
+</Project>
