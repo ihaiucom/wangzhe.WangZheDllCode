@@ -18,14 +18,19 @@ namespace Assets.Scripts.Framework
 	[AutoSingleton(false)]
 	public class GameFramework : MonoSingleton<GameFramework>
 	{
+        // 预处理完成回调代理
 		public delegate void DelegateOnBaseSystemPrepareComplete();
 
+        // 应用版本
 		public static string AppVersion;
 
+        // 渲染帧频
 		public static int c_renderFPS = 30;
 
+        // 一帧时间 (毫秒)
 		public static float c_targetFrameTime = 1000f / (float)GameFramework.c_renderFPS;
 
+        // 最后一次计算 FPS时间
 		public double lastRealTime;
 
 		public string tongCaiKey;
@@ -88,13 +93,13 @@ namespace Assets.Scripts.Framework
 		{
 			if (this.lockFPS_SGame)
 			{
-				Application.targetFrameRate = GameFramework.unityTargetFrameRate;
+				Application.targetFrameRate = GameFramework.unityTargetFrameRate; // 60
 				base.StartCoroutine("SGame_WaitForTargetFrameRate");
 			}
 			else
 			{
 				base.StopCoroutine("SGame_WaitForTargetFrameRate");
-				Application.targetFrameRate = GameFramework.c_renderFPS;
+				Application.targetFrameRate = GameFramework.c_renderFPS; // 30
 			}
 		}
 
@@ -169,7 +174,9 @@ namespace Assets.Scripts.Framework
 
 		protected override void Init()
 		{
+            // 设置不黑屏
 			Screen.sleepTimeout = -1;
+            // 获取应用版本号
 			GameFramework.AppVersion = CVersion.GetAppVersion();
 			this.setTargetFrameRate();
 		}
@@ -408,13 +415,17 @@ namespace Assets.Scripts.Framework
 			catch (Exception)
 			{
 			}
+            // 日志系统
 			Singleton<BugLocateLogSys>.CreateInstance();
+            // SDK： 登录、支付、分享
 			Singleton<ApolloHelper>.GetInstance().EnableBugly();
+            // 设置横屏和朝向
 			Screen.autorotateToLandscapeLeft = true;
 			Screen.autorotateToLandscapeRight = true;
 			Screen.autorotateToPortrait = false;
 			Screen.autorotateToPortraitUpsideDown = false;
 			Screen.orientation = ScreenOrientation.AutoRotation;
+            // 设置分辨率
 			GameSettings.RefreshResolution();
 			AndroidJavaClass androidJavaClass = new AndroidJavaClass(ApolloConfig.GetGameUtilityString());
 			if (androidJavaClass != null)
